@@ -22,7 +22,6 @@ host.tmp <- tableimport.function("host.qza")
 colnames(host.tmp) <- c("ASVid", "SampleID", "Reads")
 
 ## import blast output (from `host_blastID.R` script):
-## runfromlocal: tmp2 <- read.csv(file="~/Repos/mysosoup/data/host/Mangan.blastOut.csv")
 tmp2 <- read_csv(file = 'https://github.com/devonorourke/mysosoup/raw/master/data/host/Mangan.blastOut.csv')
 host_species <- c('Myotis sodalis', 'Myotis lucifugus', 'Nycticeius humeralis')
 tmp2 <- tmp2 %>% filter(taxa %in% host_species) %>% distinct(query, taxa)
@@ -74,15 +73,27 @@ write.csv(SampTaxaReadSumry, file="~/Repos/mysosoup/data/taxonomy/host_abundance
 #runfrom local: dada2.tmp <- tableimport.function("~/Repos/mysosoup/data/qiime_qza/asvTables/Mangan_noBats_ASVtable.qza")
 dada2.tmp <- tableimport.function("arth.qza")
 colnames(dada2.tmp) <- c("ASVid", "SampleID", "Reads")
-#runfromlocal: meta <- read_csv(file = "~/Repos/mysosoup/data/manan_metadata.csv", col_names = TRUE)
 meta <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/manan_metadata.csv", col_names = TRUE)
 colnames(meta)[1] <- "SampleID"
 df <- merge(dada2.tmp, meta)
 rm(dada2.tmp, meta)
-sumry0 <- as.data.frame(df %>% group_by(SampleID, SampleType, BatchType) %>% 
-                          summarise(sumArthReads=sum(Reads), nASVs=n_distinct(ASVid)) %>%
-                          arrange(sumArthReads))
+sumry0 <- as.data.frame(df %>% group_by(SampleID, SampleType, BatchType, Roost, CollectionMonth, Site) %>% 
+                          summarise(sumNonBatReads=sum(Reads), nASVs=n_distinct(ASVid)) %>%
+                          arrange(sumNonBatReads))
 hostseq_data <- merge(sumry0, SampTaxaReadSumry, all=TRUE)
 
 ## write to disk:
 write.csv(hostseq_data, file="~/Repos/mysosoup/data/taxonomy/sample_abundancesummaries_wBatHostData.csv", row.names = FALSE, quote = FALSE)
+
+## summary of use
+hostseq_data %>% 
+  group_by(BatchType, multihit) %>% 
+  summarise(counts=n()) %>% 
+  spread(., key=multihit, value=counts)
+
+bymeta <- hostseq_data %>% 
+  group_by(BatchType, multihit, Roost, CollectionMonth, Site) %>% 
+  summarise(counts=n()) %>%
+  spread(., key=multihit, value=counts) %>%
+  arrange(BatchType, Site, Roost, CollectionMonth)
+
