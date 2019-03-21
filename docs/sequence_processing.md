@@ -80,7 +80,7 @@ REF=/mnt/lustre/macmaneslab/devon/guano/BOLDdb/host_dbs
 qiime quality-control exclude-seqs \
   --i-query-sequences Mangan.raw.repSeqs.qza \
   --i-reference-sequences $REF/host_seqs.qza \
-  --p-perc-identity 0.85 \
+  --p-perc-identity 0.9 \
   --o-sequence-hits Mangan_raw.hits.qza \
   --o-sequence-misses Mangan_raw.misses.qza \
   --p-method vsearch
@@ -96,4 +96,71 @@ qiime tools export \
 mv dna-sequences.fasta Mangan_hosthits.fasta  
 ```
 
-There are 281 potential sequences identified in the resulting `Mangan_hosthits.fasta` file. These sequences were queried in NCBI BLAST; we retained the top 10 hits for each input in the `mangan_hittable.csv` file. 
+There are 39 potential sequences identified in the resulting `Mangan_hosthits.fasta` file. These sequences were queried in NCBI BLAST; we retained the top 10 hits for each input in the `mangan_hittable.csv` file. These taxa were identified in the `host_blastID.R` script: three bat species were listed among all pontential ASVs: _Myotis sodalis_, _Myotis lucifugus_, and _Nycticeius humeralis_ - the ASVs associated with these bats are listed in `host_hashIDs.txt`. Four other species were retrieved among the results: three of these were very low alignments (< 90%) and the other was a true bug, _Hyaliodes vitripennis_. This likely speaks to the difficulty in using short COI markers, as distant taxa can randomly share common stretech of COI.
+
+The ASVs identified to the three Myotis species were retained as host sequences in a separate file and removed from the larger dataset of remaining ASVs. The analyses split in scope: the host ASVs are used to identify host species with sample, while the non-host ASV data are next subject to a reference-based chimera filtering and further filtering.
+
+To create the host-only dataset:
+```
+qiime feature-table filter-features \
+--i-table Mangan.raw.table.qza \
+--m-metadata-file host_hashIDs.txt \
+--o-filtered-table Mangan_BatsOnly_ASVtable.qza
+```
+
+And the host-only sequences (used for classification: see `host_classification.md`):
+```
+qiime feature-table filter-seqs \
+--i-data Mangan.raw.repSeqs.qza \
+--i-table Mangan_BatsOnly_ASVtable.qza \
+--o-filtered-data Mangan_BatsOnly.repSeqs.qza
+```
+
+To create the host-removed dataset:
+```
+qiime feature-table filter-features \
+--i-table Mangan.raw.table.qza \
+--m-metadata-file host_hashIDs.txt \
+--o-filtered-table Mangan_noBats_ASVtable.qza \
+--p-exclude-ids
+```
+
+We also create a host-removed set of sequences:
+```
+qiime feature-table filter-seqs \
+--i-data Mangan.raw.repSeqs.qza \
+--i-table Mangan_noBats_ASVtable.qza \
+--o-filtered-data Mangan_noBats.repSeqs.qza
+```
+
+These data are separately processed:
+1. The `Mangan_noBats_ASVtable.qza` data are subject to a reference-based chimera detection (described below) and classification (see `diet_classification.md`). The outcome of these processes led to a final data filtering step in the `sequence_analysis.R` script; the goal is to create a dataset that represents ASVs most likely to represent bat diet signal (and thus eliminating ASVs from potential contaminant sources, etc.).
+2. The `Mangan_BatsOnly_ASVtable.qza` data is used to identify the host identities of the samples; data are classified (see `host_classification.md`) and passed into the `host_see-filtering.R` script for analysis.
+
+# Reference-based chimera filtering
+While DADA2 employs a de novo filtering approach, we used an additional a reference-based filtering approach to flag other chimeras that weren't flagged by DADA2 when our reads were being denoised. This process uses VSEARCH in conjunction with our curated database consisting of arthropod and chordate BOLD records combined with the host sequences. Details on database curation is outlined in the `database_construction.md` document, while the `host_database.md` document details how host references were collected.
+> `$REF` refers to the file path to the arthropod+chordate+host reference sequences
+
+REF=/mnt/lustre/macmaneslab/devon/guano/BOLDdb
+
+```
+qiime vsearch uchime-ref \
+--p-threads 24 --o-stats \
+--i-sequences Mangan_noBats.repSeqs.qza \
+--i-table Mangan_noBats_ASVtable.qza \
+--i-reference-sequences "$REF" \
+--output-dir ref-chimera_data
+```
+
+The resulting suspected chimera output data were exported as text files for analysis in the `sequence_analysis.R` script:
+```
+cd ./ref-chimera_data/
+qiime tools export --input-path stats.qza --output-path output
+mv ./output/stats.tsv ..
+qiime tools export --input-path chimeras.qza --output-path output
+mv ./output/dna-sequences.fasta .
+mv dna-sequences.fasta nonBat_chimeraSeqs.fasta
+qiime tools export --input-path nonchimeras.qza --output-path output
+mv ./output/dna-sequences.fasta .
+mv dna-sequences.fasta nonBat_NONchimeraSeqs.fasta
+```

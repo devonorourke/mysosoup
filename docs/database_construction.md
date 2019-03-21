@@ -176,8 +176,12 @@ Sorting 100%
 Writing output file 100%
 ```
 
+We repeated the above process for the chordate records. The dereplicated arthropod and chordate records were used to create a reference database that also included the host sequences. The final database consisting of arthropod, chordate, and host records includes **1,963,230** distinct sequences.
+
 ## Formatting data for QIIME import
-Two files are required for importing into QIIME2 to perform classification: (1) a taxonomy file, and (2) a fasta file. The taxonomy file uses the same 2 column format as the `outmap.txt` file, except we're only going to retain the records present in the dereplicated dataset. The `boldCOI.derep.fasta` file contains the correct format for import. We performed the same function below for the arthropod and chordate records separately; these records can be merged within QIIME2 to make a single Chordate+Arthropod record. The following illustrates how to perform the QIIME2 reformatting for arthropod records; the same process is repeated for chordate records.
+Two files are required for importing into QIIME2 to perform classification: (1) a taxonomy file, and (2) a fasta file. The taxonomy file uses the same 2 column format as the `outmap.txt` file, except we're only going to retain the records present in the dereplicated dataset. The `boldCOI.derep.fasta` file contains the correct format for import. We performed the same function below for the arthropod and chordate records separately to create separate taxonomy and fasta files initially, but their records were then combined to create a single database that was imported into QIIME.
+
+The following illustrates how to perform the QIIME2 reformatting for arthropod records; the same process is repeated for chordate records.
 
 First, we make a temporary list of all the sequenceID values from the headers of the `boldCOI.derep.fasta` file, then use that as a list to query the matches in the `outmap.txt` file to generate the taxonomy file we want:
 ```
@@ -207,9 +211,39 @@ qiime tools import \
 rm boldCOI.derep.qiime.tmp
 ```
 
-Note that following import into QIIME2, the `boldCOI.derep.txt` file was further processed for additional use in other R scripts:
+## Combining QIIME records
+As noted above, we also combined the arthropod and chordate BOLD records created here in addition to the host reference sequences described in the `host_database.md` document. These are used for chimera filtering and taxonomy assignment.
+> `$PATH1`, `$PATH2`, and `$PATH3` refer to the file paths to the host, arthropod, and chordate reference files respectively
+
+PATH1=/mnt/lustre/macmaneslab/devon/guano/BOLDdb/host_dbs
+PATH2=/mnt/lustre/macmaneslab/devon/guano/BOLDdb/allBOLD
+PATH3=/mnt/lustre/macmaneslab/devon/guano/BOLDdb/allBOLD/chordates
+
 ```
-zcat boldCOI.derep.txt.gz | cut -f 1 > tmp1
-zcat boldCOI.derep.txt.gz | cut -f 2- | cut -d ';' -f 3- > tmp2
-paste tmp1 tmp2 -d ';' | gzip --best > boldCOI.derep.txt.gz
+## merge taxonomy mapping data
+cat "$PATH1"/qiime.host.txt.gz "$PATH2"/boldCOI.arth_derep.txt.gz "$PATH3"/boldCOI.chord_derep.txt.gz > boldCOI.all.plusHost.txt.gz
+
+## merge seq data
+cat "$PATH1"/qiime.host.fa.gz "$PATH2"/boldCOI.derep.fasta.gz "$PATH3"/boldCOI.chordate_derep.fasta.gz > boldCOI.all.plusHost.fasta.gz
 ```
+
+One minor cleanup detail: we noticed that some BOLD sequence records can contain unexpected `#` characters in the sequences themselves. Though it was minor (just a pair records contained these as trailing characters at the end of the two sequences), we removed them to avoid any downstream difficulties in other aspects of the pipeline (for example, training a database with the Naive Bayes classifier will flag an error):
+
+```
+zcat boldCOI.all.plusHost.fasta.gz | sed 's/#.*//g' > tmp
+gzip tmp --best > boldCOI.all.plusHost.fasta.gz
+```
+
+Files were then imported into QIIME:
+```
+qiime tools import \
+  --type 'FeatureData[Sequence]' \
+  --input-path boldCOI.all.plusHost.fasta.gz \
+  --output-path boldCOI.all.plusHost.seqs.qza
+
+qiime tools import \
+  --type 'FeatureData[Taxonomy]' \
+  --input-format HeaderlessTSVTaxonomyFormat \
+  --input-path boldCOI.all.plusHost.txt \
+  --output-path boldCOI.all.plusHost.tax.qza
+```  
