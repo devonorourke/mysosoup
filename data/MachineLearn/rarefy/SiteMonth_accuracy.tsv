@@ -1,0 +1,10 @@
+	EN-July	EN-June	EN-September	HB-July	HB-June	HB-September	Overall Accuracy
+EN-July	0.8888888888888888	0.0	0.1111111111111111	0.0	0.0	0.0	
+EN-June	0.125	0.875	0.0	0.0	0.0	0.0	
+EN-September	0.1111111111111111	0.0	0.6666666666666666	0.0	0.0	0.2222222222222222	
+HB-July	0.1	0.0	0.0	0.9	0.0	0.0	
+HB-June	0.0	0.0	0.0	0.0	1.0	0.0	
+HB-September	0.0	0.0	0.0	0.0	0.0	1.0	
+Overall Accuracy							0.8928571428571429
+Baseline Accuracy							0.19642857142857142
+Accuracy Ratio							4.545454545454546
