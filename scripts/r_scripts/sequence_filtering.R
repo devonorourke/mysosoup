@@ -3,7 +3,20 @@ library(reshape2)
 library(qiime2R)
 library(scales)
 
-# notrun: download.file("https://github.com/devonorourke/mysosoup/raw/master/data/qiime_qza/asvTables/Mangan_noBats_ASVtable.qza", "arth.qza")
+## function for plot theme:
+theme_devon <- function () { 
+  theme_bw(base_size=12, base_family="Avenir") %+replace% 
+    theme(
+      panel.background  = element_blank(),
+      plot.background = element_rect(fill="transparent", colour=NA), 
+      legend.background = element_rect(fill="transparent", colour=NA),
+      legend.key = element_rect(fill="transparent", colour=NA)
+    )
+}
+
+
+
+# notrun: download.file("https://github.com/devonorourke/mysosoup/raw/master/data/qiime_qza/asvTables/Mangan_noBats_ASVtable.qza", "nonbat.qza")
 
 ## convert .qza to matrix, then convert wide-format matrix to long-format data.frame object
 tableimport.function <- function(table){
@@ -18,174 +31,145 @@ tableimport.function <- function(table){
 }
 
 
-#runfrom local: dada2.tmp <- tableimport.function("~/Repos/mysosoup/data/qiime_qza/asvTables/Mangan_noBats_ASVtable.qza")
-dada2.tmp <- tableimport.function("arth.qza")
-colnames(dada2.tmp) <- c("ASVid", "SampleID", "Reads")
+## runfrom local: nonbat.tmp <- tableimport.function("~/Repos/mysosoup/data/qiime_qza/asvTables/Mangan.nonbatASVs.table.qza")
+nonbat.tmp <- tableimport.function("nonbat.qza")
+colnames(nonbat.tmp) <- c("ASVid", "SampleID", "Reads")
 
 ## add metadata  
-#runfromlocal: meta <- read_csv(file = "~/Repos/mysosoup/data/manan_metadata.csv", col_names = TRUE)
-meta <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/manan_metadata.csv", col_names = TRUE)
-colnames(meta)[1] <- "SampleID"
-
-df <- merge(dada2.tmp, meta)
-rm(dada2.tmp, meta)
-
+meta <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/metadata/mangan_metadata.csv.gz", col_names = TRUE)
+df <- merge(nonbat.tmp, meta)
+rm(nonbat.tmp, meta)
 
 ## add taxonomy information
-#runfromlocal: taxa <- read_delim(file = "~/Repos/mysosoup/data/taxonomy/mangan_tax_p97c94.tsv",delim = "\t", col_names = TRUE)
-taxa <- read_delim(file = "https://github.com/devonorourke/mysosoup/raw/master/data/taxonomy/mangan_tax_p97c94.tsv",
-                   delim = "\t", col_names = TRUE)
-
-taxa <- taxa %>% separate(., col = Taxon, sep=';',
-                  into = c("kingdom_name", "phylum_name", "class_name", "order_name", "family_name", "genus_name", "species_name")) %>%
-  select(-Confidence)
+taxa <- read_delim(file = "https://github.com/devonorourke/mysosoup/raw/master/data/taxonomy/mangan_tax_vs.tsv.gz", delim = "\t", col_names = TRUE)
+taxa <- taxa %>% separate(., col = Taxon, sep=';', into = c("kingdom_name", "phylum_name", "class_name", "order_name", "family_name", "genus_name", "species_name")) %>% select(-Confidence)
 taxa <- as.data.frame(apply(taxa, 2, function(y) gsub(".__", "", y)))
 taxa <- as.data.frame(apply(taxa, 2, function(y) gsub("^$|^ $", NA, y)))
 taxa <- as.data.frame(apply(taxa, 2, function(y) gsub("Ambiguous_taxa", NA, y)))
+taxa <- as.data.frame(apply(taxa, 2, function(y) gsub("Unassigned", NA, y)))
 colnames(taxa)[1] <- "ASVid"
-
 df <- merge(df, taxa)
-rm(taxa)
 
 
+## any relationship between the number of ASVs per sample, the number of reads per sample, and whether or not
+## ..the sample was derived from a Plate-extraction?
+  ## Coloring the samples that were withing a cell of an NTC
+sumry0 <- df %>% 
+  group_by(SampleID, SampleType, BatchType, Source, ContamArea) %>% 
+  summarise(sumReads=sum(Reads), nASVs=n_distinct(ASVid))
 
-### Filtering strategies
-## distribution of number of ASVs per sample:
-sumry0 <- df %>% group_by(SampleID, SampleType, BatchType) %>% summarise(sumReads=sum(Reads), nASVs=n_distinct(ASVid))
+ggplot(sumry0, aes(sumReads, nASVs, color=ContamArea, shape=SampleType)) + 
+  geom_point(data=sumry0 %>% filter(SampleType == "control"), aes(sumReads, nASVs, color=ContamArea, shape=SampleType), size=4) + 
+  geom_point(data=sumry0 %>% filter(SampleType != "control"), aes(sumReads, nASVs, color=ContamArea, shape=SampleType)) + 
+  facet_wrap(~ Source) +
+  scale_x_continuous(labels = comma) +
+  theme_devon()
+  
+  ## these results indicate that the kind of extraction (plate vs. isolate) isn't really diving differences in #ASVs or #reads per sample
+  ## 5 of 8 Control samples have very low number of ASVs but fairly average numbers of reads per sample
+  ## location of true sample near a contaminated well doesn't influence number of reads or number of ASVs - they're indendent
 
-#1) drop singleton ASVs
+
+## drop singleton ASVs
 ## can create a filter that removes ASVs from dataset when they are present in only a single sample:
 ## number of ASVs per sample
-sumry1 <- df %>% group_by(ASVid) %>% summarise(ASV_readCounts=sum(Reads), ASV_detections=n())
-singletonASVs <- sumry1 %>% filter(ASV_detections > 1) %>% select(ASVid)
-df_noSingleASV <- df %>% filter(ASVid %in% singletonASVs$ASVid)
+asv_ReadCounts <- df %>% group_by(ASVid) %>%  summarise(ASV_readCounts=sum(Reads), ASV_detections=n())
+singletonASVs <- asv_ReadCounts %>% filter(ASV_detections == 1) %>% select(ASVid)
+df_noSingleASV <- df %>% filter(!ASVid %in% singletonASVs$ASVid)
+
+## make same plot as above: do we see similar trends with plate vs. isolates and controls vs true samples when singletons are removed?
+sumry1 <- df_noSingleASV %>% 
+  group_by(SampleID, SampleType, BatchType, Source, ContamArea) %>% 
+  summarise(sumReads=sum(Reads), nASVs=n_distinct(ASVid))
+
+ggplot(sumry1, aes(sumReads, nASVs, color=ContamArea, shape=SampleType)) + 
+  geom_point(data=sumry1 %>% filter(SampleType == "control"), aes(sumReads, nASVs, color=ContamArea, shape=SampleType), size=4) + 
+  geom_point(data=sumry1 %>% filter(SampleType != "control"), aes(sumReads, nASVs, color=ContamArea, shape=SampleType)) + 
+  facet_wrap(~ Source) +
+  scale_x_continuous(labels = comma) +
+  theme_devon()
+
+  ## results are similar to previous plot... filtering out singletons doesn't change overall patterns
+
+## drop any ASV that doesn't have at least Family-rank information (assumption here is poor classification MAY be indicative of sequence error)
+df_taxfilt <- df %>% 
+  filter(!is.na(kingdom_name)) %>% 
+  filter(!is.na(phylum_name)) %>% 
+  filter(!is.na(class_name)) %>% 
+  filter(!is.na(order_name)) %>% 
+  filter(!is.na(family_name)) %>% 
+  filter(phylum_name == "Arthropoda")
+sumry_taxfilt <- df_taxfilt %>% group_by(ASVid) %>% summarise(sumReads=sum(Reads), nSamples=n_distinct(SampleID))
+commonASVs_taxfilt <- intersect(df_taxfilt %>% filter(SampleType == "control") %>% select(ASVid),
+                                df_taxfilt %>% filter(SampleType == "sample") %>% select(ASVid)) %>% pull()
+
+unique_controlASVs_taxfilt <- setdiff(df_taxfilt %>% filter(SampleType == "control") %>% select(ASVid),
+                                df_taxfilt %>% filter(SampleType == "sample") %>% select(ASVid)) %>% pull()
+unique_sampleASVs_taxfilt <- setdiff(df_taxfilt %>% filter(SampleType == "sample") %>% select(ASVid),
+                                     df_taxfilt %>% filter(SampleType == "control") %>% select(ASVid)) %>% pull()
+
+ggplot(sumry_taxfilt, aes(x=sumReads, y=nSamples)) +
+  geom_point(data = sumry_taxfilt %>% filter(ASVid %in% commonASVs_taxfilt), color="black") +
+  geom_point(data = sumry_taxfilt %>% filter(ASVid %in% unique_controlASVs_taxfilt), color="red", size=4) +
+  geom_point(data = sumry_taxfilt %>% filter(ASVid %in% unique_sampleASVs_taxfilt), color="blue") +
+  theme_devon()
 
 
-#1b) retain only ASVs with at least Order-level taxonomy information
-## also dropping the two ASVs assigned to a mule deer ... weird.
-df_taxfiltd <- df %>% 
-  filter(kingdom_name != "Unassigned") %>%
-  filter(!is.na(phylum_name)) %>%
-  filter(!is.na(class_name)) %>%
-  filter(!is.na(order_name)) %>%
-  filter(phylum_name != "Chordata")
-
-dropASVs <- df %>% 
-  filter(kingdom_name == "Unassigned" | phylum_name == "Chordata" | is.na(order_name)) %>%
-  select(ASVid) %>% distinct(.)   ## 2213 ASVs 
+## what's up with those common ASVs in both true samples and contaminants?
+common_ASV_df <- df %>% filter(ASVid %in% commonASVs_taxfilt)
+sumry_common_contamASVs <- common_ASV_df %>% group_by(ASVid) %>% summarise(nReads=sum(Reads), nSamples=n_distinct(SampleID))
+## how many total sequences are dropped if we remove those 69 ASVs?
+df %>% summarise(nReads=sum(Reads))
+common_ASV_df %>% summarise(nReads=sum(Reads))
+4253793/9411633 ## these 68 'contaminant' ASVs represent nearly half (45.2%) of all ASVs !
 
 
-#1c) also drop any read with less than N sequences (arbitrary)
+##### filtering options
+## filter by 1) removing ASVs that are identified in more NTCs than true samples (by occurrence, not percentage) .. and/OR ..
+##           2) remove ASVs that contain more total reads for that ASV among all NTCs than among all true samples
 
-df_taxfiltd_min10 <- df_taxfiltd %>% filter(Reads >= 10)
-df_taxfiltd_min50 <- df_taxfiltd %>% filter(Reads >= 50)
-df_taxfiltd_min100 <- df_taxfiltd %>% filter(Reads >= 100)
+contam_df <- df %>% filter(SampleType == "control")
 
-df_taxfiltd_min10 %>% select(SampleID) %>% n_distinct(.)  ## 296 samples
-df_taxfiltd_min50 %>% select(SampleID) %>% n_distinct(.)  ## 296 samples
-df_taxfiltd_min100 %>% select(SampleID) %>% n_distinct(.) ## 296 samples ... so a min-read filtering doesn't drop any particular sample
+noncontam_sumry <- df %>% 
+  filter(SampleType == "sample") %>% 
+  group_by(ASVid) %>% 
+  summarise(NC_nReads=sum(Reads), NC_nSamples=n_distinct(SampleID))
 
-#2) same ideas as #1, but we group by NTC or not too:
-sumry2 <- df %>% group_by(ASVid, SampleType) %>% summarise(ASV_readCounts=sum(Reads), ASV_detections=n())
-#2b) same for tax-filtd df:
-sumry2b <- df_taxfiltd %>% group_by(ASVid, SampleType) %>% summarise(ASV_readCounts=sum(Reads), ASV_detections=n())
-#2c) same for abund-filt df:
-sumry2ci <- df_taxfiltd_min10 %>% group_by(ASVid, SampleType) %>% summarise(ASV_readCounts=sum(Reads), ASV_detections=n())
-sumry2cii <- df_taxfiltd_min50 %>% group_by(ASVid, SampleType) %>% summarise(ASV_readCounts=sum(Reads), ASV_detections=n())
-sumry2ciii <- df_taxfiltd_min100 %>% group_by(ASVid, SampleType) %>% summarise(ASV_readCounts=sum(Reads), ASV_detections=n())
+contam_sumry <- contam_df %>% group_by(ASVid) %>% 
+  summarise(C_nReads=sum(Reads), C_nSamples=n_distinct(SampleID))
 
-bigfilt_df <- df %>% filter(ASVid %in% sumry2ciii$ASVid)
+light_filt_df <- merge(contam_sumry, noncontam_sumry)
+light_filt_df$more_ASVs <- light_filt_df$C_nSamples > light_filt_df$NC_nSamples  ## ZERO examples
+light_filt_df$more_Reads <- light_filt_df$C_nReads > light_filt_df$NC_nReads  ## Just 9 examples here
 
-#3) How many ASVs are private to control/sample subsets?
-controlASVs <- sumry2 %>% filter(SampleType=="control") %>% distinct(ASVid)
-sampleASVs <- sumry2 %>% filter(SampleType=="sample") %>% distinct(ASVid)
-common <- intersect(controlASVs$ASVid, sampleASVs$ASVid)  ## 131 in common (so 20 of these ASVs are unique to controls)
-#3b) Same for the tax-filtered df?
-b.controlASVs <- sumry2b %>% filter(SampleType=="control") %>% distinct(ASVid)
-b.sampleASVs <- sumry2b %>% filter(SampleType=="sample") %>% distinct(ASVid)
-b.common <- intersect(b.controlASVs$ASVid, b.sampleASVs$ASVid)  ## 96 in common still! so most of what they're sharing are in fact highly likely to be arthropod samples, not weird contaminants
+  ## these filtering strategies suggest that despite some ASVs occurring in many samples, the ASVs that are shared between ..
+  ## .. contaminant and true samples rarely produce what you'd expect as indicative of widespread contamination: all NTCs having the most widely observed ASVs
+  ## Instead, we find that there are NEVER more than 4 NTCs with these common ASVs (just 4 of 79 ASVs); five examples where there are 3 NTCs with a common ASV; ..
+  ## .. and the remaining 70 ASVs are only ever detected in 2 or 1 NTC samples.
 
+## we can further refind this by highlight just the ASVs which would be used in downstream analyses for diet work: ..
+## .. those ASVs that contain Arthropod phylum-classification, and at least Family-rank information:
 
-#4) Create data.frame of ONLY common ASVs...
-df_common <- df %>% filter(ASVid %in% common)  
-  ## makes up nearly 1/3 of all the data!
-  ## can't just drop these ASVs completely...
+taxfilt_contamASVs <- intersect(light_filt_df$ASVid, df_taxfilt$ASVid)
+contam_taxfilt_df <- light_filt_df %>% filter(ASVid %in% taxfilt_contamASVs)
 
-df_common %>% group_by(SampleType) %>% summarise(ReadSums=sum(Reads), nSamples=n())
+  ## this further reduces our analyses to just 68 ASVs
 
-### Visualizing data
-# 1) distribution of reads per ASV by Samples with ASV
-ggplot(sumry1, aes(x=ASV_readCounts, y=ASV_detections)) + 
-  geom_point()
+## We'll create two lists of ASVs to filter our original dataset:
+## 1) ASVs that meet our taxonomy completeness criteria (Arthropod-associated phylum_name with at least Family info) and include all ASVs whether or not they are present in NTC samples
+## 2) As with #1 above, but removing the 69 ASVs present in NTC samples 
 
-# 2) distribution of reads per ASV by samples with ASV; highlighting NTC samples as separate from samples  
-ggplot() + 
-  geom_point(data=sumry2 %>% filter(SampleType=="sample"), 
-             aes(x=ASV_readCounts, y=ASV_detections), alpha=0.4) +
-  geom_point(data=sumry2 %>% filter(SampleType=="control"), 
-             aes(x=ASV_readCounts, y=ASV_detections, color=SampleType), color='red', alpha=0.8) +
-  scale_x_continuous(labels = comma)
+taxfilt_ASVs <- df_taxfilt %>% distinct(ASVid)
+colnames(taxfilt_ASVs)[1] <- "#OTUID"
+write.table(taxfilt_ASVs, "~/Repos/mysosoup/data/taxonomy/taxfiltd_ASVs_NTCincluded.txt", row.names = FALSE, quote = FALSE, col.names = TRUE)
 
-# 3) same plot, but highlighting the ASVs shared between sample and controls (black are only in guano samples)
-ggplot() + 
-  geom_point(data=sumry2 %>% filter(!ASVid %in% b.common), 
-             aes(x=ASV_readCounts, y=ASV_detections), alpha=0.4) +
-  geom_point(data=sumry2 %>% filter(ASVid %in% b.common), 
-             aes(x=ASV_readCounts, y=ASV_detections, color=SampleType), color='orange', alpha=0.8) +
-  scale_x_continuous(labels=comma)
+taxfilt_2_ASVs <- df_taxfilt %>% filter(!ASVid %in% contam_df$ASVid) %>% distinct(ASVid)
+colnames(taxfilt_2_ASVs)[1] <- "#OTUID"
+write.table(taxfilt_2_ASVs, "~/Repos/mysosoup/data/taxonomy/taxfiltd_ASVs_NTCdrops.txt", row.names = FALSE, quote = FALSE, col.names = TRUE)
 
-# 4) Histogram of read depth frequency among control and sample subsets 
-ggplot(df_common, aes(x=Reads, fill=SampleType)) + 
-  geom_histogram(position="dodge") +
-  xlim(0,5000) ## change value as needed
+## These two text files are used to filter by retaining only the ASVs listed in those files. 
+## The resulting `.qza` artifacts are then rarefied and then used for diversity analyses.
 
-
-
-##### plotting frequency of arthropod vs. chordate vs. unassigned; compare with whether or not they were flagged as reference chimeras
-
-
-###
-
-
-
-library(vegan)
-
-## beta diversity function for RAREFIED data from FOX site for select MONTHS
-rrarewithdrop <- function(x, sample) {
-  rrarefy(x[rowSums(x) >= sample, , drop = FALSE], sample)
-}
-
-betadist.function <- function(betatest, binaryval) {
-  tmp.meta <- bigfilt_df %>% distinct(SampleID)
-  tmp.mat <- dcast(bigfilt_df, SampleID ~ ASVid, value.var = "Reads", fill=0)
-  row.names(tmp.mat) <- tmp.mat$SampleID
-  tmp.mat$SampleID <- NULL
-  tmp.mat2 <- data.frame(rrarewithdrop(tmp.mat, 9313))  ## this drops out two guano samples
-  rm(tmp.mat)
-  namefilter <- row.names(tmp.mat2)
-  i <- as.matrix(colSums(tmp.mat2, na.rm=T) != 0)
-  tmp.mat3 <- tmp.mat2[, i]
-  rm(tmp.mat2)
-  tmp.meta <- tmp.meta %>% filter(SampleID %in% namefilter)  ## redo meta data to drop any samples that were discarded by rarefying
-  tmp.betadiv <- vegdist(tmp.mat3, betatest, binary = binaryval)
-}
-
-
-dist <- betadist.function("bray", FALSE)
-nmds_list <- metaMDS(dist, distance = "bray", trymax = 40, k = 4, autotransform = FALSE)
-nmds_df <- as.data.frame(nmds_list$points)
-rm(nmds_list)
-nmds_df$SampleID <- row.names(nmds_df)
-
-meta <- df %>% select(SampleID, CollectionMonth, Site, SampleType, BatchType, Roost) %>% distinct(.)
-
-nmds_df <- merge(nmds_df, meta)
-
-
-ggplot(nmds_df, aes(x=MDS1, y=MDS2, color=CollectionMonth, shape=Site)) + 
-  geom_point() +
-  facet_wrap(~SampleType)
-
-
-nmds_df$CollectionMonth <- as.factor(nmds_df$CollectionMonth)
-nmds_df$CollectionMonth <- as.factor(nmds_df$CollectionMonth)
+## double check to ensure there are NTCs (or not) in these two filtered ASV sets:
+tmp_wNTCasv_df <- df %>% filter(ASVid %in% taxfilt_ASVs$ASVid)
+tmp_noNTCasv_df <- df %>% filter(ASVid %in% taxfilt_2_ASVs$ASVid)

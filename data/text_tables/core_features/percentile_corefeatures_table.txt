@@ -1,0 +1,6 @@
+percentile Araneae Coleoptera Diptera Ephemeroptera Hemiptera Lepidoptera Psocodea Trichoptera
+p05 6 2 45 1 2 6 1 1
+p10 6 2 45 1 2 6 1 1
+p20 2 NA 18 NA NA 2 1 1
+p30 2 NA 9 NA NA NA NA NA
+p50 1 NA 3 NA NA NA NA NA

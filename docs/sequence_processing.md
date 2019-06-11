@@ -12,155 +12,95 @@ The pooled library of COI amplicons were sequenced on an Illumina MiSeq machine 
 # Installation specifications
 We used a series of functions in QIIME2 (version 2019.1) to process the sequence data; a distinct Conda environment was created and followed specifications described in [QIIME2 documentation](https://docs.qiime2.org/2019.1/install/).
 
+# Primer and barcode trimming with Cutadapt
+While a very similar set of commands to remove non-COI sequence data (ie. barcodes, primers, etc.) exist within a QIIME environment there is a bug that exists in rare instances where a read is trimmed and results in a length of 0 - in this instance the program fails. The standalone Cutadapt version allows for an additional minimum length parameter which ensures that any reads with 0 (or whatever minimum length is used) are discarded in the filtered data - we set a minimum of 100 bases as the required length to discard any short fragments (the `-m 100` flag). In addition, we're employing the linked-read approach [see relevant Cutadapt section here](https://cutadapt.readthedocs.io/en/stable/guide.html#linked-adapters) that requires that the only reads which we retain are those in which the primer pairs are recognized in the read (for R1 this is the forward primer and the reverse complement of the reverse primer; for R2, it's the reverse primer and the reverse complement of the forward primer) - this is the `--trimmed-only` flag passed in the argument below. This requirement reduces the total number of retained reads, but it increases the likelihood that the read data we ultimately join (and retain for downstream analyses) are derived from instances in which both primers annealed at the expected areas of the COI fragment being amplified. In our experience, the linked read approach can reduce the number of ASVs by over 20% (compared to strictly passing the primers in their respective expected postions); in addition, the `--trimmed-only` flag retaining _only_ linked reads can further reduce spurious ASVs.
+
+```
+RAWDIR=/mnt/lustre/macmaneslab/devon/guano/NAU/Mangan/rawfq
+
+for SAMPLE in $(ls $RAWDIR | cut -f 1 -d '_' | sort -u); do
+  cutadapt --cores=24 \
+  -a GGTCAACAAATCATAAAGATATTGG...GGATTTGGAAATTGATTAGTWCC \
+  -A GGWACTAATCAATTTCCAAATCC...CCAATATCTTTATGATTTGTTGACC \
+  -m 100 --trimmed-only \
+  -o "$SAMPLE"_1_trimd.fastq.gz -p "$SAMPLE"_2_trimd.fastq.gz \
+  "$RAWDIR"/"$SAMPLE"_L001_R1_001.fastq.gz "$RAWDIR"/"$SAMPLE"_L001_R2_001.fastq.gz;
+done
+```
+
+> `GGTCAACAAATCATAAAGATATTGG` represents the expected 5'-end primer for R1 data (forward primer)  
+> `GGATTTGGAAATTGATTAGTWCC` represents the expected 3'-end primer for R1 data (reverse complement reverse primer)  
+> `GGWACTAATCAATTTCCAAATCC` represents the expected 5'-end primer for R2 data (reverse primer)  
+> `CCAATATCTTTATGATTTGTTGACC` represents the expected 3'-end primer for R2 data (reverse complement forward primer)
+
+Note that the resulting trimmed reads remain unpaired. We next import these unpaired data into QIIME2 for DADA2 denoising and paired-end joining. Prior to denoising these data are evaluated for per-base quality to determine what fragment lengths are retained/trimmed by DADA2.
+
 # Data import
-Raw fastq files were imported into QIIME by creating a file that QIIME2 reads to import all individual files into a single zipped `.qza` archive file in QIIME format. We don't have a typical input file type, so we'll create a manifest file and import as paired-end data. See [their import tutorial](https://docs.qiime2.org/2018.11/tutorials/importing/#sequence-data-with-sequence-quality-information-i-e-fastq) for full details. Data was imported as follows:
+Trimmed fastq files were imported into QIIME by creating a (manifest) file that QIIME2 reads to import all individual files into a single zipped `.qza` archive file in QIIME format. We don't have a typical input file type, so we'll create a manifest file and import as paired-end data. See [their import tutorial](https://docs.qiime2.org/2018.11/tutorials/importing/#sequence-data-with-sequence-quality-information-i-e-fastq) for full details. Data was imported as follows:
 
 ```
 qiime tools import \
   --type 'SampleData[PairedEndSequencesWithQuality]' \
-  --input-path Mangan.manifest.file \
-  --output-path Mangan.demux.qza \
+  --input-path ../Mangan.manifest_linked_required.file \
+  --output-path Mangan.trimd_linked_required.qza \
   --input-format PairedEndFastqManifestPhred33
 ```
 
-# Primer and barcode trimming with Cutadapt
-We'll be using the QIIME cutadapt plugin to remove the primer and barcode sequences from the raw reads. See their [documentation](https://docs.qiime2.org/2019.1/plugins/available/cutadapt/?highlight=cutadapt) - specific to our data structure, we're using the [trim-paired](https://docs.qiime2.org/2019.1/plugins/available/cutadapt/trim-paired/) option because our data is already demultiplexed.
-
+> an example of the data structure of the `Mangan.manifest_linked_required.file` is as follows:
 ```
-qiime cutadapt trim-paired \
-  --i-demultiplexed-sequences Mangan.demux.qza \
-  --p-cores 24 \
-  --p-front-f GGTCAACAAATCATAAAGATATTGG \
-  --p-adapter-f GGATTTGGAAATTGATTAGTWCC \
-  --p-front-r GGWACTAATCAATTTCCAAATCC \
-  --p-adapter-r CCAATATCTTTATGATTTGTTGACC \
-  --o-trimmed-sequences Mangan.trimd.qza
+sample-id,absolute-filepath,direction
+6212017EGA1,/mnt/lustre/macmaneslab/devon/guano/NAU/Mangan/trimd_linkReqd_fq/6212017EGA1_1_trimd.fastq.gz,forward
+6212017EGA1,/mnt/lustre/macmaneslab/devon/guano/NAU/Mangan/trimd_linkReqd_fq/6212017EGA1_2_trimd.fastq.gz,reverse
+6212017EGA2,/mnt/lustre/macmaneslab/devon/guano/NAU/Mangan/trimd_linkReqd_fq/6212017EGA2_1_trimd.fastq.gz,forward
+6212017EGA2,/mnt/lustre/macmaneslab/devon/guano/NAU/Mangan/trimd_linkReqd_fq/6212017EGA2_2_trimd.fastq.gz,reverse
 ```
 
-We can create a per-sample summary of the resulting read depths that were trimmed with cutadapt. This visualization also includes an interactive plot that illustrates the per-sample base quality scores that are used to inform the DADA2 filtering parameters; note we're subsampling from a maximum of 100,000 reads per sample to generate base quality information.
+We can create a per-sample summary of the resulting read depths that were trimmed with cutadapt. This visualization also includes an interactive plot that illustrates the per-sample base quality scores that are used to inform the DADA2 filtering parameters; note we're subsampling from a maximum of 10,000 reads per sample to generate base quality information.
 
 ```
 qiime demux summarize \
-  --i-data Mangan.trimd.qza \
-  --p-n 100000 \
-  --o-visualization Mangan.trimd.qzv
+  --i-data Mangan.trimd_linked_required.qza \
+  --p-n 10000 \
+  --o-visualization Mangan.required_trimd_perBase_viz.qzv
 ```  
 
-The resulting visualization can be inspected to demonstrate that our forward and reverse sequencing quality appear as expected: reads are generally of high quality through the first 180 bp (our COI amplicon itself), but then start to deteriorate in quality thereafter. Forward reads drop significantly around 230 bp, while reverse reads drop off earlier around 200 bp. The DADA2 [tutorial](https://benjjneb.github.io/dada2/tutorial.html) suggests we trim the last 10 bp of the reads where quality deteriorates because it helps improve the algorithms sensitivity to rare sequence variants. We'll trim at the full length of the amplicon, a few base pairs where the quality scores _start_ to drop: 175 bp. There is more than sufficient overlap to join paired ends following DADA2 denoising of single end data.
-
+The resulting visualization can be inspected to demonstrate that our forward and reverse sequencing quality appear as expected: reads are generally of high quality through the first 181 bp (our target COI region of the amplicon), but then immediately deteriorate in quality thereafter. In fact, most reads do not contain more than the expected 181 bp (91% of reads are of the expected length); the remaining reads that exceed this length are of dramatically lower quality. Because our amplicon is expected to be 181 bp in length, reads exceeding this length likely represent samples that lacked primers and were left untrimmed. The DADA2 [tutorial](https://benjjneb.github.io/dada2/tutorial.html) suggests we trim the last 10 bp of the reads where quality deteriorates because it helps improve the algorithms sensitivity to rare sequence variants. We'll trim at the full length of the amplicon, a few base pairs where the quality scores _start_ to drop: 175 bp. There is more than sufficient overlap to join paired ends following DADA2 denoising of single end data. Furthermore, trimming around the 180 bp mark should sufficiently discard those instances in which a read lacked a primer and was untrimmed.
 
 ## Denosing with DADA2
 Previous testing indicated that DADA2 effectively reduces the number of unique sequence variants (ASVs) that are produced by the inherent errors in sequence base assignment generated during an Illumina run; these rare errors ultimately inflate the number of distinct amplicons in the dataset. DADA2 discards singleton sequences by default, but retains doubletons, etc.
 
 ```
 qiime dada2 denoise-paired \
-  --i-demultiplexed-seqs Mangan.trimd.qza \
+  --i-demultiplexed-seqs Mangan.trimd_linked_required.qza \
   --p-trunc-len-f 175 \
   --p-trunc-len-r 175 \
   --p-n-threads 24 \
-  --o-table Mangan.raw.table.qza \
-  --o-representative-sequences Mangan.raw.repSeqs.qza \
-  --o-denoising-stats Mangan.DADA2.denoisingStats.qza
+  --o-table Mangan.raw_linked_required.table.qza \
+  --o-representative-sequences Mangan.raw_linked_required.repSeqs.qza \
+  --o-denoising-stats Mangan.DADA2.denoisingStats_linked_required.qza
 
 qiime metadata tabulate \
-  --m-input-file Mangan.DADA2.denoisingStats.qza \
-  --o-visualization Mangan.DADA2.denoisingStats.qzv  
+  --m-input-file Mangan.DADA2.denoisingStats_linked_required.qza \
+  --o-visualization Mangan.DADA2.denoisingStats_linked_required.qzv
 ```
 
-The resulting data following DADA2 denoising includes a set of representative sequences (`Mangan.raw.repSeqs.qza`), a matrix of the abundances of reads per ASV/Sample (`Mangan.raw.table.qza`), and summary files that illustrate the number of chimeric sequences that were discarded (`Mangan.DADA2.denoisingStats.qz*`). Data are further filtered to (1) remove host sequences, and (2) remove any remaining chimeras through reference-based detection.
+The resulting data following DADA2 denoising includes a set of representative sequences (`Mangan.raw_linked_required.repSeqs.qza`), a matrix of the abundances of reads per ASV/Sample (`Mangan.raw_linked_required.table.qza`), and summary files that illustrate the number of chimeric sequences that were discarded (`Mangan*.qz*`). Notably, four samples no longer contain any reads - all four were extraction blanks (negative controls). While 11 blanks were created, the remaining 7 samples contain substantial number of reads and likely reflect instances in which a piece of guano was accidentally transferred into a well. These will be further investigated for potential downstream effects on possible contamination.
 
-# Filtering bat reads
-We attempted to separate ASVs that contain host (bat) DNA from ASVs likely derived from diet by constructing a QIIME database containing a series of possible host reference sequences - see `host_database.md` for full details of how the samples were selected. These references included the focal species of _Myotis sodalis_ as well as a range of bats found across the Midwest and Northeast. In addition, we included other bat and bird species that had guano samples processed in our lab in previous projects; inclusion of these host sequences was done as a measure of contaminant check and removal.
-Representative ASVs from the `Mangan.raw.repSeqs.qza` file were queried for alignment to host reference sequences:
-> `$REF` refers to the file path to the relevant host files available at the _mysosoup_ GitHub repo
-
+We remove these four samples from the `.qza` artifact given that they have no data:
 ```
-REF=/mnt/lustre/macmaneslab/devon/guano/BOLDdb/host_dbs
-
-qiime quality-control exclude-seqs \
-  --i-query-sequences Mangan.raw.repSeqs.qza \
-  --i-reference-sequences $REF/host_seqs.qza \
-  --p-perc-identity 0.9 \
-  --o-sequence-hits Mangan_raw.hits.qza \
-  --o-sequence-misses Mangan_raw.misses.qza \
-  --p-method vsearch
+qiime feature-table filter-samples \
+--i-table Mangan.raw_linked_required.table.qza \
+--p-min-features 1 \
+--o-filtered-table Mangan.samp-filt.table.qza
 ```
 
-These data are then exported and assigned putative taxonomies with NCBI BLAST. We are interested in understanding the query coverage, percent identity, and taxonomic information for each potential host sequence.
-
-```
-qiime tools export \
-  --input-path Mangan_raw.hits.qza \
-  --output-path mangan_raw_hits
-
-mv dna-sequences.fasta Mangan_hosthits.fasta  
-```
-
-There are 39 potential sequences identified in the resulting `Mangan_hosthits.fasta` file. These sequences were queried in NCBI BLAST; we retained the top 10 hits for each input in the `mangan_hittable.csv` file. These taxa were identified in the `host_blastID.R` script: three bat species were listed among all pontential ASVs: _Myotis sodalis_, _Myotis lucifugus_, and _Nycticeius humeralis_ - the ASVs associated with these bats are listed in `host_hashIDs.txt`. Four other species were retrieved among the results: three of these were very low alignments (< 90%) and the other was a true bug, _Hyaliodes vitripennis_. This likely speaks to the difficulty in using short COI markers, as distant taxa can randomly share common stretech of COI.
-
-The ASVs identified to the three Myotis species were retained as host sequences in a separate file and removed from the larger dataset of remaining ASVs. The analyses split in scope: the host ASVs are used to identify host species with sample, while the non-host ASV data are next subject to a reference-based chimera filtering and further filtering.
-
-To create the host-only dataset:
-```
-qiime feature-table filter-features \
---i-table Mangan.raw.table.qza \
---m-metadata-file host_hashIDs.txt \
---o-filtered-table Mangan_BatsOnly_ASVtable.qza
-```
-
-And the host-only sequences (used for classification: see `host_classification.md`):
+We also remove any ASVs that were associated _only_ with those four samples:
 ```
 qiime feature-table filter-seqs \
---i-data Mangan.raw.repSeqs.qza \
---i-table Mangan_BatsOnly_ASVtable.qza \
---o-filtered-data Mangan_BatsOnly.repSeqs.qza
+--i-data Mangan.raw_linked_required.repSeqs.qza \
+--i-table Mangan.samp-filt.table.qza \
+--o-filtered-data Mangan.samp-filt.repSeqs.qza
 ```
+  > It turns out this didn't remove any further samples
 
-To create the host-removed dataset:
-```
-qiime feature-table filter-features \
---i-table Mangan.raw.table.qza \
---m-metadata-file host_hashIDs.txt \
---o-filtered-table Mangan_noBats_ASVtable.qza \
---p-exclude-ids
-```
-
-We also create a host-removed set of sequences:
-```
-qiime feature-table filter-seqs \
---i-data Mangan.raw.repSeqs.qza \
---i-table Mangan_noBats_ASVtable.qza \
---o-filtered-data Mangan_noBats.repSeqs.qza
-```
-
-These data are separately processed:
-1. The `Mangan_noBats_ASVtable.qza` data are subject to a reference-based chimera detection (described below) and classification (see `diet_classification.md`). The outcome of these processes led to a final data filtering step in the `sequence_analysis.R` script; the goal is to create a dataset that represents ASVs most likely to represent bat diet signal (and thus eliminating ASVs from potential contaminant sources, etc.).
-2. The `Mangan_BatsOnly_ASVtable.qza` data is used to identify the host identities of the samples; data are classified (see `host_classification.md`) and passed into the `host_see-filtering.R` script for analysis.
-
-# Reference-based chimera filtering
-While DADA2 employs a de novo filtering approach, we used an additional a reference-based filtering approach to flag other chimeras that weren't flagged by DADA2 when our reads were being denoised. This process uses VSEARCH in conjunction with our curated database consisting of arthropod and chordate BOLD records combined with the host sequences. Details on database curation is outlined in the `database_construction.md` document, while the `host_database.md` document details how host references were collected.
-> `$REF` refers to the file path to the arthropod+chordate+host reference sequences
-
-REF=/mnt/lustre/macmaneslab/devon/guano/BOLDdb
-
-```
-qiime vsearch uchime-ref \
---p-threads 24 --o-stats \
---i-sequences Mangan_noBats.repSeqs.qza \
---i-table Mangan_noBats_ASVtable.qza \
---i-reference-sequences "$REF" \
---output-dir ref-chimera_data
-```
-
-The resulting suspected chimera output data were exported as text files for analysis in the `sequence_analysis.R` script:
-```
-cd ./ref-chimera_data/
-qiime tools export --input-path stats.qza --output-path output
-mv ./output/stats.tsv ..
-qiime tools export --input-path chimeras.qza --output-path output
-mv ./output/dna-sequences.fasta .
-mv dna-sequences.fasta nonBat_chimeraSeqs.fasta
-qiime tools export --input-path nonchimeras.qza --output-path output
-mv ./output/dna-sequences.fasta .
-mv dna-sequences.fasta nonBat_NONchimeraSeqs.fasta
-```
+These data represent the input into the next phase of data processing: identifying (and separating) host sequences from non-host samples using a series of databases and classification approaches. See the `classify_sequences.md` document for the next step of the pipeline; as noted in that documentation, classification required the creation of custom databases - these are further explained in separate documents (see `host_database.md` and `database_construction.md`).

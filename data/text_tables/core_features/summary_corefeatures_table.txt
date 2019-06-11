@@ -1,0 +1,65 @@
+ASVid phylum_name class_name order_name family_name genus_name species_name nSamples nReads p5samp p10samp p20samp p30samp p40samp p50samp p60samp p70samp p80samp
+011ab6fb9eeaf3923e29b2419f37925b Arthropoda Insecta Diptera Limoniidae Pseudolimnophila Pseudolimnophila luteipennis 38 19222 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+0800bfd0a4fdce8c3928b79bc5cf1698 Arthropoda Insecta Diptera Limoniidae Metalimnobia Metalimnobia triocellata 67 93326 TRUE TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE
+106866132fd52b9d5c96c38bde87c51f Arthropoda Insecta Diptera Culicidae Aedes Aedes vexans 142 131287 TRUE TRUE TRUE TRUE TRUE FALSE FALSE FALSE FALSE
+1351291e85fddedd6f274098d8131237 Arthropoda Insecta Diptera Chironomidae NA NA 42 3952 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+154245fda1eade3340224209c85cb24c Arthropoda Insecta Diptera Culicidae NA NA 29 3151 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+183cc807f31d7bd4fda10446cbbae15a Arthropoda Insecta Lepidoptera Cosmopterigidae Perimede Perimede circitor 31 26718 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+190ab3993d54d0eb9f0262c75311072e Arthropoda Insecta Diptera Tipulidae Nephrotoma Nephrotoma okefenoke 39 14655 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+19c7fb4fd8d5fd98923f0011765d8f5e Arthropoda Insecta Diptera Limoniidae NA NA 38 12857 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+1c6dbfff0c98a1080a9ef8847d7af550 Arthropoda Insecta Diptera Tipulidae Nephrotoma Nephrotoma ferruginea 43 25535 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+2066a2ef9e7c8048b1af441a0d9614b1 Arthropoda Insecta Diptera Culicidae Uranotaenia Uranotaenia sapphirina 65 16997 TRUE TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE
+22d6941e40741a993930e52eda93b955 Arthropoda Insecta Ephemeroptera Heptageniidae Stenacron Stenacron interpunctatum 31 22929 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+26a257f94e8e6109221965efdbf26392 Arthropoda Insecta Diptera Limoniidae NA NA 33 31431 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+2b424f267586a3e6fb471ae154a1e97c Arthropoda Insecta Hemiptera Cicadellidae Gyponana NA 29 121403 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+2c11ea64de16805e25ed359888baabf6 Arthropoda Insecta Psocodea Psocidae Metylophorus Metylophorus novaescotiae 69 97743 TRUE TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE
+3c5423c213cf0027257b844a9c89b19d Arthropoda Insecta Diptera Limoniidae Helius Helius flavipes 59 67341 TRUE TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE
+3cfeeb16701da023d483c4bca6e37a3e Arthropoda Insecta Diptera Limoniidae Rhipidia NA 168 313613 TRUE TRUE TRUE TRUE TRUE TRUE FALSE FALSE FALSE
+406451f6312e57f8c264a94242b049e6 Arthropoda Insecta Diptera Chironomidae Chironomus NA 72 15673 TRUE TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE
+43dcc5a07f9d10fdd355a358de425469 Arthropoda Insecta Diptera Culicidae Culex NA 36 21627 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+4486a2c60a1eeb1e9e651102734f0aa4 Arthropoda Arachnida Araneae Araneidae Eustala NA 90 112460 TRUE TRUE TRUE TRUE FALSE FALSE FALSE FALSE FALSE
+4622cb135cf309852ac4289aacbb7f5b Arthropoda Insecta Diptera Limoniidae Erioptera Erioptera parva 125 302123 TRUE TRUE TRUE TRUE TRUE FALSE FALSE FALSE FALSE
+46f68fb7accd2cf2419ca3cd22da3646 Arthropoda Insecta Lepidoptera Tineidae Acrolophus Acrolophus mortipennella 72 138234 TRUE TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE
+4d6844e2e1aaa41f64bbcee1d9dea924 Arthropoda Insecta Diptera Culicidae Coquillettidia Coquillettidia perturbans 56 20840 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+502e4582f52a371da24811f3668cd636 Arthropoda Insecta Diptera Chironomidae Glyptotendipes NA 57 11126 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+53afa5b48c087c19568802a7136d95c6 Arthropoda Insecta Diptera Limoniidae Rhipidia NA 58 70873 TRUE TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE
+54b1db250664d848cd63a3a640536ad1 Arthropoda Insecta Diptera Chironomidae NA NA 37 4015 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+59a5c4341e412755fffe9915f73073ed Arthropoda Insecta Diptera Psychodidae NA NA 35 70407 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+5b897311f2eb82ef521745e27588f457 Arthropoda Insecta Diptera Culicidae Culex Culex erraticus 44 25488 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+5c7b4ae8c0a5fba99d78884078bc2714 Arthropoda Insecta Diptera Culicidae Culex Culex erraticus 36 22616 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+5cac244b7bc2b762706cf1e5898f59a9 Arthropoda Insecta Diptera Chironomidae Glyptotendipes Glyptotendipes meridionalis 56 40523 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+6087454a8ad23dba11c15b3b6a9d38b1 Arthropoda Insecta Diptera Limoniidae NA NA 30 7452 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+6280a664e750c88afb6069f05b2a29a7 Arthropoda Insecta Trichoptera Hydropsychidae Potamyia Potamyia flava 61 85965 TRUE TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE
+62f3f2d32c53e9c0fa0183f78539af1d Arthropoda Insecta Lepidoptera Oecophoridae Inga Inga sparsiciliella 35 12610 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+65d5fa6d7e70a2048699fd898caf1fca Arthropoda Arachnida Araneae Araneidae Eustala NA 209 633503 TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE FALSE
+67571657f9bc42a71d6c402661be1d97 Arthropoda Insecta Diptera Tipulidae Nephrotoma Nephrotoma ferruginea 70 93268 TRUE TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE
+6868fa68c66d6b641ff8d94e83b79372 Arthropoda Insecta Diptera Culicidae Culex Culex erraticus 62 34956 TRUE TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE
+68b467c1b5a07faca9412c38f779f507 Arthropoda Insecta Diptera Limoniidae Rhipidia NA 34 45346 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+69a268dae0c24eb609014e75a2ba5100 Arthropoda Insecta Lepidoptera Erebidae Renia Renia adspergillus 30 8741 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+6a5c7f2f53495aec6dc9eea864305059 Arthropoda Insecta Diptera Culicidae Culex Culex erraticus 74 88702 TRUE TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE
+79f33868abee420faa529b31aefc8d10 Arthropoda Arachnida Araneae Anyphaenidae Anyphaena Anyphaena pectorosa 46 17176 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+86d824f733d61170ef80a4235cb32238 Arthropoda Insecta Lepidoptera Tortricidae Choristoneura NA 62 24734 TRUE TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE
+89e5597a9643af8cc7fe80ac924b8d76 Arthropoda Insecta Diptera Limoniidae NA NA 91 130691 TRUE TRUE TRUE TRUE FALSE FALSE FALSE FALSE FALSE
+8b79c3f59fd520aeb1e6e134baf51d23 Arthropoda Insecta Diptera Tipulidae Nephrotoma Nephrotoma eucera 29 22480 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+8d20fe3b061cf6d4675a338e37222192 Arthropoda Insecta Diptera Limoniidae NA NA 39 12912 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+9333dd0039cca5f8971e32f3d3badb2d Arthropoda Insecta Diptera Tabanidae Tabanus NA 37 61203 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+94cac66ecd39a4d5332e6a65750d9719 Arthropoda Insecta Diptera Culicidae Culex Culex territans 31 4652 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+954ba86f46a17e332fb8f7e065d5c196 Arthropoda Insecta Diptera Chironomidae Glyptotendipes NA 66 39696 TRUE TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE
+9b9c0238bfb28edb2cddb188980bfb9f Arthropoda Insecta Hemiptera Flatidae NA NA 55 27144 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+9c1759410185e12aa041d91bef2484d5 Arthropoda Insecta Diptera Tabanidae Chrysops NA 42 175914 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+a1cfe0335c0c447b1e4944f81e472a0c Arthropoda Arachnida Araneae Araneidae Eustala Eustala cepina 35 12044 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+b0c4de8c62edbae4e6ff051a2cc68aeb Arthropoda Insecta Diptera Psychodidae NA NA 41 378912 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+c0ba220cf5cce50c45e4b4eacbc601a7 Arthropoda Insecta Diptera Limoniidae NA NA 90 91795 TRUE TRUE TRUE TRUE FALSE FALSE FALSE FALSE FALSE
+c1b305dcd78bb77c09ff85032e57f691 Arthropoda Insecta Diptera Chironomidae NA NA 36 3058 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+d18b9b0d9c0501fc4310fd74dbfc5a16 Arthropoda Insecta Diptera Limoniidae Erioptera Erioptera caliptera 144 301634 TRUE TRUE TRUE TRUE TRUE TRUE FALSE FALSE FALSE
+d4aa1704bc85aca2c0e1e898e5586c0d Arthropoda Insecta Diptera Tabanidae Hybomitra NA 34 44119 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+d4ebdfff2f632287ba46e8dbea1da61c Arthropoda Arachnida Araneae Araneidae Metepeira NA 32 5825 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+e7a7d20b407bbcd2da8ad0849d305a72 Arthropoda Insecta Diptera Limoniidae Erioptera Erioptera parva 30 9570 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+ea1049842c518a849f88a3a1f3981ff5 Arthropoda Insecta Lepidoptera Tortricidae NA NA 51 22101 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+eae35ebb8aff8fa1779e68fc1cd63e6e Arthropoda Arachnida Araneae Tetragnathidae Tetragnatha Tetragnatha elongata 29 7584 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+ed1aad37a270547a75cba148aca2723b Arthropoda Insecta Diptera Chironomidae Axarus Axarus festivus 45 43157 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+ee428b867f1c0aa2d56e7c61d744bf56 Arthropoda Insecta Diptera Limoniidae Epiphragma Epiphragma solatrix 146 219976 TRUE TRUE TRUE TRUE TRUE TRUE FALSE FALSE FALSE
+f1c7baf332ebaa98a4381b5c5de74f64 Arthropoda Insecta Diptera Chironomidae Chironomus NA 92 22384 TRUE TRUE TRUE TRUE FALSE FALSE FALSE FALSE FALSE
+f3cfa7b35761ffd5bcb10fa5257278f8 Arthropoda Insecta Coleoptera Ptilodactylidae Ptilodactyla NA 29 20741 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+f5bb9eb4107ebf5ac9f7c18398485e9b Arthropoda Insecta Coleoptera Ptilodactylidae Ptilodactyla NA 45 60001 TRUE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+fa0da7ffc3332383518acba7efc25952 Arthropoda Insecta Diptera Culicidae Culex Culex erraticus 101 83346 TRUE TRUE TRUE TRUE FALSE FALSE FALSE FALSE FALSE

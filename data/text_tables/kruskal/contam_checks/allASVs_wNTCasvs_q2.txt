@@ -1,0 +1,6 @@
+
+	Kruskal-Wallis rank sum test
+
+data:  Hill_value by Grouper
+Kruskal-Wallis chi-squared = 9.9205, df = 6, p-value = 0.128
+

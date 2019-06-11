@@ -19,10 +19,11 @@ conda create -n dev_qiime1 python=2.7 qiime matplotlib=1.4.3 mock nose -c biocon
 
 
 ## Obtaining data
-We modified details illustrated in the vignette provided by the [bold R package](https://github.com/ropensci/bold) to download data from the [Barcode of Life Database](http://v4.boldsystems.org/). See the R script `bold_datapull.R` and `bold_datapull_chordate.R` for full details on how the raw BOLD data was obtained and filtered. In brief, we selected COI records from BOLD by pulling all records matching either the Arthropod or Chordate Phyla (separate to each R script); data was filtered to require the `markercode` column matching "COI-5P", and the `phylum_name` column matching either "Arthropoda" or "Chordata". The output of this script produced `.csv` files that contain sequence information, taxonomic information, and associated metadata including the `sequenceID`, `processid`, `bin_uri`, `genbank_accession`, `country`, `institution_storing` records.
+We modified details illustrated in the vignette provided by the [bold R package](https://github.com/ropensci/bold) to download data from the [Barcode of Life Database](http://v4.boldsystems.org/). See the R scripts `bold_datapull.R` (Arthropods only), `bold_datapull_chordate.R` (Chordates only) and `bold_data_pull_nonArth_nonChord.R` (other animals, plus Fungi and Protist COI sequences) for full details on how the raw BOLD data was obtained and filtered. In brief, we selected COI records from BOLD, then data was filtered to require the `markercode` column matching "COI-5P". The output of this script produced `.csv` files that contain sequence information, taxonomic information, and associated metadata including the `sequenceID`, `processid`, `bin_uri`, `genbank_accession`, `country`, `institution_storing` records.
 
 ### Arthropod records
-Because we're pulling nearly two million arthropod records from BOLD, we'll query the servers iteratively by generating a list of groups to pull from. I found that you can avoid any server complications by keeping the list size under about 2 million records, so I divied up all Arthropods into the following groups:
+Because we're pulling nearly two million arthropod records from BOLD, we'll query the servers iteratively by generating a list of groups to pull from. I found that you can avoid any server complications by keeping the list size under about 2 million records, so I divvied up all Arthropods into the following groups:
+
 1. all non-Insect arthropods
 2. Dipterans
 3. Coleopterans
@@ -88,162 +89,218 @@ The same principles were applied for Chordate BOLD records as with Arthropod rec
 
 2. Filtered for length and removed gap characters (results in **215,028** records):
 ```
-grep -v 'sequenceID,taxon,nucleotides' boldCustom.allChordate.seqNtaxa.csv | \
+zgrep -v 'sequenceID,taxon,nucleotides' boldCustom.allChordate.seqNtaxa.csv.gz | \
 awk -F ',' '{OFS="\t"};{print $1";tax="$2, $3}' | \
 sed 's/^/>/g' | tr '\t' '\n' | \
-seqkit seq - --min-len 100 --remove-gaps -w 0 > boldCustom.allChordate.filt1.fasta
+seqkit seq - --min-len 100 --remove-gaps -w 0 | gzip > boldCustom.allChordate.filt1.fasta.gz
 ```
 
 3. Identified any non-standard IUPAC DNA characters and removed such records (Inosine, "I" was discovered twice):
 ```
-seqkit fx2tab -n -i -a boldCustom.allChordate.filt1.fasta | \
+seqkit fx2tab -n -i -a boldCustom.allChordate.filt1.fasta.gz | \
 csvtk -H -t grep -f 4 -r -i -p "[^ACGT]" | \
 awk '{print $2}' | sort | uniq -c | sort -k1nr
 
-seqkit fx2tab -n -i -a boldCustom.allChordate.filt1.fasta | \
+seqkit fx2tab -n -i -a boldCustom.allChordate.filt1.fasta.gz | \
 csvtk -H -t grep -f 4 -r -i -p "I" | cut -f 1 > idsWithI.txt
 
-seqkit grep --pattern-file idsWithI.txt --invert-match boldCustom.allChordate.filt1.fasta > boldCustom.allChordate.filt2.fasta
+seqkit grep --pattern-file idsWithI.txt --invert-match boldCustom.allChordate.filt1.fasta.gz | gzip > boldCustom.allChordate.filt2.fasta.gz
 ```
-> Of the two records, one contained many duplicate records of a shared Genus while the other contained no Family-level information and would be dropped by our downsreadm filtering requirements.
+> Of the two records, one contained many duplicate records of a shared Genus while the other contained no Family-level information and would be dropped by our downstream filtering requirements.
 
 4. Removing sequences with taxonomic incompleteness (**188,779** remaining records):
 
 ```
-seqkit fx2tab -n -i -a boldCustom.allChordate.filt2.fasta | csvtk -H -t grep -f 1 -r -i -p "f__;" | cut -f 1 > idsNoFam.txt
-seqkit -w 0 grep --pattern-file idsNoFam.txt --invert-match boldCustom.allChordate.filt2.fasta > boldCustom.allChordate.filt3.fasta
+seqkit fx2tab -n -i -a boldCustom.allChordate.filt2.fasta.gz | csvtk -H -t grep -f 1 -r -i -p "f__;" | cut -f 1 > idsNoFam.txt
+seqkit -w 0 grep --pattern-file idsNoFam.txt --invert-match boldCustom.allChordate.filt2.fasta.gz | gzip > boldCustom.allChordate.filt3.fasta.gz
 ```
+
+## Non Arthropod, Non Chordate records
+The same principles were applied to BOLD records queried for non Arthropod/Chordate records, except we used a more liberal taxonomic rank requirement in filtering our data: instead of retaining only those with at least Family-rank information, we included all sequences assigned to at least Phylum. Because these data are used as filters to remove sequences we do not need to know more exclusive taxa Rank: provided they are a Mollusc, or a Fungi, for example, we know enough to  remove them from our dataset. Using a more liberal rank requirement allowed us to retain a broader set of representative sequences in these groups.
+
+### For non-Animal records
+```
+zgrep -v 'sequenceID,taxon,nucleotides' boldCustom.allnonAnml.seqNtaxa.csv.gz | \
+awk -F ',' '{OFS="\t"};{print $1";tax="$2, $3}' | \
+sed 's/^/>/g' | tr '\t' '\n' | \
+seqkit seq - --min-len 100 --remove-gaps -w 0 | gzip > boldCustom.allnonAnml.filt1.fasta.gz
+```
+> No additionanl steps were taken; no non-IUPAC characters were detected
+
+There are just **6,436** of these records.
+
+### For non-Arthropod/Chordate animal records
+
+The initial **239,678** records are reduced to **239,651** records following length filtering, and then just a single additional record was dropped after filtering for IUPAC code.
+
+```
+zgrep -v 'sequenceID,taxon,nucleotides' boldCustom.allNonArthChordAnml.seqNtaxa.csv.gz | \
+awk -F ',' '{OFS="\t"};{print $1";tax="$2, $3}' | \
+sed 's/^/>/g' | tr '\t' '\n' | \
+seqkit seq - --min-len 100 --remove-gaps -w 0 | gzip > boldCustom.allNonArthChordAnml.filt1.fasta.gz
+
+seqkit fx2tab -n -i -a boldCustom.allNonArthChordAnml.filt1.fasta.gz | \
+csvtk -H -t grep -f 4 -r -i -p "[^ACGT]" | \
+awk '{print $2}' | sort | uniq -c | sort -k1nr > nonArthChordAnml.list
+
+seqkit fx2tab -n -i -a boldCustom.allNonArthChordAnml.filt1.fasta.gz | \
+csvtk -H -t grep -f 4 -r -i -p "I" | cut -f 1 > idsWithI.txt
+
+seqkit grep --pattern-file idsWithI.txt --invert-match boldCustom.allNonArthChordAnml.filt1.fasta.gz -w 0 | gzip > boldCustom.allNonArthChordAnml.filt2.fasta.gz
+```
+
+This file was then subject to dereplication, as explained in the `Dereplicating with LCA` section below.
+
+# Non-BOLD references from Porter Lab
+Because there were so few COI records for non-Animals, we retained additional COI records from GenBank that were mined from Terri Porter's database - see [her workflow here](https://github.com/terrimporter/COI_NCBI_2018) and their CO1 mtDNA [dataset here](https://github.com/terrimporter/CO1Classifier). We used their v3.2 release [here](https://github.com/terrimporter/CO1Classifier/releases/tag/v3.2-ref). Notably, they required species-level information for their data, but the records were not dereplicated.
+
+First, we gathered their data:
+
+```
+wget https://github.com/terrimporter/CO1Classifier/releases/download/v3.2-ref/CO1v3_2_training.tar.gz
+tar xzf CO1v3_2_training.tar.gz
+```
+
+We then selected all non-Arthropod/Chordate records from the dataset to produce a fasta and taxonomy file used in subsequent dereplicating steps discussed below:
+```
+zcat mytrainseq.fasta.gz | paste - - | grep -v "Arthropoda" | grep -v "Chordata" | tr '\t' '\n' > tPorter.nonArth_nonChord.fasta
+
+cat tPorter.nonArth_nonChord.fasta | paste - - | cut -f 1 -d ' ' | sed 's/>//' > left.tmp
+cat tPorter.nonArth_nonChord.fasta | grep '^>' | cut -f 2- -d ' ' | cut -f 3- -d ';' > right.tmp
+paste left.tmp right.tmp > tPorter.nonArth_nonChord.taxa
+
+cat tPorter.nonArth_nonChord.fasta | grep -v "^>" > bottom.tmp
+paste left.tmp bottom.tmp | sed 's/^/>/' | tr '\t' '\n' > tPorter.nonArth_nonChord.nolabel.fasta
+```
+
+This resulted in **177,427** additional COI records; though notably, there are (1) redundant sequences within the file, and (2) there may be redundant records with BOLD. These redundancies are removed following dereplication next, while also accounting for potentially shared taxa when common sequences contain distinct taxonomic information.
 
 ## Dereplicating with LCA
 Databases can contain redundant sequences; dereplicating datasets is one solution to this problem, however, the default dereplication tools used in programs like VSEARCH will select the first record when multiple sequence matches exist. This can be problematic if the two records contain non-identical taxonomic information; this generally can create one of two problems. First, if the sequences contain non-identical records but equally complete levels of taxonomic information, there are two generally adopted strategies to picking a "winner" - majority, or consensus. A majority approach will take the most abundant of classifications, while a consensus approach invokes a least common ancestor (LCA) algorithm which retains only taxonomic information at the level where the matching sequences are equal. The second problem that can occur is if the two sequences contain unequal levels of information - a majority or consensus approach can again be invoked, but in this case you will always lose information with a consensus approach to whichever record contains the least amount of taxonomic information.
 We adapted the [instructions](https://github.com/mikerobeson/Misc_Code/tree/master/SILVA_to_RDP) written by Mike Robeson for formatting a SILVA database, and incorporated the [consensus approach to reclassifying taxa](https://gist.github.com/walterst/9ddb926fece4b7c0e12c) script written by William (Tony) Walters. This resolved the problem of ties whereby identical sequences with distinct taxa are resolved to a common taxonomic level. This also required installing QIIME1 - we did so by creating a new virtual environment; see [here for instructions](http://qiime.org/install/install.html) on installing QIIME1. The actions are to first generate the appropriate file structures to perform the LCA algorithm on all data, then, with those "ties" now resolved, we can dereplicate the data knowing that any potential duplicate sequence selected will have the appropriate taxonomy assigned.
 
-We dereplicated arthropod and chordate records separately so that we could keep dereplicated fasta files separate depending on future needs. The following illustrates how we approached dereplication of the arthropod records only, though the same process was carried out for the `boldCustom.allChordate.filt3.fasta` file.
-> Note that for the chordate records, **188,779** filtered sequences were reduced to **121,214** unique records.
+We created a single master file containing all COI records from all data sources by first creating the taxonomy mapping file and fasta files (required as input for the dereplication scripts) from Arthropod, Chordate, and other data sources separately (to speed up processing across multiple compute nodes). When combining all records we had to filter duplicate SequenceID records that arose from overlapping records obtained from our BOLD-derived data and the Porter Dataset that also pulled some of their records from BOLD (also detailed below) - there were just 120 instances of these among the 3.6 million records.
 
-### Dereplicating arthropod records
-First, create the taxonomy mapping file; it's a two-column record of sequenceID and taxonomy string.
+First, create the taxonomy mapping file; it's a two-column record of sequenceID and taxonomy string. The following code depicts this process for the Arthropod dataset only. The same process was repeated for Chordates, other Animal BOLD records, and the Porter dataset.
+
 ```
 ## Taxonomy mapping file:
 cat boldCustom.allArth.filt3.fasta | grep '^>' | sed 's/^>//' | cut -d ';' -f 1 > tmp.left
 cat boldCustom.allArth.filt3.fasta | grep '^>' | sed 's/^>//' | cut -d ';' -f2- | sed 's/tax=k__//' | sed 's/p__//' | sed 's/c__//' | sed 's/o__//' | sed 's/f__//' | sed 's/g__//' | sed 's/s__//' > tmp.right
-paste -d '\t' tmp.left tmp.right > tmp_nolabels.taxa
+paste -d '\t' tmp.left tmp.right | gzip > tmp_nolabels.taxa.gz
 rm tmp.left tmp.right
 ```
 
-Next, create a reduced fasta file without taxa info in the headers to save disk space when writing the subsequent outfiles:
+Next, create a reduced fasta file without taxa info in the headers to save disk space when writing the subsequent files:
 ```
 ## reduced fasta file:
 cat boldCustom.allArth.filt3.fasta | grep '^>' | cut -d ';' -f 1 > tmp.left
 cat boldCustom.allArth.filt3.fasta | grep -v '^>' > tmp.seqs
-paste -d '\t' tmp.left tmp.seqs | tr '\t' '\n' > tmp_nolabels.fasta
+paste -d '\t' tmp.left tmp.seqs | tr '\t' '\n' | gzip > tmp_nolabels.fasta.gz
 rm tmp.left tmp.seqs
 ```
 
-We'll use that `tmp_nolabels.fasta` file as input for the [pick_otus.py](http://qiime.org/scripts/pick_otus.html) script. We switch the conda environments from the ``
+Once this process was completed for all subsets of files, we combined them into a single set of taxonomy map and fasta files:
+
+```
+cat tPorter.nonArth_nonChord.taxa.gz tmp_nolabels.taxa.gz boldCustom.allChordate_taxmap.txt.gz boldCustom.allNonArthChordAnml_taxmap.txt.gz boldCustom.allnonAnml_taxmap.txt.gz > allRecords_taxmap.txt.gz
+```
+
+Combine all fasta files:
+```
+cat tPorter.nonArth_nonChord.nolabel.fasta.gz tmp_nolabels.fasta.gz boldCustom.allChordate_nolabels.fasta.gz boldCustom.allNonArthChordAnml_nolabels.fasta.gz boldCustom.allnonAnml_nolabels.fasta.gz > allRecords_nolabels.fasta.gz
+```
+
+Results in **3,664,106** records. Unfortunately, a few of these are duplicates. To create deduplicated records for the fasta and taxonomy mapping file (these need to be decompressed for the  next process to function properly):
+```
+seqkit rmdup allRecords_nolabels.fasta.gz -w 0 > allRecords_nolabels_dedup.fasta
+zcat allRecords_taxmap.txt.gz | sort -k1,1 | uniq > allRecords_taxmap_dedup.txt
+```
+
+This removed 120 duplicate records. Notably, duplicate sequences may remain - these deduplication here is with respect to the record's Sequence ID, not the sequence string itself. Before dereplicating, we need to identify duplicate sequence records and apply the LCA algorithm to reduce taxa information when applicable. This is a two step process that requires a pair of QIIME1 modified scripts; first, we use the `allRecords_nolabels_dedup.fasta` file as input for the [pick_otus.py](http://qiime.org/scripts/pick_otus.html) script. We switch the conda environments also:
 ```
 conda activate dev_qiime1
-pick_otus.py -i tmp_nolabels.fasta -o pid100_otus --similarity 1.0 --threads 24
-```
-This generates a `tmp_nolabels_otus.txt` text file within a newly created `pid100_otus` directory that is used in the next [create_consensus_taxonomy.py](https://gist.github.com/walterst/bd69a19e75748f79efeb) script to generate the mapping file that will apply the LCA algorithm.
-
-We next apply three inputs (`tmp_nolabels.taxa`, `tmp_nolabels.fasta`, and `tmp_nolabels_otus.txt`) to generate a consensus mapping file output (`outmap.txt`) for our data:
-```
-python create_consensus_taxonomy.py tmp_nolabels.taxa tmp_nolabels.fasta ./pid100_otus/tmp_nolabels_otus.txt outmap.txt
+pick_otus.py -i allRecords_nolabels_dedup.fasta -o pid100_otus --similarity 1.0 --threads 24
 ```
 
-The `outmap.txt`file is a 2-column file with the sequenceID and taxonomy string:
+This generates a `allRecords_nolabels_dedup_otus.txt` text file within a newly created `pid100_otus` directory that is used in the next [create_consensus_taxonomy.py](https://gist.github.com/walterst/bd69a19e75748f79efeb) script to generate the mapping file that will apply the LCA algorithm.
+
+We next apply three inputs (`allRecords_taxmap_dedup.txt`, `allRecords_nolabels_dedup`, and `allRecords_nolabels_dedup_otus.txt`) to generate a consensus mapping file output (`allRecords_taxmap_outmap.txt`) for our data:
+```
+python create_consensus_taxonomy.py allRecords_taxmap_dedup.txt allRecords_nolabels_dedup.fasta ./pid100_otus/allRecords_nolabels_dedup_otus.txt allRecords_outmap.txt
+```
+
+The `*outmap.txt`file is a 2-column file with the sequenceID and taxonomy string:
 ```
 5333265	Animalia;Arthropoda;Insecta;Diptera;Cecidomyiidae;;
 5333264	Animalia;Arthropoda;Insecta;Hemiptera;Aphididae;Aphis;Ambiguous_taxa
 5333267	Animalia;Arthropoda;Insecta;Thysanoptera;Thripidae;;
 ```
 
-Recall that the `tmp_nolabels.taxa` taxonomy mapping file (created from our filtered `tmp_nolabels.fasta` file) contained **3,051,814** records - this includes potentially redundant sequences. The `outmap.txt` file contains **3,051,814** records also, but we have applied the LCA algorithm to these records. All that remains to do is dereplicate these records; because it doesn't matter which record is chosen among redundant sequences now (they all have similar taxa records) we can dereplicate the `tmp_nolabels.fasta` directly:
+The `allRecords_taxmap_dedup.txt` taxonomy mapping file (created from the (Record ID deduplicated) `allRecords_nolabels_dedup.fasta` file) contains **3,663,986** records - this includes potentially redundant sequences. The `*outmap.txt` file contains a similar number of records, but we have applied the LCA algorithm to these records. All that remains to do is dereplicate these records; because it doesn't matter which record is chosen among redundant sequences now (they all have similar taxa records) we can dereplicate the `allRecords_nolabels_dedup.fasta` directly:
 ```
 vsearch \
---derep_fulllength tmp_nolabels.fasta \
---output boldCOI.derep.fasta \
+--derep_fulllength allRecords_nolabels_dedup.fasta \
+--output bigCOI.derep.fasta \
 --relabel_keep --threads 4 --fasta_width 0 --notrunclabels
 ```
 
-The dereplicated data contain **1,841,946** unique records (about 60% of the original data); the Vsearch output provided the following brief summary:
+The dereplicated data contain **2,181,331** unique records (~ 60% of the original data); the Vsearch output provided the following brief summary:
 ```
-Dereplicating file tmp_nolabels.fasta 100%
-1873901062 nt in 3051814 seqs, min 100, max 1982, avg 614
-Sorting 100%
-1841946 unique sequences, avg cluster 1.7, median 1, max 3547
-Writing output file 100%
+2295494308 nt in 3663986 seqs, min 100, max 9861, avg 627
+2181331 unique sequences, avg cluster 1.7, median 1, max 3547
 ```
-
-We repeated the above process for the chordate records. The dereplicated arthropod and chordate records were used to create a reference database that also included the host sequences. The final database consisting of arthropod, chordate, and host records includes **1,963,230** distinct sequences.
 
 ## Formatting data for QIIME import
-Two files are required for importing into QIIME2 to perform classification: (1) a taxonomy file, and (2) a fasta file. The taxonomy file uses the same 2 column format as the `outmap.txt` file, except we're only going to retain the records present in the dereplicated dataset. The `boldCOI.derep.fasta` file contains the correct format for import. We performed the same function below for the arthropod and chordate records separately to create separate taxonomy and fasta files initially, but their records were then combined to create a single database that was imported into QIIME.
+Two files are required for importing into QIIME2 to perform classification: (1) a taxonomy file, and (2) a fasta file. The taxonomy file uses the same 2 column format as the `*outmap.txt` file, except we're only going to retain the records present in the dereplicated dataset. The `bigCOI.derep.fasta` file contains the correct format for import.
 
-The following illustrates how to perform the QIIME2 reformatting for arthropod records; the same process is repeated for chordate records.
-
-First, we make a temporary list of all the sequenceID values from the headers of the `boldCOI.derep.fasta` file, then use that as a list to query the matches in the `outmap.txt` file to generate the taxonomy file we want:
+We make a temporary list of all the sequenceID values from the headers of the `bigCOI.derep.fasta` file, then use that as a list to query the matches in the `*outmap.txt` file to generate the taxonomy file we want:
 ```
-grep '^>' boldCOI.derep.fasta | sed 's/>//' > derep.seqid.tmp
-awk 'FNR==NR {hash[$1]; next} $1 in hash' derep.seqid.tmp outmap.txt > boldCOI.derep.txt
-sed 's/Animalia;/k__Animalia;p__/' boldCOI.derep.txt | sed 's/;/;c__/2' | sed 's/;/;o__/3' | sed 's/;/;f__/4' | sed 's/;/;g__/5' | sed 's/;/;s__/6' > boldCOI.derep.qiime.tmp
+zgrep '^>' bigCOI.derep.fasta | sed 's/>//' > derep.seqid.tmp
+fgrep -f derep.seqid.tmp allRecords_outmap.txt > bigCOI_taxmap.tmp
+sed 's/Animalia;/k__Animalia;p__/' bigCOI_taxmap.tmp | sed 's/;/;c__/2' | sed 's/;/;o__/3' | sed 's/;/;f__/4' | sed 's/;/;g__/5' | sed 's/;/;s__/6' > bigCOI.derep_taxmap.txt
 rm derep.seqid.tmp
 ```
 
-The `boldCOI.derep.fasta` and `boldCOI.derep.qiime.tmp` files are imported into QIIME2:
+I'm unclear exactly why there was a small discrepency between the number of records in the fasta and that in the taxonomy mapping file (six additional records in the tax map); these were identified and removed after manual inspection revealed their extra sub-species information was redundant:
+```
+## what's missing?
+comm -23 <(sort taxmap.headers) <(sort fasta.headers) > extraTaxMap_data.txt
+
+## produces:
+2798360
+2798361
+2798362
+2798372
+2798374
+2798376
+
+## records are then dropped:
+grep -v -f extraTaxMap_data.txt bigCOI_taxmap.txt > tmp && mv tmp bigCOI_taxmap.txt
+```
+
+> Those six duplicate records all had the taxa info: `Animalia;Arthropoda;Insecta;Trichoptera;Hydropsychidae;Hydropsyche;Hydropsyche nsp 2006031401`
+
+One minor cleanup detail: we needed to convert the lower-case bases used in the Porter Dataset to upper case for an issue with classifying taxa:
+```
+seqkit seq bigCOI.derep.fasta --upper-case -w 0 > tmp && mv tmp bigCOI.derep.fasta
+```
+These `bigCOI.derep.fasta` and `bigCOI_taxmap.txt` files are imported into QIIME2:
 
 ```
 ## fasta file import
 qiime tools import \
   --type 'FeatureData[Sequence]' \
-  --input-path boldCOI.derep.fasta \
-  --output-path boldCOI.derep.seqs.qza
+  --input-path bigCOI.derep.fasta \
+  --output-path bigCOI.derep.seqs.qza
 
 ## taxonomy file import
 qiime tools import \
   --type 'FeatureData[Taxonomy]' \
   --input-format HeaderlessTSVTaxonomyFormat \
-  --input-path boldCOI.derep.qiime.tmp \
-  --output-path boldCOI.derep.tax.qza
+  --input-path bigCOI_taxmap.txt \
+  --output-path bigCOI.derep.tax.qza
 
 ## remove temporary file:
 rm boldCOI.derep.qiime.tmp
 ```
-
-## Combining QIIME records
-As noted above, we also combined the arthropod and chordate BOLD records created here in addition to the host reference sequences described in the `host_database.md` document. These are used for chimera filtering and taxonomy assignment.
-> `$PATH1`, `$PATH2`, and `$PATH3` refer to the file paths to the host, arthropod, and chordate reference files respectively
-
-PATH1=/mnt/lustre/macmaneslab/devon/guano/BOLDdb/host_dbs
-PATH2=/mnt/lustre/macmaneslab/devon/guano/BOLDdb/allBOLD
-PATH3=/mnt/lustre/macmaneslab/devon/guano/BOLDdb/allBOLD/chordates
-
-```
-## merge taxonomy mapping data
-cat "$PATH1"/qiime.host.txt.gz "$PATH2"/boldCOI.arth_derep.txt.gz "$PATH3"/boldCOI.chord_derep.txt.gz > boldCOI.all.plusHost.txt.gz
-
-## merge seq data
-cat "$PATH1"/qiime.host.fa.gz "$PATH2"/boldCOI.derep.fasta.gz "$PATH3"/boldCOI.chordate_derep.fasta.gz > boldCOI.all.plusHost.fasta.gz
-```
-
-One minor cleanup detail: we noticed that some BOLD sequence records can contain unexpected `#` characters in the sequences themselves. Though it was minor (just a pair records contained these as trailing characters at the end of the two sequences), we removed them to avoid any downstream difficulties in other aspects of the pipeline (for example, training a database with the Naive Bayes classifier will flag an error):
-
-```
-zcat boldCOI.all.plusHost.fasta.gz | sed 's/#.*//g' > tmp
-gzip tmp --best > boldCOI.all.plusHost.fasta.gz
-```
-
-Files were then imported into QIIME:
-```
-qiime tools import \
-  --type 'FeatureData[Sequence]' \
-  --input-path boldCOI.all.plusHost.fasta.gz \
-  --output-path boldCOI.all.plusHost.seqs.qza
-
-qiime tools import \
-  --type 'FeatureData[Taxonomy]' \
-  --input-format HeaderlessTSVTaxonomyFormat \
-  --input-path boldCOI.all.plusHost.txt \
-  --output-path boldCOI.all.plusHost.tax.qza
-```  

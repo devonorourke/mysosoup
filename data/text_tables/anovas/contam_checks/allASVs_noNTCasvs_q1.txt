@@ -1,0 +1,7 @@
+                      Df Sum Sq Mean Sq F value   Pr(>F)    
+CollectionMonth        2   2828  1414.2  12.325 7.37e-06 ***
+Site                   1     65    64.7   0.564    0.453    
+CollectionMonth:Site   2     24    12.0   0.105    0.901    
+Residuals            283  32472   114.7                     
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
