@@ -36,7 +36,7 @@ nonbat.tmp <- tableimport.function("nonbat.qza")
 colnames(nonbat.tmp) <- c("ASVid", "SampleID", "Reads")
 
 ## add metadata  
-meta <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/metadata/mangan_metadata.csv.gz", col_names = TRUE)
+meta <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/metadata/mangan_metadata.csv", col_names = TRUE)
 df <- merge(nonbat.tmp, meta)
 rm(nonbat.tmp, meta)
 

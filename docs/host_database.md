@@ -1,23 +1,51 @@
-# Host COI data
-We included fasta references for bat and bird COI sequences from a variety of sources. These data included:
-- Bat data from
-  - Clare, Lim, Fenton, and Hebert 2011 PLoS supplementary list: CACA, CAPE, CASU, DERO, EPBR, EPFU, EUMA, GLSO, LABL, MOMO, MYNI, MYRI, NOAL, NOLE, PHDI, PHHA, PHST, PTGY, PTPA, PTPE, RHPU, RHNA, RHTU, STLI, TOSA, TRCI
-  - from PopSet 726974368: MYSO, MYSE, and MYLE
-  - from PopSet 301344216: MYAU, MYLU, PESU, EPFU, NYHU, LABO, COTO, LACI, LANO
-  - from Chambers et al. (2015) - Species from Feces: EUGL, EUUN, RHBI, STPA
-  - from Korstian, Williams, and Hale: LAEG
-  - from BOLD (direct submission): MOSI
+# Host COI data selection strategy
 
-Additional host COI reference sequences for a few bird species were added because samples processed in the same lab as the Mangan study:
-  - From Kerr, 2007: ABTO, ATFL, LUWA
-  - From Kerr (2009): CORF
-  - From Kerr, 2011: MAWA, JAWE, SOSP, WCSP, WIWA, YEWA
-  - From Hebert 2004: BEVI,
-  - Schindel 2011 (bioproject PRJNA81595): BEWR, YBCH
-  - Direct BOLD submission: BHCO, BHGR, BLPH, CLSW, COYE, HAAM, LEGO, MELT, RBLE, VERD
-  - From Saitoh et al. (2015: JABW  
+Because the primers are known to amplify host COI we developed a database of potential bat sequences representing species known to occupy the Cypress Creek National Wildlife Refuge. In addition, we expanded our search to include additional bat species from neighboring states such as Kentucky, Indiana, Tennesee, Arkansas, and Missouri. Finally, other bat and bird species reference sequences were collected. These species were known to have guano being processed in the same lab that this study was conducted and we wanted to be able to detect potential instances of cross contamination. We prioritized selecting representative sequences for each species by identifying published articles over undocumented Genbank or Barcode of Life Database (BOLD) submissions, and selected the full length (either ~ 500 or 650 bp) COI Sanger sequence to short reads where possible.
 
-Species codes used above refer to the following species:
+# Host data sources
+Full references are available at the end of this document. Citations and links included where possible. Abbreviated species names are explained in the table following the attributed papers (see below).
+
+## Bat references
+
+1. (Clare et al., 2011) [supplementary Table S1](https://doi.org/10.1371/journal.pone.0022648.s003).
+  - bat species included: CACA, CAPE, CASU, DERO, EPBR, EPFU, EUMA, GLSO, LABL, MOMO, MYNI, MYRI, NOAL, NOLE, PHDI, PHHA, PHST, PTGY, PTPA, PTPE, RHPU, RHNA, RHTU, STLI, TOSA, TRCI
+
+2. (Vonhof, Russell, and Miller-Butterworth, 2015) [PopSet 726974368](https://www.ncbi.nlm.nih.gov/popset/?term=726974368)
+  - bat species included: MYSO, MYSE, and MYLE
+
+3. (Streicker et al., 2010) [PopSet 301344216](https://www.ncbi.nlm.nih.gov/popset/?term=301344216)
+  - bat species included: MYAU, MYLU, PESU, EPFU, NYHU, LABO, COTO, LACI, LANO
+
+4. (Walker et al. 2016) [supplementary Table S2](https://doi.org/10.1371/journal.pone.0162342.s002)
+  - bat species included: EUGL, EUUN, RHBI, STPA
+
+5. (Korstian, Williams, and Hale, 2016) [supplementary table 12686_2015_509_MOESM1_ESM.txt](https://static-content.springer.com/esm/art%3A10.1007%2Fs12686-015-0509-4/MediaObjects/12686_2015_509_MOESM1_ESM.txt)
+  - bat species included: LAEG
+
+6. from BOLD (direct submission)[http://v4.boldsystems.org/index.php/Public_RecordView?processid=BPBAT246-14]
+  - bat species included: MOSI
+
+## Bird references
+
+Additional host COI reference sequences for a few bird species were added because samples processed in the same lab as this study.
+
+1. (Kerr et al., 2007)
+  - bird species included: [ABTO](https://www.ncbi.nlm.nih.gov/nuccore/DQ433094), [ATFL](https://www.ncbi.nlm.nih.gov/nuccore/DQ433033), [LUWA](https://www.ncbi.nlm.nih.gov/nuccore/DQ433253)
+2. (Kerr et al., 2009)
+  - bird species included: [CORF](https://www.ncbi.nlm.nih.gov/nuccore/GQ481508)
+3. (Kerr, 2011) [supplementary Table S2](https://onlinelibrary.wiley.com/action/downloadSupplement?doi=10.1111%2Fj.1755-0998.2011.03049.x&file=MEN_3049_sm_TableS2.pdf)
+  - bird species included: MAWA, JAWE, SOSP, WCSP, WIWA, YEWA
+4. (Hebert et al., 2004)
+  - bird species included: BEVI
+5. (Schindel et al., 2011) [BioProject PRJNA81595](https://www.ncbi.nlm.nih.gov/bioproject/?term=PRJNA81595)
+  - bird species included: [BEWR](https://www.ncbi.nlm.nih.gov/nuccore/JQ176472), [YBCH](https://www.ncbi.nlm.nih.gov/nuccore/HM033416)
+6. (Saitoh et al., 2015)
+  - bird species included: [JABW](https://www.ncbi.nlm.nih.gov/nuccore/AB843412)
+7.  from BOLD (direct submission)
+  - bird species included: [BHCO](https://www.ncbi.nlm.nih.gov/nuccore/HM033586), [BHGR](http://v4.boldsystems.org/index.php/Public_RecordView?processid=BOM2215-11), [BLPH](https://www.ncbi.nlm.nih.gov/nuccore/DQ434059), [CLSW](https://www.ncbi.nlm.nih.gov/nuccore/AY666213), [COYE](https://www.ncbi.nlm.nih.gov/nuccore/HM033476), [HAAM](https://www.ncbi.nlm.nih.gov/nuccore/NC_025603.1?report=genbank), [LEGO](http://v4.boldsystems.org/index.php/Public_RecordView?processid=BOM852-07), [MELT](http://v4.boldsystems.org/index.php/Public_RecordView?processid=BVIET015-08), [RBLE](http://v4.boldsystems.org/index.php/Public_RecordView?processid=SIBHI082-11), VERD
+
+## Species codes
+The following table identifies the species name for each of the abbreviated bat and bird species codes used above.
 
 | code | taxa name |
 | --- | --- |
@@ -48,7 +76,7 @@ Species codes used above refer to the following species:
 |LABL|Lasiurus blossevillii|
 |LAEG|Lasiurus ega|
 |LEGO|Spinus psaltria|
-|LUWA|Oreothlypis luciae|
+|LUWA|Vermivora luciae|
 |MACR|_Carpodacus erythrinus_ used as substitute|
 |MAWA|Setophaga magnolia|
 |MELT|Garrulax canorus|
@@ -80,7 +108,7 @@ Species codes used above refer to the following species:
 |YEWA|Setophaga petechia|
 
 # QIIME formatting of host sequences
-The above fasta sequences were converted into QIIME-formatted text and fasta files for import using the following script (imported concatenated fasta file starts as `tmp2.fa`)
+The above fasta sequences were saved as a temporary fasta file `tmp.fa` and converted into QIIME-formatted `.qza` taxonomy and sequence files for import using the following script (original concatenated fasta file starts as `tmp2.fa`)
 ```
 seqtk seq -l0 tmp.fa > tmp2.fa
 cat tmp2.fa | paste - - | awk -F "\t" '{print $2}' > tmp.seqs.txt
@@ -127,6 +155,8 @@ qiime tools import \
   --output-path host_taxonomy.qza
 ```
 
+The text and QIIME-formatted files mentioned above are available in the [Open Science Frameworks repo](https://osf.io/qju3w/) for this project. (DOI 10.17605/OSF.IO/QJU3W)
+
 # References
 
 Clare, E. L., Lim, B. K., Fenton, M. B., & Hebert, P. D. N. (2011). Neotropical Bats: Estimating Species Diversity with DNA Barcodes. PLoS ONE, 6(7), e22648. doi:10.1371/journal.pone.0022648 
@@ -148,6 +178,5 @@ Schindel DE, Stoeckle MY, Milensky C, Trizna M, Schmidt B, Gebhard C, Graves G. 
 Streicker DG, Turmelle AS, Vonhof MJ, Kuzmin IV, McCracken GF, Rupprecht CE. Host phylogeny constrains cross-species emergence and establishment of rabies virus in bats. Science. 2010 Aug 6;329(5992):676-9. doi: 10.1126/science.1188836.
 
 Vonhof,M.J., Russell,A.L. and Miller-Butterworth,C.M. (07-08-2015) Range-Wide Genetic Analysis of Little Brown Bat (Myotis lucifugus) Populations: Estimating the Risk of Spread of White-Nose Syndrome. PLoS ONE 10:(7)E0128713
-
 
 Walker FM, Williamson CHD, Sanchez DE, Sobek CJ, Chambers CL (2016) Species From Feces: Order-Wide Identification of Chiroptera From Guano and Other Non-Invasive Genetic Samples. PLOS ONE 11(9): e0162342. https://doi.org/10.1371/journal.pone.0162342
