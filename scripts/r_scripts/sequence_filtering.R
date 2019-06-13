@@ -35,13 +35,13 @@ tableimport.function <- function(table){
 nonbat.tmp <- tableimport.function("nonbat.qza")
 colnames(nonbat.tmp) <- c("ASVid", "SampleID", "Reads")
 
-## add metadata  
+## add metadata
 meta <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/metadata/mangan_metadata.csv", col_names = TRUE)
 df <- merge(nonbat.tmp, meta)
 rm(nonbat.tmp, meta)
 
 ## add taxonomy information
-taxa <- read_delim(file = "https://github.com/devonorourke/mysosoup/raw/master/data/taxonomy/mangan_tax_vs.tsv.gz", delim = "\t", col_names = TRUE)
+taxa <- read_delim(file = "https://github.com/devonorourke/mysosoup/raw/master/data/taxonomy/mangan_tax_p97c94.tsv", delim = "\t", col_names = TRUE)
 taxa <- taxa %>% separate(., col = Taxon, sep=';', into = c("kingdom_name", "phylum_name", "class_name", "order_name", "family_name", "genus_name", "species_name")) %>% select(-Confidence)
 taxa <- as.data.frame(apply(taxa, 2, function(y) gsub(".__", "", y)))
 taxa <- as.data.frame(apply(taxa, 2, function(y) gsub("^$|^ $", NA, y)))
@@ -50,24 +50,42 @@ taxa <- as.data.frame(apply(taxa, 2, function(y) gsub("Unassigned", NA, y)))
 colnames(taxa)[1] <- "ASVid"
 df <- merge(df, taxa)
 
-
-## any relationship between the number of ASVs per sample, the number of reads per sample, and whether or not
-## ..the sample was derived from a Plate-extraction?
-  ## Coloring the samples that were withing a cell of an NTC
+## calculate the total number of reads per sample, and the number of unique ASVs observed per sample
 sumry0 <- df %>% 
   group_by(SampleID, SampleType, BatchType, Source, ContamArea) %>% 
   summarise(sumReads=sum(Reads), nASVs=n_distinct(ASVid))
+write.csv(sumry0, file = "~/Repos/mysosoup/data/text_tables/contam_evals/freqObs_and_seqDepth_perSample.csv",
+          quote = FALSE, row.names = FALSE)
+  ## 5 of 7 negative control (NTC) samples have very low number of ASVs but fairly average numbers of reads per sample... most guano have >30 ASVs
+  ## only 2 of 7 true NTCs has more than 30, just like the "blankS39" sample which we KNOW had guano fall into the well
 
+## related question: how many times do we see a particular ASV among any of the NTC samples?
+## are those NTCs with few ASVs at least all showing the same ASVs?
+df %>% filter(SampleType == "control") %>% summarise(nSamples = n_distinct(SampleID))   ## there are 8 NTC samples (7 extraction blanks, one we know is contaminated ("blankS39")...
+
+NTConly_df <- df %>% 
+  filter(SampleType == "control") %>%
+  group_by(ASVid) %>% 
+  summarise(counts=n())
+  ## nope; we find that only 4/87 ASVs in four of eight samples
+  ## 5/87 ASVs in three samples; 15/87 in two samples
+  ## 63/87 in only single sample ... so most are unique, indicating that there isn't pervasive (ex. reagent) contamination
+
+
+## Coloring the samples that were withing a cell of an NTC
+## any relationship between the number of ASVs per sample, the number of reads per sample, and whether or not
+## ..the sample was derived from a Plate-extraction?
+
+## plot this
 ggplot(sumry0, aes(sumReads, nASVs, color=ContamArea, shape=SampleType)) + 
   geom_point(data=sumry0 %>% filter(SampleType == "control"), aes(sumReads, nASVs, color=ContamArea, shape=SampleType), size=4) + 
   geom_point(data=sumry0 %>% filter(SampleType != "control"), aes(sumReads, nASVs, color=ContamArea, shape=SampleType)) + 
   facet_wrap(~ Source) +
   scale_x_continuous(labels = comma) +
   theme_devon()
-  
   ## these results indicate that the kind of extraction (plate vs. isolate) isn't really diving differences in #ASVs or #reads per sample
-  ## 5 of 8 Control samples have very low number of ASVs but fairly average numbers of reads per sample
   ## location of true sample near a contaminated well doesn't influence number of reads or number of ASVs - they're indendent
+
 
 
 ## drop singleton ASVs
