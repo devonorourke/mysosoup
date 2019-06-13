@@ -7,8 +7,7 @@
 library(taxize)
 library(tidyverse)
 
-mangan_blast_in <- read_csv(file="https://github.com/devonorourke/mysosoup/raw/master/data/host/mangan_hittable.csv.gz", col_names = FALSE)
-#runfromlocal: mangan_blast_in <- read_csv("~/Repos/mysosoup/data/host/mangan_hittable2.csv.gz", col_names = FALSE)
+mangan_blast_in <- read_csv(file="https://github.com/devonorourke/mysosoup/raw/master/data/host/mangan_hittable.csv", col_names = FALSE)
 colnames(mangan_blast_in) <- c("query", "subject", "pid", "alnlen", "mismatch", "gapopen", 
                                "qstart", "qend", "sstart", "send", "eval", "bitscore")
 
