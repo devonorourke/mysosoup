@@ -1,0 +1,261 @@
+ncbiID,subject,query,pid,alnlen,mismatch,gapopen,qstart,qend,sstart,send,eval,bitscore,family,genus,species
+1082393,KJ753924.1,53e6d09b11de86f8176c5d097f216eea,88.95,181,18,2,1,180,12,191,2.71e-54,222,Tephritidae,Bactrocera,Bactrocera rubigina
+1082393,KF659753.1,53e6d09b11de86f8176c5d097f216eea,88.95,181,18,2,1,180,1,180,2.71e-54,222,Tephritidae,Bactrocera,Bactrocera rubigina
+1082393,KF659745.1,53e6d09b11de86f8176c5d097f216eea,88.95,181,18,2,1,180,1,180,2.71e-54,222,Tephritidae,Bactrocera,Bactrocera rubigina
+1082393,KF659739.1,53e6d09b11de86f8176c5d097f216eea,89.503,181,17,2,1,180,1,180,5.82e-56,228,Tephritidae,Bactrocera,Bactrocera rubigina
+109479,JX008071.1,645527c3f16d27672ec42f6cb1252308,86.705,173,23,0,8,180,8,180,2.12e-45,193,Vespertilionidae,Myotis,Myotis mystacinus
+109479,JX008071.1,78659fdbc329b34d975ce914afbf78c6,86.705,173,23,0,8,180,8,180,2.12e-45,193,Vespertilionidae,Myotis,Myotis mystacinus
+1105569,HQ979085.1,c15965caffea20beeb3ceba247dd918b,97.79,181,4,0,1,181,1,181,1.56e-81,313,Chironomidae,NA,Chironomidae sp. BOLD:AAL7361
+1136913,KJ841734.1,b63327723633cfbce842a26534efc386,95.028,181,9,0,1,181,12,192,3.41e-73,285,Drosophilidae,Apenthecia,Apenthecia foliolata
+1166840,JN171113.1,1bebd26bce5017ca5066651585e2157e,90.23,174,17,0,8,181,8,181,5.82e-56,228,Carabidae,Bembidion,Bembidion sexfoveatum
+1474088,KJ166079.1,c15965caffea20beeb3ceba247dd918b,97.238,181,5,0,1,181,1,181,7.27e-80,307,Chironomidae,NA,Chironomidae sp. BOLD:AAL7358
+1474792,KJ209116.1,74931840f9f3047a87dee266b058af2f,100,181,0,0,1,181,1,181,3.34e-88,335,Drosophilidae,Scaptomyza,Scaptomyza sp. BOLD:AAG8491
+1474792,KJ209405.1,74931840f9f3047a87dee266b058af2f,100,181,0,0,1,181,1,181,3.34e-88,335,Drosophilidae,Scaptomyza,Scaptomyza sp. BOLD:AAG8491
+1474792,KJ208755.1,74931840f9f3047a87dee266b058af2f,100,181,0,0,1,181,1,181,3.34e-88,335,Drosophilidae,Scaptomyza,Scaptomyza sp. BOLD:AAG8491
+1474792,KJ209083.1,74931840f9f3047a87dee266b058af2f,100,181,0,0,1,181,1,181,3.34e-88,335,Drosophilidae,Scaptomyza,Scaptomyza sp. BOLD:AAG8491
+1587200,KU917788.1,53e6d09b11de86f8176c5d097f216eea,88.827,179,20,0,2,180,2,180,9.75e-54,220,Hydrophilidae,Crenitis,Crenitis punctatostriata
+1642241,KP112812.1,14437d7aa8c29be0ac1a955d00a48791,94.475,181,10,0,1,181,1,181,1.59e-71,279,Psychodidae,Pintomyia,Pintomyia misionensis
+1642241,KP112815.1,14437d7aa8c29be0ac1a955d00a48791,95.028,181,9,0,1,181,1,181,3.41e-73,285,Psychodidae,Pintomyia,Pintomyia misionensis
+1642241,KP112830.1,14437d7aa8c29be0ac1a955d00a48791,94.475,181,10,0,1,181,1,181,1.59e-71,279,Psychodidae,Pintomyia,Pintomyia misionensis
+1642241,KP112831.1,14437d7aa8c29be0ac1a955d00a48791,94.475,181,10,0,1,181,1,181,1.59e-71,279,Psychodidae,Pintomyia,Pintomyia misionensis
+1642241,KP112822.1,14437d7aa8c29be0ac1a955d00a48791,95.028,181,9,0,1,181,1,181,3.41e-73,285,Psychodidae,Pintomyia,Pintomyia misionensis
+1655246,KP402800.1,a3a1dd06cb3ab290106dd1d9018abe44,85,180,26,1,1,179,1,180,4.6e-42,182,Syrphidae,Ocyptamus,Ocyptamus filiola
+1671611,KR085204.1,c15965caffea20beeb3ceba247dd918b,96.685,181,6,0,1,181,1,181,3.38e-78,302,Chironomidae,Procladius,Procladius bellus
+1672297,KR085357.1,c15965caffea20beeb3ceba247dd918b,96.685,181,6,0,1,181,1,181,3.38e-78,302,Chironomidae,Procladius,Procladius sp. BOLD:AAL7358
+1677370,KM570864.1,b63327723633cfbce842a26534efc386,95.028,181,9,0,1,181,1,181,3.41e-73,285,Chloropidae,NA,Chloropidae sp. BOLD:AAH4147
+1694182,KM919037.1,171f69cb54dc4814fd0f4f5d743350c6,100,180,0,0,2,181,1,180,1.2e-87,333,Mycetophilidae,NA,Mycetophilidae sp. BOLD:AAG4956
+1694182,KR241689.1,171f69cb54dc4814fd0f4f5d743350c6,100,180,0,0,2,181,1,180,1.2e-87,333,Mycetophilidae,NA,Mycetophilidae sp. BOLD:AAG4956
+1694182,KM910864.1,171f69cb54dc4814fd0f4f5d743350c6,100,180,0,0,2,181,1,180,1.2e-87,333,Mycetophilidae,NA,Mycetophilidae sp. BOLD:AAG4956
+1694182,KR236321.1,171f69cb54dc4814fd0f4f5d743350c6,100,180,0,0,2,181,1,180,1.2e-87,333,Mycetophilidae,NA,Mycetophilidae sp. BOLD:AAG4956
+1694182,KM918991.1,171f69cb54dc4814fd0f4f5d743350c6,100,181,0,0,1,181,2,182,3.34e-88,335,Mycetophilidae,NA,Mycetophilidae sp. BOLD:AAG4956
+1718322,KT733109.1,1bebd26bce5017ca5066651585e2157e,90.805,174,16,0,8,181,8,181,1.25e-57,233,Asilidae,Leptogaster,Leptogaster sp. NMSA DIP 70267
+1724968,KT707716.1,1bebd26bce5017ca5066651585e2157e,93.37,181,12,0,1,181,1,181,9.54e-69,270,Stratiomyidae,NA,Stratiomyidae sp. BOLD:ACW5619
+1796509,KT696265.1,53e6d09b11de86f8176c5d097f216eea,88.95,181,20,0,1,181,13653,13473,7.53e-55,224,Histeridae,NA,Histeridae sp. BMNH 1274741
+1881780,KR474381.1,171f69cb54dc4814fd0f4f5d743350c6,100,181,0,0,1,181,1,181,3.34e-88,335,Mycetophilidae,NA,Mycetophilidae sp. BOLD-2016
+1881780,KR986662.1,171f69cb54dc4814fd0f4f5d743350c6,100,180,0,0,2,181,1,180,1.2e-87,333,Mycetophilidae,NA,Mycetophilidae sp. BOLD-2016
+1881780,KR663159.1,171f69cb54dc4814fd0f4f5d743350c6,100,181,0,0,1,181,1,181,3.34e-88,335,Mycetophilidae,NA,Mycetophilidae sp. BOLD-2016
+1886977,KR968852.1,14437d7aa8c29be0ac1a955d00a48791,99.448,181,1,0,1,181,1,181,1.55e-86,329,Limoniidae,NA,Limoniidae sp. BOLD-2016
+1887090,KR659045.1,53e6d09b11de86f8176c5d097f216eea,89.011,182,18,2,1,181,1,181,7.53e-55,224,Chloropidae,NA,Chloropidae sp. BOLD-2016
+1887115,KR506699.1,a3a1dd06cb3ab290106dd1d9018abe44,86.667,165,21,1,16,179,3,167,4.6e-42,182,Chloropidae,Oscinella,Oscinella sp. BOLD-2016
+1887203,KR763035.1,c15965caffea20beeb3ceba247dd918b,97.222,180,5,0,2,181,1,180,2.62e-79,305,Chironomidae,Procladius,Procladius sp. BOLD-2016
+1887203,KR769405.1,c15965caffea20beeb3ceba247dd918b,97.778,180,4,0,2,181,1,180,5.62e-81,311,Chironomidae,Procladius,Procladius sp. BOLD-2016
+1887203,KR696626.1,c15965caffea20beeb3ceba247dd918b,96.685,181,6,0,1,181,1,181,3.38e-78,302,Chironomidae,Procladius,Procladius sp. BOLD-2016
+1888158,KT110818.1,e9793522c4f912271fe5d69c2f857ab0,98.895,181,2,0,1,181,1,181,7.22e-85,324,Dolichopodidae,NA,Dolichopodinae sp. BOLD-2016
+1890543,JF873638.1,1bebd26bce5017ca5066651585e2157e,90,180,18,0,1,180,1,180,1.25e-57,233,Sciomyzidae,Anticheta,Anticheta borealis
+1890543,JN302037.1,1bebd26bce5017ca5066651585e2157e,90.556,180,17,0,1,180,1,180,2.69e-59,239,Sciomyzidae,Anticheta,Anticheta borealis
+1890616,KR659911.1,1bebd26bce5017ca5066651585e2157e,96.685,181,6,0,1,181,1,181,3.38e-78,302,Stratiomyidae,Oxycera,Oxycera albovittata
+1890616,MG967749.1,1bebd26bce5017ca5066651585e2157e,97.238,181,5,0,1,181,1,181,7.27e-80,307,Stratiomyidae,Oxycera,Oxycera albovittata
+1890920,MG094214.1,b63327723633cfbce842a26534efc386,100,171,0,0,11,181,1,171,1.21e-82,316,Milichiidae,Milichiella,Milichiella arcuata
+1890920,KR658784.1,b63327723633cfbce842a26534efc386,100,181,0,0,1,181,1,181,3.34e-88,335,Milichiidae,Milichiella,Milichiella arcuata
+1890920,MG089585.1,b63327723633cfbce842a26534efc386,100,180,0,0,2,181,1,180,1.2e-87,333,Milichiidae,Milichiella,Milichiella arcuata
+1897887,KR463013.1,1bebd26bce5017ca5066651585e2157e,89.444,180,19,0,2,181,1,180,5.82e-56,228,Simuliidae,Helodon,Helodon pleuralis
+1897887,MF842740.1,1bebd26bce5017ca5066651585e2157e,89.444,180,19,0,2,181,1,180,5.82e-56,228,Simuliidae,Helodon,Helodon pleuralis
+1912190,KU566614.1,1bebd26bce5017ca5066651585e2157e,90.055,181,18,0,1,181,1,181,3.48e-58,235,Simuliidae,Gigantodax,Gigantodax nr. marginalis BIOUG02455-B07
+1981761,KX420409.1,53e6d09b11de86f8176c5d097f216eea,91.16,181,16,0,1,181,1,181,1.61e-61,246,Histeridae,Ulkeus,Ulkeus sp. cvb524hist001
+2173346,MG967798.1,53e6d09b11de86f8176c5d097f216eea,88.889,180,20,0,1,180,1,180,2.71e-54,222,Stratiomyidae,Tinda,Tinda nigra
+2210218,MF821651.1,a3a1dd06cb3ab290106dd1d9018abe44,85.556,180,23,3,2,179,1,179,3.55e-43,185,Chloropidae,Oscinella,Oscinella sp. BIOUG26776-G09
+2210229,MF824268.1,a3a1dd06cb3ab290106dd1d9018abe44,85.556,180,23,3,2,179,4,182,3.55e-43,185,Chloropidae,Oscinella,Oscinella sp. BIOUG26982-F09
+2300218,MG067666.1,c15965caffea20beeb3ceba247dd918b,97.222,180,5,0,2,181,1,180,2.62e-79,305,Chironomidae,Procladius,Procladius sp. BIOUG24650-A01
+2300223,MG070382.1,c15965caffea20beeb3ceba247dd918b,97.222,180,5,0,2,181,1,180,2.62e-79,305,Chironomidae,Procladius,Procladius sp. BIOUG24498-B04
+2300235,MG075940.1,c15965caffea20beeb3ceba247dd918b,97.778,180,4,0,2,181,1,180,5.62e-81,311,Chironomidae,Procladius,Procladius sp. BIOUG24730-D02
+2315015,MG077562.1,e9793522c4f912271fe5d69c2f857ab0,98.895,181,2,0,1,181,1,181,7.22e-85,324,Dolichopodidae,NA,Dolichopodinae sp. BIOUG24090-C03
+2315017,MG077864.1,e9793522c4f912271fe5d69c2f857ab0,98.895,181,2,0,1,181,1,181,7.22e-85,324,Dolichopodidae,NA,Dolichopodinae sp. BIOUG24446-B08
+2315019,MG079981.1,e9793522c4f912271fe5d69c2f857ab0,99.448,181,1,0,1,181,1,181,1.55e-86,329,Dolichopodidae,NA,Dolichopodinae sp. BIOUG24443-G09
+2315029,MG083606.1,e9793522c4f912271fe5d69c2f857ab0,99.448,181,1,0,1,181,1,181,1.55e-86,329,Dolichopodidae,NA,Dolichopodinae sp. BIOUG24443-H01
+2315030,MG083806.1,e9793522c4f912271fe5d69c2f857ab0,98.895,181,2,0,1,181,1,181,7.22e-85,324,Dolichopodidae,NA,Dolichopodinae sp. BIOUG24090-A05
+2315038,MG086221.1,e9793522c4f912271fe5d69c2f857ab0,98.895,181,2,0,1,181,1,181,7.22e-85,324,Dolichopodidae,NA,Dolichopodinae sp. BIOUG24446-B07
+2315040,MG087218.1,e9793522c4f912271fe5d69c2f857ab0,99.444,180,1,0,2,181,1,180,5.58e-86,327,Dolichopodidae,NA,Dolichopodinae sp. BIOUG24355-H07
+2315041,MG087232.1,e9793522c4f912271fe5d69c2f857ab0,98.895,181,2,0,1,181,1,181,7.22e-85,324,Dolichopodidae,NA,Dolichopodinae sp. BIOUG24446-B02
+2315042,MG087714.1,e9793522c4f912271fe5d69c2f857ab0,99.444,180,1,0,2,181,1,180,5.58e-86,327,Dolichopodidae,NA,Dolichopodinae sp. BIOUG24355-G08
+2315137,MG077417.1,74931840f9f3047a87dee266b058af2f,100,181,0,0,1,181,1,181,3.34e-88,335,Drosophilidae,Scaptomyza,Scaptomyza sp. BIOUG01410-C10
+2315142,MG080692.1,74931840f9f3047a87dee266b058af2f,100,181,0,0,1,181,1,181,3.34e-88,335,Drosophilidae,Scaptomyza,Scaptomyza sp. BIOUG31997-E06
+2315147,MG083052.1,74931840f9f3047a87dee266b058af2f,100,181,0,0,1,181,1,181,3.34e-88,335,Drosophilidae,Scaptomyza,Scaptomyza sp. BIOUG31883-H07
+2315155,MG087065.1,74931840f9f3047a87dee266b058af2f,100,181,0,0,1,181,1,181,3.34e-88,335,Drosophilidae,Scaptomyza,Scaptomyza sp. BIOUG31060-C10
+2331952,HM412834.1,171f69cb54dc4814fd0f4f5d743350c6,100,181,0,0,1,181,1,181,3.34e-88,335,Mycetophilidae,Greenomyia,Greenomyia sp. BBDED498-10
+2331953,HM412905.1,171f69cb54dc4814fd0f4f5d743350c6,100,181,0,0,1,181,1,181,3.34e-88,335,Mycetophilidae,Greenomyia,Greenomyia sp. BBDED580-10
+240516,KT881557.1,53e6d09b11de86f8176c5d097f216eea,88.95,181,18,2,1,180,1589,1768,2.71e-54,222,Tephritidae,Bactrocera,Bactrocera melastomatos
+2412789,MG298100.1,b63327723633cfbce842a26534efc386,94.475,181,10,0,1,181,1,181,1.59e-71,279,Rhagionidae,Rhagio,Rhagio sp. BIOUG01411-H01
+2534158,MG307156.1,a3a1dd06cb3ab290106dd1d9018abe44,85,180,24,3,2,179,1,179,1.65e-41,180,Chloropidae,Gaurax,Gaurax sp. BIOUG23186-C04
+2534174,MG307166.1,a3a1dd06cb3ab290106dd1d9018abe44,85,180,24,3,2,179,1,179,1.65e-41,180,Chloropidae,Gaurax,Gaurax sp. BIOUG23187-H01
+2534180,MG307601.1,a3a1dd06cb3ab290106dd1d9018abe44,85,180,24,3,2,179,1,179,1.65e-41,180,Chloropidae,Gaurax,Gaurax sp. BIOUG23198-E07
+2534183,MG306320.1,a3a1dd06cb3ab290106dd1d9018abe44,85,180,24,3,2,179,1,179,1.65e-41,180,Chloropidae,Gaurax,Gaurax sp. BIOUG23198-F11
+2534197,MG308139.1,a3a1dd06cb3ab290106dd1d9018abe44,85,180,24,3,2,179,1,179,1.65e-41,180,Chloropidae,Gaurax,Gaurax sp. BIOUG23201-F10
+2534208,MG306789.1,a3a1dd06cb3ab290106dd1d9018abe44,85,180,24,3,2,179,1,179,1.65e-41,180,Chloropidae,Gaurax,Gaurax sp. BIOUG26019-G03
+27670,GU723164.1,d2efef68ab6bafa1d39102b89bf88944,98.895,181,2,0,1,181,1,181,7.22e-85,324,Vespertilionidae,Nycticeius,Nycticeius humeralis
+27670,GU723164.1,78659fdbc329b34d975ce914afbf78c6,99.448,181,1,0,1,181,1,181,1.55e-86,329,Vespertilionidae,Nycticeius,Nycticeius humeralis
+27670,GU723163.1,d2efef68ab6bafa1d39102b89bf88944,99.448,181,1,0,1,181,1,181,1.55e-86,329,Vespertilionidae,Nycticeius,Nycticeius humeralis
+27670,GU723248.1,645527c3f16d27672ec42f6cb1252308,98.78,164,2,0,17,180,1,164,2.04e-75,292,Vespertilionidae,Nycticeius,Nycticeius humeralis
+27670,GU723164.1,645527c3f16d27672ec42f6cb1252308,99.444,180,1,0,1,180,1,180,5.58e-86,327,Vespertilionidae,Nycticeius,Nycticeius humeralis
+27670,GU723247.1,645527c3f16d27672ec42f6cb1252308,99.39,164,1,0,17,180,1,164,4.38e-77,298,Vespertilionidae,Nycticeius,Nycticeius humeralis
+27670,GU723247.1,d2efef68ab6bafa1d39102b89bf88944,98.788,165,2,0,17,181,1,165,5.66e-76,294,Vespertilionidae,Nycticeius,Nycticeius humeralis
+27670,GU723246.1,645527c3f16d27672ec42f6cb1252308,100,164,0,0,17,180,1,164,9.41e-79,303,Vespertilionidae,Nycticeius,Nycticeius humeralis
+27670,GU723246.1,d2efef68ab6bafa1d39102b89bf88944,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Nycticeius,Nycticeius humeralis
+27670,KJ642022.1,d2efef68ab6bafa1d39102b89bf88944,99.448,181,1,0,1,181,12,192,1.55e-86,329,Vespertilionidae,Nycticeius,Nycticeius humeralis
+27670,GU723247.1,78659fdbc329b34d975ce914afbf78c6,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Nycticeius,Nycticeius humeralis
+27670,KJ642025.1,645527c3f16d27672ec42f6cb1252308,100,180,0,0,1,180,12,191,1.2e-87,333,Vespertilionidae,Nycticeius,Nycticeius humeralis
+27670,KJ642025.1,78659fdbc329b34d975ce914afbf78c6,100,181,0,0,1,181,12,192,3.34e-88,335,Vespertilionidae,Nycticeius,Nycticeius humeralis
+27670,KJ642023.1,d2efef68ab6bafa1d39102b89bf88944,99.448,181,1,0,1,181,12,192,1.55e-86,329,Vespertilionidae,Nycticeius,Nycticeius humeralis
+27670,KJ642023.1,645527c3f16d27672ec42f6cb1252308,100,180,0,0,1,180,12,191,1.2e-87,333,Vespertilionidae,Nycticeius,Nycticeius humeralis
+27670,GU723246.1,78659fdbc329b34d975ce914afbf78c6,100,165,0,0,17,181,1,165,2.62e-79,305,Vespertilionidae,Nycticeius,Nycticeius humeralis
+27670,GU723163.1,645527c3f16d27672ec42f6cb1252308,100,180,0,0,1,180,1,180,1.2e-87,333,Vespertilionidae,Nycticeius,Nycticeius humeralis
+27670,GU723163.1,78659fdbc329b34d975ce914afbf78c6,100,181,0,0,1,181,1,181,3.34e-88,335,Vespertilionidae,Nycticeius,Nycticeius humeralis
+27670,KJ642024.1,78659fdbc329b34d975ce914afbf78c6,100,181,0,0,1,181,12,192,3.34e-88,335,Vespertilionidae,Nycticeius,Nycticeius humeralis
+27670,KJ642025.1,d2efef68ab6bafa1d39102b89bf88944,99.448,181,1,0,1,181,12,192,1.55e-86,329,Vespertilionidae,Nycticeius,Nycticeius humeralis
+27670,GU723248.1,78659fdbc329b34d975ce914afbf78c6,98.788,165,2,0,17,181,1,165,5.66e-76,294,Vespertilionidae,Nycticeius,Nycticeius humeralis
+27670,KJ642022.1,645527c3f16d27672ec42f6cb1252308,100,180,0,0,1,180,12,191,1.2e-87,333,Vespertilionidae,Nycticeius,Nycticeius humeralis
+27670,GU723248.1,d2efef68ab6bafa1d39102b89bf88944,98.182,165,3,0,17,181,1,165,2.63e-74,289,Vespertilionidae,Nycticeius,Nycticeius humeralis
+27670,KJ642022.1,78659fdbc329b34d975ce914afbf78c6,100,181,0,0,1,181,12,192,3.34e-88,335,Vespertilionidae,Nycticeius,Nycticeius humeralis
+27670,KJ642024.1,d2efef68ab6bafa1d39102b89bf88944,99.448,181,1,0,1,181,12,192,1.55e-86,329,Vespertilionidae,Nycticeius,Nycticeius humeralis
+27670,KJ642023.1,78659fdbc329b34d975ce914afbf78c6,100,181,0,0,1,181,12,192,3.34e-88,335,Vespertilionidae,Nycticeius,Nycticeius humeralis
+27670,KJ642024.1,645527c3f16d27672ec42f6cb1252308,100,180,0,0,1,180,12,191,1.2e-87,333,Vespertilionidae,Nycticeius,Nycticeius humeralis
+385036,GU723229.1,d522a80fed1adee71f631b85a3a16fed,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382104.1,b6d8cd13dd3c7ae8add173947e4453f0,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382104.1,9571a06c0df51336c4b5dae125329da3,100,165,0,0,59,223,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis sodalis
+385036,GU723229.1,5b1b957e1f448c4404078ca20c5875c8,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,GU723230.1,c1f82325df7f3777b7039ab8c6ebc15f,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,GU723230.1,0f9b9d16fe3d116357d9fb68553da9e1,100,165,0,0,17,181,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis sodalis
+385036,GU723230.1,b6d8cd13dd3c7ae8add173947e4453f0,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,GU723230.1,9571a06c0df51336c4b5dae125329da3,100,165,0,0,59,223,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382104.1,de30f78335ddf188c9c3064447e5ecc9,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,GU723229.1,9571a06c0df51336c4b5dae125329da3,100,165,0,0,59,223,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis sodalis
+385036,GU723229.1,0f9b9d16fe3d116357d9fb68553da9e1,100,165,0,0,17,181,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis sodalis
+385036,GU723229.1,b6d8cd13dd3c7ae8add173947e4453f0,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,GU723229.1,de30f78335ddf188c9c3064447e5ecc9,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382105.1,5b1b957e1f448c4404078ca20c5875c8,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,GU723229.1,076fa78f4dd69b67a085a99a0b560275,99.441,179,1,0,17,195,1,179,2.01e-85,326,Vespertilionidae,Myotis,Myotis sodalis
+385036,GU723229.1,9905172cd2a4905e4746823300fecfbf,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,GU723230.1,d522a80fed1adee71f631b85a3a16fed,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382104.1,076fa78f4dd69b67a085a99a0b560275,99.441,179,1,0,17,195,1,179,2.01e-85,326,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382104.1,5b1b957e1f448c4404078ca20c5875c8,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382104.1,c1f82325df7f3777b7039ab8c6ebc15f,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382104.1,9905172cd2a4905e4746823300fecfbf,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382105.1,076fa78f4dd69b67a085a99a0b560275,99.441,179,1,0,17,195,1,179,2.01e-85,326,Vespertilionidae,Myotis,Myotis sodalis
+385036,GU723230.1,de30f78335ddf188c9c3064447e5ecc9,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,GU723229.1,ee6575cab7780fe25b51f8238ca74fd4,100,165,0,0,17,181,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382105.1,9571a06c0df51336c4b5dae125329da3,100,165,0,0,59,223,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382105.1,0f9b9d16fe3d116357d9fb68553da9e1,100,165,0,0,17,181,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis sodalis
+385036,GU723230.1,ee6575cab7780fe25b51f8238ca74fd4,100,165,0,0,17,181,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis sodalis
+385036,GU723231.1,414cdc433a260ea81a1df0130f7d054e,100,165,0,0,17,181,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis sodalis
+385036,GU723229.1,c1f82325df7f3777b7039ab8c6ebc15f,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382105.1,b6d8cd13dd3c7ae8add173947e4453f0,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382105.1,ee6575cab7780fe25b51f8238ca74fd4,100,165,0,0,17,181,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382105.1,d522a80fed1adee71f631b85a3a16fed,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382105.1,414cdc433a260ea81a1df0130f7d054e,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382105.1,de30f78335ddf188c9c3064447e5ecc9,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382109.1,9905172cd2a4905e4746823300fecfbf,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382109.1,9571a06c0df51336c4b5dae125329da3,100,165,0,0,59,223,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis sodalis
+385036,GU723230.1,076fa78f4dd69b67a085a99a0b560275,99.441,179,1,0,17,195,1,179,2.01e-85,326,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382109.1,0f9b9d16fe3d116357d9fb68553da9e1,100,165,0,0,17,181,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382109.1,b6d8cd13dd3c7ae8add173947e4453f0,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382109.1,5b1b957e1f448c4404078ca20c5875c8,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382109.1,c1f82325df7f3777b7039ab8c6ebc15f,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382109.1,de30f78335ddf188c9c3064447e5ecc9,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382104.1,414cdc433a260ea81a1df0130f7d054e,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382104.1,0f9b9d16fe3d116357d9fb68553da9e1,100,165,0,0,17,181,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382109.1,d522a80fed1adee71f631b85a3a16fed,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382110.1,0f9b9d16fe3d116357d9fb68553da9e1,100,165,0,0,17,181,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382110.1,b6d8cd13dd3c7ae8add173947e4453f0,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382110.1,9571a06c0df51336c4b5dae125329da3,100,165,0,0,59,223,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382110.1,c1f82325df7f3777b7039ab8c6ebc15f,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382104.1,ee6575cab7780fe25b51f8238ca74fd4,100,165,0,0,17,181,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382104.1,d522a80fed1adee71f631b85a3a16fed,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382110.1,5b1b957e1f448c4404078ca20c5875c8,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382110.1,d522a80fed1adee71f631b85a3a16fed,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382110.1,9905172cd2a4905e4746823300fecfbf,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382105.1,c1f82325df7f3777b7039ab8c6ebc15f,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382105.1,9905172cd2a4905e4746823300fecfbf,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382112.1,414cdc433a260ea81a1df0130f7d054e,100,165,0,0,17,181,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382114.1,de30f78335ddf188c9c3064447e5ecc9,98.788,165,2,0,17,181,1,165,5.66e-76,294,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382114.1,ee6575cab7780fe25b51f8238ca74fd4,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382114.1,d522a80fed1adee71f631b85a3a16fed,98.788,165,2,0,17,181,1,165,5.66e-76,294,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382114.1,c1f82325df7f3777b7039ab8c6ebc15f,98.788,165,2,0,17,181,1,165,5.66e-76,294,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382114.1,9905172cd2a4905e4746823300fecfbf,98.788,165,2,0,17,181,1,165,5.66e-76,294,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382106.1,414cdc433a260ea81a1df0130f7d054e,100,165,0,0,17,181,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382107.1,c1f82325df7f3777b7039ab8c6ebc15f,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,GU723230.1,5b1b957e1f448c4404078ca20c5875c8,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,GU723230.1,9905172cd2a4905e4746823300fecfbf,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382107.1,9571a06c0df51336c4b5dae125329da3,100,165,0,0,59,223,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382107.1,d522a80fed1adee71f631b85a3a16fed,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382107.1,414cdc433a260ea81a1df0130f7d054e,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382107.1,0f9b9d16fe3d116357d9fb68553da9e1,100,165,0,0,17,181,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382107.1,076fa78f4dd69b67a085a99a0b560275,99.441,179,1,0,17,195,1,179,2.01e-85,326,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382107.1,5b1b957e1f448c4404078ca20c5875c8,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382107.1,de30f78335ddf188c9c3064447e5ecc9,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382107.1,ee6575cab7780fe25b51f8238ca74fd4,100,165,0,0,17,181,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382115.1,de30f78335ddf188c9c3064447e5ecc9,98.788,165,2,0,17,181,1,165,5.66e-76,294,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382115.1,0f9b9d16fe3d116357d9fb68553da9e1,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382109.1,414cdc433a260ea81a1df0130f7d054e,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382115.1,c1f82325df7f3777b7039ab8c6ebc15f,98.788,165,2,0,17,181,1,165,5.66e-76,294,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382115.1,414cdc433a260ea81a1df0130f7d054e,100,165,0,0,17,181,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382116.1,5b1b957e1f448c4404078ca20c5875c8,98.788,165,2,0,17,181,1,165,5.66e-76,294,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382116.1,d522a80fed1adee71f631b85a3a16fed,98.788,165,2,0,17,181,1,165,5.66e-76,294,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382116.1,ee6575cab7780fe25b51f8238ca74fd4,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382109.1,076fa78f4dd69b67a085a99a0b560275,99.441,179,1,0,17,195,1,179,2.01e-85,326,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382109.1,ee6575cab7780fe25b51f8238ca74fd4,100,165,0,0,17,181,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382116.1,b6d8cd13dd3c7ae8add173947e4453f0,98.788,165,2,0,17,181,1,165,5.66e-76,294,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382116.1,9905172cd2a4905e4746823300fecfbf,98.788,165,2,0,17,181,1,165,5.66e-76,294,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382116.1,0f9b9d16fe3d116357d9fb68553da9e1,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382116.1,de30f78335ddf188c9c3064447e5ecc9,98.788,165,2,0,17,181,1,165,5.66e-76,294,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382116.1,c1f82325df7f3777b7039ab8c6ebc15f,98.788,165,2,0,17,181,1,165,5.66e-76,294,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382110.1,de30f78335ddf188c9c3064447e5ecc9,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382110.1,076fa78f4dd69b67a085a99a0b560275,99.441,179,1,0,17,195,1,179,2.01e-85,326,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382107.1,9905172cd2a4905e4746823300fecfbf,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382107.1,b6d8cd13dd3c7ae8add173947e4453f0,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382114.1,0f9b9d16fe3d116357d9fb68553da9e1,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382110.1,ee6575cab7780fe25b51f8238ca74fd4,100,165,0,0,17,181,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382110.1,414cdc433a260ea81a1df0130f7d054e,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382115.1,ee6575cab7780fe25b51f8238ca74fd4,99.394,165,1,0,17,181,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382115.1,d522a80fed1adee71f631b85a3a16fed,98.788,165,2,0,17,181,1,165,5.66e-76,294,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382115.1,9905172cd2a4905e4746823300fecfbf,98.788,165,2,0,17,181,1,165,5.66e-76,294,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382115.1,b6d8cd13dd3c7ae8add173947e4453f0,98.788,165,2,0,17,181,1,165,5.66e-76,294,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382115.1,9571a06c0df51336c4b5dae125329da3,99.394,165,1,0,59,223,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382114.1,076fa78f4dd69b67a085a99a0b560275,98.883,179,2,0,17,195,1,179,9.34e-84,320,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382114.1,b6d8cd13dd3c7ae8add173947e4453f0,98.788,165,2,0,17,181,1,165,5.66e-76,294,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382114.1,9571a06c0df51336c4b5dae125329da3,99.394,165,1,0,59,223,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382115.1,076fa78f4dd69b67a085a99a0b560275,98.883,179,2,0,17,195,1,179,9.34e-84,320,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382116.1,9571a06c0df51336c4b5dae125329da3,99.394,165,1,0,59,223,1,165,1.22e-77,300,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382114.1,5b1b957e1f448c4404078ca20c5875c8,98.788,165,2,0,17,181,1,165,5.66e-76,294,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382114.1,414cdc433a260ea81a1df0130f7d054e,100,165,0,0,17,181,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382115.1,5b1b957e1f448c4404078ca20c5875c8,98.788,165,2,0,17,181,1,165,5.66e-76,294,Vespertilionidae,Myotis,Myotis sodalis
+385036,KM382116.1,076fa78f4dd69b67a085a99a0b560275,98.883,179,2,0,17,195,1,179,9.34e-84,320,Vespertilionidae,Myotis,Myotis sodalis
+46825,KR661102.1,74931840f9f3047a87dee266b058af2f,100,181,0,0,1,181,1,181,3.34e-88,335,Drosophilidae,Scaptomyza,Scaptomyza adusta
+46825,KT617665.1,74931840f9f3047a87dee266b058af2f,100,181,0,0,1,181,1,181,3.34e-88,335,Drosophilidae,Scaptomyza,Scaptomyza adusta
+500269,MG105725.1,b63327723633cfbce842a26534efc386,94.475,181,10,0,1,181,1,181,1.59e-71,279,Opomyzidae,Geomyza,Geomyza tripunctata
+500269,MG104603.1,b63327723633cfbce842a26534efc386,94.475,181,10,0,1,181,1,181,1.59e-71,279,Opomyzidae,Geomyza,Geomyza tripunctata
+500269,MG108356.1,b63327723633cfbce842a26534efc386,94.475,181,10,0,1,181,1,181,1.59e-71,279,Opomyzidae,Geomyza,Geomyza tripunctata
+511125,MF829416.1,b63327723633cfbce842a26534efc386,95,180,9,0,2,181,1,180,1.23e-72,283,Syrphidae,Pipiza,Pipiza quadrimaculata
+58236,MF381692.1,14437d7aa8c29be0ac1a955d00a48791,93.923,181,11,0,1,181,1463,1643,7.38e-70,274,Culicidae,Anopheles,Anopheles albitarsis
+58236,JN413684.1,14437d7aa8c29be0ac1a955d00a48791,94.444,180,10,0,2,181,2,181,5.7e-71,278,Culicidae,Anopheles,Anopheles albitarsis
+58236,JQ615270.1,14437d7aa8c29be0ac1a955d00a48791,94.444,180,10,0,2,181,2,181,5.7e-71,278,Culicidae,Anopheles,Anopheles albitarsis
+58236,JQ615257.1,14437d7aa8c29be0ac1a955d00a48791,94.444,180,10,0,2,181,2,181,5.7e-71,278,Culicidae,Anopheles,Anopheles albitarsis
+59463,GU723127.1,ba3a67e00683bc23423185654463dbad,100,181,0,0,1,181,1,181,3.34e-88,335,Vespertilionidae,Myotis,Myotis lucifugus
+59463,GU723127.1,382ea10b1c328a71f139601c173f574b,99.448,181,1,0,1,181,1,181,1.55e-86,329,Vespertilionidae,Myotis,Myotis lucifugus
+59463,GU723128.1,ba3a67e00683bc23423185654463dbad,99.448,181,1,0,1,181,1,181,1.55e-86,329,Vespertilionidae,Myotis,Myotis lucifugus
+59463,GU723128.1,382ea10b1c328a71f139601c173f574b,100,181,0,0,1,181,1,181,3.34e-88,335,Vespertilionidae,Myotis,Myotis lucifugus
+59463,GU723129.1,ba3a67e00683bc23423185654463dbad,100,181,0,0,1,181,1,181,3.34e-88,335,Vespertilionidae,Myotis,Myotis lucifugus
+59463,GU723129.1,382ea10b1c328a71f139601c173f574b,99.448,181,1,0,1,181,1,181,1.55e-86,329,Vespertilionidae,Myotis,Myotis lucifugus
+59463,GU723130.1,ba3a67e00683bc23423185654463dbad,98.895,181,2,0,1,181,1,181,7.22e-85,324,Vespertilionidae,Myotis,Myotis lucifugus
+59463,GU723130.1,382ea10b1c328a71f139601c173f574b,98.343,181,3,0,1,181,1,181,3.36e-83,318,Vespertilionidae,Myotis,Myotis lucifugus
+59463,MF362599.1,382ea10b1c328a71f139601c173f574b,99.448,181,1,0,1,181,5370,5550,1.55e-86,329,Vespertilionidae,Myotis,Myotis lucifugus
+59463,JF498689.1,ba3a67e00683bc23423185654463dbad,99.444,180,1,0,2,181,1,180,5.58e-86,327,Vespertilionidae,Myotis,Myotis lucifugus
+59463,JF498689.1,382ea10b1c328a71f139601c173f574b,98.889,180,2,0,2,181,1,180,2.6e-84,322,Vespertilionidae,Myotis,Myotis lucifugus
+59463,KP273591.1,ba3a67e00683bc23423185654463dbad,99.448,181,1,0,1,181,5391,5571,1.55e-86,329,Vespertilionidae,Myotis,Myotis lucifugus
+59463,MG423465.1,ba3a67e00683bc23423185654463dbad,99.444,180,1,0,2,181,1,180,5.58e-86,327,Vespertilionidae,Myotis,Myotis lucifugus
+59463,MG423465.1,382ea10b1c328a71f139601c173f574b,100,180,0,0,2,181,1,180,1.2e-87,333,Vespertilionidae,Myotis,Myotis lucifugus
+59463,KP273591.1,382ea10b1c328a71f139601c173f574b,98.895,181,2,0,1,181,5391,5571,7.22e-85,324,Vespertilionidae,Myotis,Myotis lucifugus
+59463,KM364009.1,382ea10b1c328a71f139601c173f574b,100,165,0,0,17,181,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis lucifugus
+59463,KM364020.1,ba3a67e00683bc23423185654463dbad,100,165,0,0,17,181,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis lucifugus
+59463,MF362599.1,ba3a67e00683bc23423185654463dbad,100,181,0,0,1,181,5370,5550,3.34e-88,335,Vespertilionidae,Myotis,Myotis lucifugus
+59463,KM364019.1,ba3a67e00683bc23423185654463dbad,100,165,0,0,17,181,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis lucifugus
+59463,KM364007.1,382ea10b1c328a71f139601c173f574b,100,165,0,0,17,181,1,165,2.62e-79,305,Vespertilionidae,Myotis,Myotis lucifugus
+626241,MF123809.1,d2efef68ab6bafa1d39102b89bf88944,87.349,166,21,0,15,180,69,234,7.64e-45,191,Labridae,Chlorurus,Chlorurus gibbus
+9872,JN632670.1,ace9509d09105b4daf7174d15836710b,100,181,0,0,1,181,5374,5554,3.34e-88,335,Cervidae,Odocoileus,Odocoileus hemionus
+9874,KM612273.1,ace9509d09105b4daf7174d15836710b,100,181,0,0,1,181,5372,5552,3.34e-88,335,Cervidae,Odocoileus,Odocoileus virginianus
+9874,KM612275.1,ace9509d09105b4daf7174d15836710b,100,181,0,0,1,181,5372,5552,3.34e-88,335,Cervidae,Odocoileus,Odocoileus virginianus
+9874,JF443323.1,ace9509d09105b4daf7174d15836710b,100,180,0,0,2,181,1,180,1.2e-87,333,Cervidae,Odocoileus,Odocoileus virginianus
+9874,KM612274.1,ace9509d09105b4daf7174d15836710b,100,181,0,0,1,181,5372,5552,3.34e-88,335,Cervidae,Odocoileus,Odocoileus virginianus
+9874,HQ332445.1,ace9509d09105b4daf7174d15836710b,99.448,181,1,0,1,181,427,607,4.31e-87,331,Cervidae,Odocoileus,Odocoileus virginianus
+9874,JN632672.1,ace9509d09105b4daf7174d15836710b,100,181,0,0,1,181,5372,5552,3.34e-88,335,Cervidae,Odocoileus,Odocoileus virginianus
+9874,KM612278.1,ace9509d09105b4daf7174d15836710b,100,181,0,0,1,181,5372,5552,3.34e-88,335,Cervidae,Odocoileus,Odocoileus virginianus
+9874,KM612271.1,ace9509d09105b4daf7174d15836710b,100,181,0,0,1,181,5372,5552,3.34e-88,335,Cervidae,Odocoileus,Odocoileus virginianus
+9874,KM612276.1,ace9509d09105b4daf7174d15836710b,99.448,181,1,0,1,181,5372,5552,1.55e-86,329,Cervidae,Odocoileus,Odocoileus virginianus
