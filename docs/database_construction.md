@@ -1,4 +1,27 @@
-# Database curation
+# Database curation overview
+The primers used in this experiment are known to amplify host DNA, yet it's unclear what other taxa other than host and arthropods are likely to be amplified. This can be problematic because discriminating between dietary components and non-dietary sequence variants is challenging as it's not always clear whether the observed sequence variants were truly prey items, prey items of prey items, taxa that are found in the intestinal flora of the host, or taxa that are found in the external environment in which the guano is collected. However, we can confidently remove taxa that are clearly not part of the diet such as fungi and other microeukaryotes. In addition, because these bats are insectivores we can discard instances in which things like other vertebrates are detected (e.g. bats aren't eating other bats, or fish, or deer).  We therefore sought to create a database that included both microeukaryote COI sequences and the broader macroeurkaryote COI references.
+
+We wanted to develop a database that encompassed as broad a record of COI resources as possible to achieve three goals:
+1. Identify the bat (host) DNA and separate it from all other sequences. These could potentially be used to classify the bat species in the guano sample. Given that the samples were passively collected and that the acoustic data was unable to confidently discriminate between _Myotis_ species (e.g. _sodalis_ vs. _lucifugus_), any host information was going to be useful.
+2. Identifying non-bat, non-diet items. This gets very subjective, but we wanted to at least remove obvious things. These bats are insectivores, so it's unlikely that if we'd have identified a swordfish in the guano, then that ASV should obviously be removed (or, we ought to rethink how we've designed our database and applied our classifiers!) Likewise,
+3. Classify the arthropod DNA in the bat guano samples.
+
+Previous comparisons of available COI databases (see our separate Tidybug Repo and [this document](https://github.com/devonorourke/tidybug/blob/master/docs/database_analyses.md) led us combine a series of references from two databases:
+
+1. Terri Porter's Eukaryote CO1 mtDNA [dataset](https://github.com/terrimporter/CO1Classifier) consists of a collection of Genbank records. The references in this dataset include only records that contain Species names; these include arthropod, chordate, and microeukaryote sequences. We downloaded this fasta file directly from their v3.2 release [here](https://github.com/terrimporter/CO1Classifier/releases/tag/v3.2-ref).
+```
+wget https://github.com/terrimporter/CO1Classifier/releases/download/v3.2-ref/CO1v3_2_training.tar.gz
+tar xzf CO1v3_2_training.tar.gz
+```
+
+2. The [Barcode of Life Database](http://v4.boldsystems.org/) is another large repository of COI sequences. To obtain these references we queried the [BOLD Taxonomy API](http://v4.boldsystems.org/index.php/resources/api?type=taxonomy) using the [bold R package](https://github.com/ropensci/bold). We used three related R scripts to collect reference taxonomies and sequences for [Arthropods](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/bold_datapull_arths.R), [Chordates](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/bold_datapull_chordate.R), and all [other animal, fungi, and protists](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/bold_datapull_nonArth_nonChord.R) sequences available. For each group we selected COI records from BOLD, then data was filtered to require the `markercode` column matching "COI-5P". The output of these scripts produced `.csv` files that contain sequence information, taxonomic information, and associated metadata including the `sequenceID`, `processid`, `bin_uri`, `genbank_accession`, `country`, `institution_storing` records.
+
+The entirety of these files were subject to dereplication, applying a Least Common Ancestor (LCA) algorithm with a consensus approach, and a few additional quality control filters. Each of these processes are explained below.
+
+# Database design
+Specific virtual environments were applied for certain portions of database construction with Conda. I've tried to highlight how certain decisions can significantly impact the composition of the database, in part, by documenting how many representative sequences remain after applying a certain filtering parameter. In particular, the Porter database did not apply an LCA or dereplicate records; as a result, some of their records with Species names became "Ambiguous" at that level, because multiple identical sequences contained distinct taxonomic information. We ensured that the same considerations were applied both to the BOLD and Porter records, as described below.
+
+## Required programs
 I've found that there are a handful of filtering steps that are useful when creating custom COI databases from BOLD records. To accomplish this, we used a few virtual environments for the work; `arrR` was used for data acquisition from BOLD, as well as filtering the resulting BOLD records,  `dev_qiime1` was used to apply further filtering parameters using some QIIME1 scripts and related Python scripts, and `qiime2-2018.11` was used to import the final filtered COI dataset. See the `sequence_filtering.md` document for QIIME2 information; the additional virtual environments were created as follows:
 
 ```
@@ -18,10 +41,9 @@ conda create -n dev_qiime1 python=2.7 qiime matplotlib=1.4.3 mock nose -c biocon
 > - if you get an error, uninstall and reinstall the offending python package (for example, I've had to do this for scipy and biom-format before)
 
 
-## Obtaining data
-We modified details illustrated in the vignette provided by the [bold R package](https://github.com/ropensci/bold) to download data from the [Barcode of Life Database](http://v4.boldsystems.org/). See the R scripts `bold_datapull.R` (Arthropods only), `bold_datapull_chordate.R` (Chordates only) and `bold_data_pull_nonArth_nonChord.R` (other animals, plus Fungi and Protist COI sequences) for full details on how the raw BOLD data was obtained and filtered. In brief, we selected COI records from BOLD, then data was filtered to require the `markercode` column matching "COI-5P". The output of this script produced `.csv` files that contain sequence information, taxonomic information, and associated metadata including the `sequenceID`, `processid`, `bin_uri`, `genbank_accession`, `country`, `institution_storing` records.
+# Obtaining data
 
-### Arthropod records
+## Arthropod records
 Because we're pulling nearly two million arthropod records from BOLD, we'll query the servers iteratively by generating a list of groups to pull from. I found that you can avoid any server complications by keeping the list size under about 2 million records, so I divvied up all Arthropods into the following groups:
 
 1. all non-Insect arthropods
@@ -262,7 +284,7 @@ sed 's/Animalia;/k__Animalia;p__/' bigCOI_taxmap.tmp | sed 's/;/;c__/2' | sed 's
 rm derep.seqid.tmp
 ```
 
-I'm unclear exactly why there was a small discrepency between the number of records in the fasta and that in the taxonomy mapping file (six additional records in the tax map); these were identified and removed after manual inspection revealed their extra sub-species information was redundant:
+I'm unclear exactly why there was a small discrepancy between the number of records in the fasta and that in the taxonomy mapping file (six additional records in the tax map); these were identified and removed after manual inspection revealed their extra sub-species information was redundant:
 ```
 ## what's missing?
 comm -23 <(sort taxmap.headers) <(sort fasta.headers) > extraTaxMap_data.txt
@@ -304,3 +326,6 @@ qiime tools import \
 ## remove temporary file:
 rm boldCOI.derep.qiime.tmp
 ```
+
+# Data accessibility
+The `.qza` artifacts are available in the [Open Source Frameworks repo of this project](https://osf.io/qju3w/).
