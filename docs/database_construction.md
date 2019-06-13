@@ -53,7 +53,7 @@ Because we're pulling nearly two million arthropod records from BOLD, we'll quer
 5. Lepidopterans
 6. all other Insects
 
-See the R script `bold_datapull.R` for implementation on how data was queried; notably, I did not follow the vignette exactly. One particular sticking point was how the names are derived when using the `taxize` library - I found that it can erronously _miss_ some taxa because of different names being applied to a group. One such instance I identified occurred between the NCBI name of `Psocoptera` while BOLD uses the term `Psocodea`; the distinction is that NCBI things `Psocodea` is a superOrder instead of just an Order, and BOLD doesn't do the super/supra level distinctions. Because of this discrepency, you'd completely miss all `Psocodea` records if you followed the vignette exactly.
+See the R script [bold_datapull_arths.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/bold_datapull_arths.R) script for implementation on how data was queried; notably, I did not follow the vignette exactly. One particular sticking point was how the names are derived when using the `taxize` library - I found that it can erronously _miss_ some taxa because of different names being applied to a group. One such instance I identified occurred between the NCBI name of `Psocoptera` while BOLD uses the term `Psocodea`; the distinction is that NCBI things `Psocodea` is a superOrder instead of just an Order, and BOLD doesn't do the super/supra level distinctions. Because of this discrepency, you'd completely miss all `Psocodea` records if you followed the vignette exactly.
 
 The retrieved records were split into two files: the first is a file containing sequence information with a particular format of taxonomic information, while the second contains metadata with taxonomy information in a different format. The first file taxonomic info is formatted in a way to produce the expected delimiters used with QIIME2 and Vsearch tools want (in case you want to dereplicate, for example), while the metadata file contained the various attributes for each Sequence ID, as well as the Phylum through Species taxa names in their original format (ie. not concatenated together). The latter allows us to quickly parse and tally the data as we impose certain filters.
 
@@ -105,7 +105,7 @@ The resulting `boldCustom.allArth.filt3.fasta` now contains **3,051,814** Arthro
 > A `missingFamilyCounts.txt` documents the number of missing sequence records, grouped by taxonomic Orders. See the tidybug/data/databases
 
 ### Chordate records
-The same principles were applied for Chordate BOLD records as with Arthropod records except that because the dataset was smaller we could pull the entire dataset from the BOLD API in a single batch. The order of operations:
+The same principles were applied for Chordate BOLD records as with Arthropod records except that because the dataset was smaller we could pull the entire dataset from the BOLD API in a single batch. See the [bold_datapull_chordate.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/bold_datapull_chordate.R) script for complete details. The order of operations:
 
 1. Obtained all chordate records from BOLD API using the `bold_datapull_chordate.R` script (results in **215,031** records).
 
@@ -138,7 +138,7 @@ seqkit -w 0 grep --pattern-file idsNoFam.txt --invert-match boldCustom.allChorda
 ```
 
 ## Non Arthropod, Non Chordate records
-The same principles were applied to BOLD records queried for non Arthropod/Chordate records, except we used a more liberal taxonomic rank requirement in filtering our data: instead of retaining only those with at least Family-rank information, we included all sequences assigned to at least Phylum. Because these data are used as filters to remove sequences we do not need to know more exclusive taxa Rank: provided they are a Mollusc, or a Fungi, for example, we know enough to  remove them from our dataset. Using a more liberal rank requirement allowed us to retain a broader set of representative sequences in these groups.
+The same principles were applied to BOLD records queried for non Arthropod/Chordate records, except we used a more liberal taxonomic rank requirement in filtering our data: instead of retaining only those with at least Family-rank information, we included all sequences assigned to at least Phylum. Because these data are used as filters to remove sequences we do not need to know more exclusive taxa Rank: provided they are a Mollusc, or a Fungi, for example, we know enough to  remove them from our dataset. Using a more liberal rank requirement allowed us to retain a broader set of representative sequences in these groups. The [bold_datapull_nonArth_nonChord.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/bold_datapull_nonArth_nonChord.R) script contains all the details.
 
 ### For non-Animal records
 ```
