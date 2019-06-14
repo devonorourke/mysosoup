@@ -172,6 +172,8 @@ We also explored whether the differences in alpha estimates vary by the factors 
 **Dunn pairwise comparisons:** Summaries available [here](https://github.com/devonorourke/mysosoup/tree/master/data/text_tables/dunn/contam_check)
   - The majority of significant pairwise comparisons exist between Site and Dates that are not overlapping on a calendar: June and September. There are differences in diversity estimates across a range of Hill Numbers, and these differences tend to occur mainly for both sites between the June and September months (that is, there are significant differences between those Months within and between Sites). The number of differences are reduced among the `wNTC` dataset, suggesting that including the ASVs present in negative controls may drown out the signal. This doesn't necessarily indicate these are especially contaminated features - simply that they are likely present in so many samples and at such a high abundance that their inclusion is swamping the ability to detect meaningful differences among Site and Date groups.
 
+175 guano samples were extracted by plate method. 80 and 95 samples were collected at Hickory Bottoms and Egner sites, respectively. Likewise, there were between 26 to 75 samples collected at each Month. If contamination was pervasive, we would have expected no significant differences between either group, yet there is strong evidence of differences in diversity estimates by Month. The lack of differences between sites isn't unexpected - artificial roosts installed at each site were only a few miles apart, thus we don't expect a substantial number of differences in available prey items. We next explored how the composition of those prey items differed, with the expectation that if samples were frequently contaminated, that most samples would look very similar to each other. Moreover, the samples that were extracted on plates should have relatively shorter distances in species compositions to negative control samples than those extracted by single tube extractions. Further, these distances should be shortest among samples in wells neighboring negative controls.
+
 # Beta diversity
 We assessed beta diversity using four different measures: two non-phylogenetic and three phylogenetic.
   - Non-phylogenetic included:
@@ -203,7 +205,7 @@ qiime tools export --input-path rooted-tree.wNTCasvs.qza --output-path rooted-tr
 # Generating data for Adonis
 We used distances estimated in QIIME2 for our Adonis evaluations. These included both phylogenetic and non-phylogenetic estimates.
 
-## Non phylogenetic estimates of beta diversity in QIIME2
+**Non phylogenetic estimates of beta diversity in QIIME2**  
 DS and BC distance measures were estimated for both `wNTC` and `noNTC`-filtered datasets in QIIME2; unfortunately there is no Morisita-Horn method available in QIIME2 (but there is in the Vegan-dependent Phyloseq R package):
 ```
 qiime diversity beta \
@@ -227,8 +229,9 @@ qiime diversity beta \
 --o-distance-matrix Mangan.noNTCasvs.bc.beta.qza
 ```
 
-## Phylogenetic estimates of beta diversityin QIIME2
-Weighted and unweighted unifrac assesments used in these analyses:
+**Phylogenetic estimates of beta diversityin QIIME2**  
+Weighted and unweighted Unifrac assesments used in these analyses:
+> The `$TREE` file represents the full path to the rooted tree generated previously ([rooted-tree.wNTCasvs.nwk](https://github.com/devonorourke/mysosoup/blob/master/data/trees/rooted-tree.wNTCasvs.nwk))
 
 ```
 TREE=/mnt/lustre/macmaneslab/devon/guano/NAU/Mangan/qiime/diversity/tree/rooted-tree.wNTCasvs.qza
@@ -257,125 +260,37 @@ qiime diversity beta-phylogenetic \
 --p-metric weighted_unifrac \
 --o-distance-matrix Mangan.noNTCasvs.wu.beta.qza
 ```
-> The `$TREE` file represents the full path to the rooted tree generated previously (`rooted-tree.wNTCasvs.qza`)
 
-All non-phylogenetic and phylogenetic distance estimates (as `.qza` artifacts) were used in `adonis_estimates.R` script.
+All non-phylogenetic and phylogenetic distance estimates are available as `.qza` artifacts in [this directory](https://github.com/devonorourke/mysosoup/tree/master/data/qiime_qza/distances) and were used in [adonis_estimates.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/adonis_estimates.R) script. The results for all Adonis tests were merged into a single [adonis_w.or.no_NTC_testing.csv](https://github.com/devonorourke/mysosoup/blob/master/data/text_tables/adonis/adonis_w.or.no_NTC_testing.csv) file; every single distance metric for both datasets (with and without negative control sample ASVs) suggested that both Site and Location, as well as the interaction of Site and Location, were significant. This would again rule against pervasive contamination, like all other analyses conducted thus far.
 
 # NMDS plots with phyloseq
-We used the Phyloseq library in an R environment to calculate distances from the same `Mangan.wNTCasvs-filt.rarefied-table_wNegSamps.qza` and `Mangan.noNTCasvs-filt.rarefied-table.qza` ASV artifact files as input. See the `nmds_plots.R` script for full details.
+We used the Phyloseq library in an R environment to calculate distances from the same `Mangan.wNTCasvs-filt.rarefied-table_wNegSamps.qza` and `Mangan.noNTCasvs-filt.rarefied-table.qza` ASV artifact files as input. See the [contam_workflow_betadiv.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/contam_workflow_betadiv.R) script for details on how ordinations were created. These analyses repeatedly showed that negative control samples are isolated incidents.
 
+For instance, using a variety of phylogenetic and non-phylogenetic distance measures, subsequent ordinations consistently failed to associate negative control samples closer to each other than the other groups like Site or time in which samples were collected. If pervasive contamination was expected, we would fail to detect extensive significant differences by Site or CollectionMonth. In addition, we'd expect the control samples to group together on the ordination.
+
+**Phylogenetic distances with Unifrac**
+Weighted ordination suggests fewer differences in ASV composition between samples than unweighted distance estimates. In either scenario, negative control samples are no more asociated with each other than either Site (point types) or Date of collection (colors).
+
+![ordi_phylo_contam4](https://github.com/devonorourke/mysosoup/blob/master/figures/nmds.unifrac_wNTCasv_wControlsShown.png)
+
+**Non-phylogenetic distance estimates**
+Dice-Sorensen(ds), Bray-Curtis (bc), and Morisita-Horn(mh) distance estimates were ordinated and further demonstrated that control samples (circles, blue color) are not associated with any particular group (Site or Location).
+
+![ordi_non-phylo_contam5](https://github.com/devonorourke/mysosoup/blob/master/figures/wNTCasvs_NMDS_wControls_byMonth.png)
+
+**Ordinating by zone of contamination**
+If the negative control samples were contaminated by liquid transfer from guano wells of a plate into a negative control well, we would expect the community composition of those wells surrounding negative control samples to have relatively shorter distances to those negative control samples. However, we fail to detect any relationship between the location of a guano sample and a negative control sample.
+
+![ordi_non-phylo_contam6](https://github.com/devonorourke/mysosoup/blob/master/figures/wNTCasvs_NMDS_wControls_byContamArea.png)
 
 # Conclusions of contamination findings
-1. some controls have very few numbers of reads
-2. some controls have average read abundance, but very few ASVs
-3. some controls have average reads and average ASVs
-4. ordination of all samples shows association of Month regardless of whether or not contaminated ASVs are included or not
-5. ordinating by plotting well location shows no association to neighboring samples - it's not pervasive dropps of liquid
-6. ordinatinog plots with extraction type (isolate or plate) shows no association with control samples - so it's not pervasive plate contamination
+1. Some negative controls have very few numbers of total reads compared to true samples; these may have occurred through minor amounts of contamination through DNA extraction of PCR but are not pervasive. They also may have been generated through tag jumping, but without any positive control we do not have the capability to measure that.
+2. Other negative control samples have average read abundances, but very few ASVs. These likely reflect situations in which a small  amount of guano dislodged from the silicone mats used during the initial shaking of all samples at the beginning of the DNA extraction step. This trace amount of guano was then preferentially amplified.
+3. Three controls have average reads and average ASVs. One of these was a known case of a piece of guano falling into a well (and thus was not surprising to see this diversity or read abundance). The other two negative control samples have similar ASV diversity, but different ASV sequences. Thus, these likely represent independent incidents in which a larger piece of guano was incorrectly transferred into a negative control well during the initial loading of DNA, or, represent another example in which a portion of guano was transferred when the silicone mat was removed during the bead beating step of the DNA extraction process.
+4. Ordination of all samples shows association of Month regardless of whether or not contaminated ASVs are included. This rules against pervasive contamination.
+5. Ordinating by plotting well location shows no association to neighboring samples - it's not pervasive drops of liquid during transfer either.
 
-conclusions: likely two things happening
-A. aerosols with low extract inhibition; note that samples were normalized
-B. chunks of poop during plate loading, mat removal and transfers
+We therefore find no compelling reason to remove the ASVs present in both guano and negative control samples.
 
-
-
-
-## Machine learning
-
-```
-------
-#!/bin/bash
-
-#SBATCH -D /mnt/lustre/macmaneslab/devon/guano/NAU/Mangan/qiime/classify-samples
-#SBATCH --job-name="lrnBatch"
-
-module purge
-module load anaconda/colsa
-source activate qiime2-2019.1
-
-
-READPATH=/mnt/lustre/macmaneslab/devon/guano/NAU/Mangan/qiime/reads
-METAFILE=/mnt/lustre/macmaneslab/devon/guano/NAU/Mangan/qiime/meta/qiime_meta.tsv
-
-qiime sample-classifier classify-samples \
-  --i-table "$READPATH"/Mangan_noBats_famOnly_min9000seq.repSeqs.qza \
-  --m-metadata-file "$METAFILE" \
-  --m-metadata-column BatchType \
-  --p-optimize-feature-selection \
-  --p-parameter-tuning \
-  --p-estimator RandomForestClassifier \
-  --p-n-estimators 1000 \
-  --output-dir learn-BatchType
-```
-
-
-
-Pulling out the sample names from the .qza file:
-```
-qiime tools export --input-path Mangan_noBats_famOnly_min9000seq_noControls.repSeqs.qza --output-path Mangan_noBats_famOnly_min9000seqs_noControls
-
-biom convert -i feature-table.biom --to-tsv -o Mangan_noBats_famOnly_min9000seqs_noControls.tsv
-
-head -2 Mangan_noBats_famOnly_min9000seqs_noControls.tsv | tail | tr '\t' '\n' | tail -n +3 > Mangan_noBats_famOnly_min9000seqs_noControls_sampleNames.txt
-```
-
-
-
-```
-
-
-
-
-Estimate distances with ASVtable and rooted tree using weighted and unweighted unifrac:
-
-TABLE=/mnt/lustre/macmaneslab/devon/guano/NAU/Mangan/qiime/reads/Mangan_noBats_ASVtable_rarefied.qza
-TREE=/mnt/lustre/macmaneslab/devon/guano/NAU/Mangan/qiime/diversity/tree/rooted-tree.qza
-
-```
-qiime diversity beta-phylogenetic \
---i-table "$TABLE" \
---i-phylogeny "$TREE" \
---p-metric weighted_unifrac \
---o-distance-matrix mangan_nobats_wuni_dist.qza
-
-qiime diversity beta-phylogenetic \
---i-table "$TABLE" \
---i-phylogeny "$TREE" \
---p-metric unweighted_unifrac \
---o-distance-matrix mangan_nobats_uuni_dist.qza
-```
-
-
-
-
-
-/mnt/lustre/macmaneslab/devon/guano/NAU/Mangan/qiime/diversity/beta
-
-unweighted_unifrac
-
-QUESTIon:
-I need to filter out the couple of mule deer reads before really doing the tree alignment and diversity estimates... those have to be removed from the rep-seqs and rep-table file...
-
-Those are just 2 of over 5000 ASVs.
-How should I go about removing any others?
-Is it worth dropping the ASVs that are no longer classified by either alignment or Bayesian?
-Could we use a tree built from ALL ASVs to identify the cluster that are clearly from arthropods against those that are likely NOT?
-
-
-
-
-
-TABLE=/mnt/lustre/macmaneslab/devon/guano/NAU/Mangan/qiime/reads/Mangan_noBats_ASVtable_FamOnly_rarefied.qza
-TREE=/mnt/lustre/macmaneslab/devon/guano/NAU/Mangan/qiime/diversity/tree/ASVfamOnlyTree/FamOnly.rooted-tree.qza
-
-qiime diversity beta-phylogenetic \
---i-table "$TABLE" \
---i-phylogeny "$TREE" \
---p-metric weighted_unifrac \
---o-distance-matrix mangan_nobats_wuni_dist.qza
-
-qiime diversity beta-phylogenetic \
---i-table "$TABLE" \
---i-phylogeny "$TREE" \
---p-metric unweighted_unifrac \
---o-distance-matrix mangan_nobats_uuni_dist.qza
+# Next steps
+Diversity estimates and machine learning classification were carried out as described in the [diversity_workflow.md](https://github.com/devonorourke/mysosoup/blob/master/docs/diversity_workflow.md) document.

@@ -16,7 +16,7 @@ theme_devon <- function () {
 }
 
 ## import metadata 
-meta <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/metadata/mangan_metadata.csv.gz", col_names = TRUE)
+meta <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/metadata/mangan_metadata.csv", col_names = TRUE)
 tinymeta <- meta %>% select(SampleID, Roost, CollectionMonth, SampleType, Site, ContamArea)
 tinymeta$Site <- ifelse(tinymeta$Site == "Egner", gsub("Egner", "EN", tinymeta$Site), tinymeta$Site)
 tinymeta$Site <- ifelse(tinymeta$Site == "HickoryBottoms", gsub("HickoryBottoms", "HB", tinymeta$Site), tinymeta$Site)
@@ -28,7 +28,7 @@ tinymeta$CollectionMonth <- ifelse(tinymeta$CollectionMonth == "7", gsub("7", "J
 tinymeta$CollectionMonth <- ifelse(tinymeta$CollectionMonth == "9", gsub("9", "September", tinymeta$CollectionMonth), tinymeta$CollectionMonth)
 
 ## import taxonomy info
-taxa <- read_delim(file = "https://github.com/devonorourke/mysosoup/raw/master/data/taxonomy/mangan_tax_vs.tsv.gz", col_names = TRUE, delim = "\t")
+taxa <- read_delim(file = "https://github.com/devonorourke/mysosoup/raw/master/data/taxonomy/mangan_tax_p97c94.tsv", delim = "\t", col_names = TRUE)
 taxa <- taxa %>% separate(., col = Taxon, sep=';', into = c("kingdom_name", "phylum_name", "class_name", "order_name", "family_name", "genus_name", "species_name")) %>% select(-Confidence)
 taxa <- as.data.frame(apply(taxa, 2, function(y) gsub(".__", "", y)))
 taxa <- as.data.frame(apply(taxa, 2, function(y) gsub("^$|^ $", NA, y)))
@@ -94,9 +94,9 @@ ALL_uni_df <- rbind(wNTCasv_uni_df, noNTCasv_uni_df)
 ## plot; save as 'nmds.unifrac_allTables'; export at 800x800
 v3pal <- viridis::plasma(3, begin = 0.35, end = 0.9, direction = -1)
 ALL_uni_df$CollectionMonth <- factor(ALL_uni_df$CollectionMonth, levels=c("June", "July", "September", "control"))
-ggplot(ALL_uni_df, aes(x=MDS1, y=MDS2, color=CollectionMonth, shape=Site)) +
+ggplot(ALL_uni_df, aes(x=MDS1, y=MDS2, color=CollectionMonth, shape=Site, label=SampleID)) +
   geom_point() +
-  scale_color_manual(values=c(v3pal, "gray40")) +
+  scale_color_manual(values=c(v3pal, "blue")) +
   facet_grid(FiltTable ~ Measure) +
   theme_devon() +
   theme(legend.position = "top")
@@ -105,7 +105,7 @@ ggplot(ALL_uni_df, aes(x=MDS1, y=MDS2, color=CollectionMonth, shape=Site)) +
 wNTCasv_uni_df$CollectionMonth <- factor(wNTCasv_uni_df$CollectionMonth, levels=c("June", "July", "September", "control"))
 ggplot(wNTCasv_uni_df, aes(x=MDS1, y=MDS2, color=CollectionMonth, shape=Site)) +
   geom_point() +
-  scale_color_manual(values=c(v3pal, "gray40")) +
+  scale_color_manual(values=c(v3pal, "blue")) +
   facet_grid(FiltTable ~ Measure) +
   theme_devon() +
   theme(legend.position = "top")
@@ -114,7 +114,7 @@ ggplot(wNTCasv_uni_df, aes(x=MDS1, y=MDS2, color=CollectionMonth, shape=Site)) +
 noNTCasv_uni_df$CollectionMonth <- factor(noNTCasv_uni_df$CollectionMonth, levels=c("June", "July", "September"))
 ggplot(noNTCasv_uni_df, aes(x=MDS1, y=MDS2, color=CollectionMonth, shape=Site)) +
   geom_point() +
-  scale_color_manual(values=c(v3pal, "gray40")) +
+  scale_color_manual(values=c(v3pal, "blue")) +
   facet_grid(FiltTable ~ Measure) +
   theme_devon() +
   theme(legend.position = "top")
@@ -126,7 +126,7 @@ ggplot(noNTCasv_uni_df, aes(x=MDS1, y=MDS2, color=CollectionMonth, shape=Site)) 
 
 tmp_wTree <- merge_phyloseq (phy_wNTCasv, tree)
 tmp_ord = ordinate(tmp_wTree, method="NMDS", distance="bray", binary=TRUE, transformation=FALSE)
-tmp_plot <- data.frame(ds_ord$points) %>% mutate(SampleID = row.names(.)) %>% mutate(Measure="ds") %>% mutate(FiltTable="wNTCasv")
+ds_plot <- data.frame(tmp_ord$points) %>% mutate(SampleID = row.names(.)) %>% mutate(Measure="ds") %>% mutate(FiltTable="wNTCasv")
 
 
 ## consider dropping that one outlier?
@@ -135,7 +135,7 @@ wNTC_BadSamples <- c('7272017EGC1', '7272017HBA6', 'ExtractionNTC11S115')
 
 nonPhyBetaFunction_wNTC <- function(Phydata, FiltTable) {
   rphy_wTree <- merge_phyloseq (Phydata, tree)
-  rphy_wTree <- subset_samples(rphy_wTree, SampleID %!in% noNTC_BadSamples)
+  rphy_wTree <- subset_samples(rphy_wTree, SampleID %!in% wNTC_BadSamples)
   dist_bc <- phyloseq::distance(rphy_wTree, "bray")
   nmds_bc <- ordinate(rphy_wTree, method = "NMDS", distance = dist_bc)
   dat_bc <- data.frame(nmds_bc$points) %>% mutate(SampleID = row.names(.)) %>% mutate(Measure="bc") %>% mutate(FiltTable=FiltTable)
@@ -160,7 +160,7 @@ wNTCasv_plot$Measure <- factor(wNTCasv_plot$Measure, levels=c("ds", "bc", "mh"))
 ## plot with control samples highlighted; save as 'wNTCasvs_NMDS_wControls_byMonth' export at 1000x475
 ggplot(wNTCasv_plot, aes(x=MDS1, y=MDS2, color=CollectionMonth, shape=Site)) +
   geom_point(data = wNTCasv_plot %>% filter(SampleType == "sample"), aes(color=CollectionMonth), alpha=0.7) +
-  geom_point(data = wNTCasv_plot %>% filter(SampleType == "control"), color="grey30", size=2) +
+  geom_point(data = wNTCasv_plot %>% filter(SampleType == "control"), color="blue", size=2) +
   scale_color_manual(values=c(v3pal, "gray40")) +
   facet_grid( ~ Measure) +
   theme_devon() +

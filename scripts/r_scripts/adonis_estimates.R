@@ -15,7 +15,7 @@ theme_devon <- function () {
 }
 
 ## import metadata 
-meta <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/metadata/mangan_metadata.csv.gz", col_names = TRUE)
+meta <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/metadata/mangan_metadata.csv", col_names = TRUE)
 tinymeta <- meta %>% select(SampleID, Roost, CollectionMonth, SampleType, Site)
 tinymeta$Site <- ifelse(tinymeta$Site == "Egner", gsub("Egner", "EN", tinymeta$Site), tinymeta$Site)
 tinymeta$Site <- ifelse(tinymeta$Site == "HickoryBottoms", gsub("HickoryBottoms", "HB", tinymeta$Site), tinymeta$Site)
@@ -66,7 +66,7 @@ adonis_wNTC_wu <- Adonis.function(wNTCasvs.wu.path, "wu", "wNTC")
 all_Adonis <- rbind(adonis_noNTC_bc, adonis_noNTC_ds, adonis_noNTC_gu, adonis_noNTC_uu, adonis_noNTC_wu,
                     adonis_wNTC_bc, adonis_wNTC_ds, adonis_wNTC_gu, adonis_wNTC_uu, adonis_wNTC_wu)
 
-write.csv(all_Adonis, file="~/Repos/mysosoup/data/text_tables/adonis_all.csv", row.names = FALSE, quote = FALSE)
+write.csv(all_Adonis, file="~/Repos/mysosoup/data/text_tables/adonis_w.or.no_NTC_testing.csv", row.names = FALSE, quote = FALSE)
 
 
 ##############################
