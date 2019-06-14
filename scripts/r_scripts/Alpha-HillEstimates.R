@@ -42,7 +42,7 @@ colnames(taxa)[1] <- "ASVid"
 # qzapath = "PATH/TO/tmp.qza"
 
 ## ..filter out remaining ASVs present exclusively in control samples, then calculate Hill Number values
-## run from local: qzapath = "~/Repos/mysosoup/data/qiime_qza/asvTables/Mangan.nonbatASVs.table.qza"
+## run from local: qzapath = "~/Repos/mysosoup/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.rarefied-table_noNegSamps.qza"
 featuretable <- read_qza(qzapath)
 mat.tmp <- featuretable$data
 rm(featuretable)

@@ -7,7 +7,7 @@ Part of that contamination investiation applied diversity estimates, and these e
 
 
 ## Alpha diversity
-See `alphadiv_analyses.R`. Includes Hill Number estimates and plots; includes ANOVA, Kruskal-Wallis, and Dunn tests.
+We used a [Alpha-HillEstimates.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/Alpha-HillEstimates.R) script to produce the Hill Number estimates at each artificial roost site. We generated the plot of diversity estimates faceted by Hill Number, and generated a series of statistical summaries determining if diversity estimates varied by the Month or Site a sample was associated with. Summaries for multifactorial [ANOVA](https://github.com/devonorourke/mysosoup/tree/master/data/text_tables/anovas), [Kruskal-Wallis](https://github.com/devonorourke/mysosoup/tree/master/data/text_tables/kruskal), and Dunn tests are available.
 
 ## Beta diversity
 See `betadiv_analyses.R`. Includes NMDS plots and Adonis estimates.
