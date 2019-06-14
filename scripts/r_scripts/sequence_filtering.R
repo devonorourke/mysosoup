@@ -76,7 +76,7 @@ NTConly_df <- df %>%
 ## any relationship between the number of ASVs per sample, the number of reads per sample, and whether or not
 ## ..the sample was derived from a Plate-extraction?
 
-## plot this
+## plot this; save as 'contam_eval_by_PlateType_and_ContamZone'; export at 
 ggplot(sumry0, aes(sumReads, nASVs, color=ContamArea, shape=SampleType)) + 
   geom_point(data=sumry0 %>% filter(SampleType == "control"), aes(sumReads, nASVs, color=ContamArea, shape=SampleType), size=4) + 
   geom_point(data=sumry0 %>% filter(SampleType != "control"), aes(sumReads, nASVs, color=ContamArea, shape=SampleType)) + 
@@ -106,7 +106,6 @@ ggplot(sumry1, aes(sumReads, nASVs, color=ContamArea, shape=SampleType)) +
   facet_wrap(~ Source) +
   scale_x_continuous(labels = comma) +
   theme_devon()
-
   ## results are similar to previous plot... filtering out singletons doesn't change overall patterns
 
 ## drop any ASV that doesn't have at least Family-rank information (assumption here is poor classification MAY be indicative of sequence error)
@@ -126,10 +125,11 @@ unique_controlASVs_taxfilt <- setdiff(df_taxfilt %>% filter(SampleType == "contr
 unique_sampleASVs_taxfilt <- setdiff(df_taxfilt %>% filter(SampleType == "sample") %>% select(ASVid),
                                      df_taxfilt %>% filter(SampleType == "control") %>% select(ASVid)) %>% pull()
 
+## plot; save as 'contam_eval_ASV_and_SeqCounts_uniqnessColored_per_Guano_or_Control'
 ggplot(sumry_taxfilt, aes(x=sumReads, y=nSamples)) +
   geom_point(data = sumry_taxfilt %>% filter(ASVid %in% commonASVs_taxfilt), color="black") +
-  geom_point(data = sumry_taxfilt %>% filter(ASVid %in% unique_controlASVs_taxfilt), color="red", size=4) +
   geom_point(data = sumry_taxfilt %>% filter(ASVid %in% unique_sampleASVs_taxfilt), color="blue") +
+  geom_point(data = sumry_taxfilt %>% filter(ASVid %in% unique_controlASVs_taxfilt), color="red", size=2) +
   theme_devon()
 
 
@@ -175,7 +175,7 @@ contam_taxfilt_df <- light_filt_df %>% filter(ASVid %in% taxfilt_contamASVs)
 
 ## We'll create two lists of ASVs to filter our original dataset:
 ## 1) ASVs that meet our taxonomy completeness criteria (Arthropod-associated phylum_name with at least Family info) and include all ASVs whether or not they are present in NTC samples
-## 2) As with #1 above, but removing the 69 ASVs present in NTC samples 
+## 2) As with #1 above, but removing the 68 ASVs present in NTC samples 
 
 taxfilt_ASVs <- df_taxfilt %>% distinct(ASVid)
 colnames(taxfilt_ASVs)[1] <- "#OTUID"

@@ -16,7 +16,7 @@ theme_devon <- function () {
 }
 
 ## import metadata 
-meta <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/metadata/mangan_metadata.csv.gz", col_names = TRUE)
+meta <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/metadata/mangan_metadata.csv", col_names = TRUE)
 tinymeta <- meta %>% select(SampleID, Roost, CollectionMonth, Site, SampleType)
 tinymeta$Site <- ifelse(tinymeta$Site == "Egner", gsub("Egner", "EN", tinymeta$Site), tinymeta$Site)
 tinymeta$Site <- ifelse(tinymeta$Site == "HickoryBottoms", gsub("HickoryBottoms", "HB", tinymeta$Site), tinymeta$Site)
@@ -27,7 +27,7 @@ tinymeta$CollectionMonth <- as.factor(tinymeta$CollectionMonth)
 
 
 ## add taxonomy information
-taxa <- read_delim(file = "https://github.com/devonorourke/mysosoup/raw/master/data/taxonomy/mangan_tax_vs.tsv.gz", delim = "\t", col_names = TRUE)
+taxa <- read_delim(file = "https://github.com/devonorourke/mysosoup/raw/master/data/taxonomy/mangan_tax_p97c94.tsv", delim = "\t", col_names = TRUE)
 taxa <- taxa %>% separate(., col = Taxon, sep=';', into = c("kingdom_name", "phylum_name", "class_name", "order_name", "family_name", "genus_name", "species_name")) %>% select(-Confidence)
 taxa <- as.data.frame(apply(taxa, 2, function(y) gsub(".__", "", y)))
 taxa <- as.data.frame(apply(taxa, 2, function(y) gsub("^$|^ $", NA, y)))

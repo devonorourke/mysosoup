@@ -16,7 +16,7 @@ theme_devon <- function () {
 }
 
 ## import metadata 
-meta <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/metadata/mangan_metadata.csv.gz", col_names = TRUE)
+meta <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/metadata/mangan_metadata.csv", col_names = TRUE)
 tinymeta <- meta %>% select(SampleID, Roost, CollectionMonth, Site, SampleType)
 tinymeta$Site <- ifelse(tinymeta$Site == "Egner", gsub("Egner", "EN", tinymeta$Site), tinymeta$Site)
 tinymeta$Site <- ifelse(tinymeta$Site == "HickoryBottoms", gsub("HickoryBottoms", "HB", tinymeta$Site), tinymeta$Site)
@@ -52,10 +52,10 @@ v3pal <- viridis::plasma(3, begin = 0.35, end = 0.9, direction = -1)
 
 ## plotting all ASVs - notice no outliers in control samples - all highly abundant samples real samples 
 ## save as 'all_Alpha_Hillvals_allASVs'; export at 800x600
-a <- ggplot(all_hill_df, aes(x=Labeler, y=Hill_value, color=CollectionMonth)) + 
+a <- ggplot(all_hill_df, aes(x=Labeler, y=Hill_value, color=CollectionMonth, label = SampleID)) + 
   geom_jitter(width = 0.2, alpha=0.8) + 
   scale_color_manual(values = c(v3pal, "gray40"), labels=c("June", "July", "September", "control")) +
-  facet_grid(Hill_qType ~ .) +
+  facet_wrap( ~ Hill_qType , scales = "free_y") +
   labs(x="", y="Estimated diversity", color = "Month") +
   theme_devon() +
   theme(axis.text.x = element_text(angle = 22.5, hjust=1),
@@ -128,7 +128,7 @@ plot_grid(a, b, ncol=2)
 ## .. at Arthropod classification containing at least Family-rank information 
 
 ## add taxonomy information
-taxa <- read_delim(file = "https://github.com/devonorourke/mysosoup/raw/master/data/taxonomy/mangan_tax_vs.tsv.gz", delim = "\t", col_names = TRUE)
+taxa <- read_delim(file = "https://github.com/devonorourke/mysosoup/raw/master/data/taxonomy/mangan_tax_p97c94.tsv", delim = "\t", col_names = TRUE)
 taxa <- taxa %>% separate(., col = Taxon, sep=';', into = c("kingdom_name", "phylum_name", "class_name", "order_name", "family_name", "genus_name", "species_name")) %>% select(-Confidence)
 taxa <- as.data.frame(apply(taxa, 2, function(y) gsub(".__", "", y)))
 taxa <- as.data.frame(apply(taxa, 2, function(y) gsub("^$|^ $", NA, y)))
@@ -167,7 +167,7 @@ hill_df_taxfilt_wNTCasv$CollectionMonth <- factor(hill_df_taxfilt_wNTCasv$Collec
 ggplot(hill_df_taxfilt_wNTCasv, aes(x=Labeler, y=Hill_value, color=CollectionMonth)) + 
   geom_jitter(width = 0.2, alpha=0.8) + 
   scale_color_manual(values = c(v3pal, 'gray40'), labels=c("June", "July", "September", "control")) +
-  facet_grid(Hill_qType ~ .) +
+  facet_wrap(~ Hill_qType, scales = "free_y") +
   labs(x="", y="Estimated diversity", color = "Month") +
   theme_devon() +
   theme(axis.text.x = element_text(angle = 22.5, hjust=1),
