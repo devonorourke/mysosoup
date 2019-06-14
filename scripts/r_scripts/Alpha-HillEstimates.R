@@ -17,7 +17,7 @@ theme_devon <- function () {
 
 ## import metadata 
 meta <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/metadata/mangan_metadata.csv", col_names = TRUE)
-tinymeta <- meta %>% select(SampleID, Roost, CollectionMonth, Site, SampleType)
+tinymeta <- meta %>% select(SampleID, Roost, CollectionMonth, Site, SampleType, BatchType)
 tinymeta$Site <- ifelse(tinymeta$Site == "Egner", gsub("Egner", "EN", tinymeta$Site), tinymeta$Site)
 tinymeta$Site <- ifelse(tinymeta$Site == "HickoryBottoms", gsub("HickoryBottoms", "HB", tinymeta$Site), tinymeta$Site)
 tinymeta$CollectionMonth[is.na(tinymeta$CollectionMonth)] <- "control"
@@ -78,7 +78,7 @@ v3pal <- viridis::plasma(3, begin = 0.35, end = 0.9, direction = -1)
 ggplot(mangan_hill_df, aes(x=Labeler, y=Hill_value, color=CollectionMonth)) + 
   geom_jitter(width = 0.2, alpha=0.8) + 
   scale_color_manual(values = c(v3pal, "gray40"), labels=c("June", "July", "September")) +
-  facet_grid( Hill_qType ~ .) +
+  facet_wrap(~ Hill_qType ) +
   labs(x="", y="Estimated diversity", color = "Month") +
   theme_devon() +
   theme(axis.text.x = element_text(angle = 22.5, hjust=1),
@@ -115,7 +115,8 @@ library(FSA)
 dunnfunction <- function(data, qfilt){
   data$Grouper <- paste(data$CollectionMonth, data$Site, sep="-")
   data$Grouper <- as.factor(data$Grouper)
-  dunnTest(Hill_value ~ Grouper, data=data %>% filter(Hill_qType==qfilt), method = "bh")
+  tmp <- dunnTest(Hill_value ~ Grouper, data=tmpdf %>% filter(Hill_qType==qfilt), method = "bh") 
+  tmp$res %>% arrange(P.adj)
 }
 
 capture.output(dunnfunction(mangan_hill_df, "q=0"),file="~/Repos/mysosoup/data/text_tables/dunn/dunn_mangan_alpha_q0.txt")
