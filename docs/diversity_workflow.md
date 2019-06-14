@@ -1,3 +1,11 @@
+# Background
+The [contamination_investigations.md](https://github.com/devonorourke/mysosoup/blob/master/docs/contamination_investigations.md) document describes efforts used to justify retaining ASVs for our bat diet analyses for such instances where sequence variants were detected in both negative control samples and guano samples. This process began by taking the host-filtered representative sequence variants generated at the output of the [classify_sequences.md](https://github.com/devonorourke/mysosoup/blob/master/docs/classify_sequences.md) document. We used the [sequence_filtering.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/sequence_filtering.R) script to identify which ASVs were present in both guano and negative control samples. Notably, we restricted our analyses to those ASVs that met two criteria:
+  - 1) The ASV was classified to the Arthropoda Phylum
+  - 2) The ASV contained at least Family-name information (i.e. Genus or Species name were retained, those missing Order name were discarded)
+
+Part of that contamination investiation applied diversity estimates, and these estimates required rarefying data. We begin our diversity work using those rarefied QIIME sequences and abundance tables ([Mangan.wNTCasvs-filt.rarefied-table_noNegSamps.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.rarefied-table_noNegSamps.qza)) that contained ASVs detected in both guano and negative control samples, though the control samples are discarded as are any ASVs that were unique to those control samples.
+
+
 ## Alpha diversity
 See `alphadiv_analyses.R`. Includes Hill Number estimates and plots; includes ANOVA, Kruskal-Wallis, and Dunn tests.
 
