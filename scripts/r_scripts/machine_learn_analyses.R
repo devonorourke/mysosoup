@@ -114,8 +114,8 @@ qzaimport.function <- function(qzapath){
   #    rfypath="~/Downloads/rarfyd.qza"
   #    nonpath="~/Downloads/nonfyd.qza"
 
-# alternative: run from local rfypath="/Users/do/Repos/mysosoup/data/qiime_qza/seqs/Mangan.wNTCasvs-filt.rarefied-table_noNegSamps_noSingleASVs.qza"
-# alternative: run from local nonpath="/Users/do/Repos/mysosoup/data/qiime_qza/seqs/Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza"
+# alternative: run from local rfypath="/Users/do/Repos/mysosoup/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.rarefied-table_noNegSamps_noSingleASVs.qza"
+# alternative: run from local nonpath="/Users/do/Repos/mysosoup/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza"
 
 rarfyd_reads <- qzaimport.function(rfypath)
 nonfyd_reads <- qzaimport.function(nonpath)
@@ -148,22 +148,22 @@ nonfyd_reads %>% filter(ASVid %in% uniq_nonrarfyd_asvs) %>% summarise(uniqs=n_di
 ## these are illustrated as heatmaps
 
 ## 2. using the rarefied dataset, we highlight select ASVs that provide the most predictive power at discrimnating by SiteWeek:
-
 ################################################################################
 
 ## For all projects, merge read data with taxa information and metadata:
 ## import taxa data
 ## add taxonomy information
-taxa <- read_delim(file = "https://github.com/devonorourke/mysosoup/raw/master/data/taxonomy/mangan_tax_vs.tsv.gz", delim = "\t", col_names = TRUE)
+taxa <- read_delim(file = "https://github.com/devonorourke/mysosoup/raw/master/data/taxonomy/mangan_tax_p97c94.tsv", delim = "\t", col_names = TRUE)
 taxa <- taxa %>% separate(., col = Taxon, sep=';', into = c("kingdom_name", "phylum_name", "class_name", "order_name", "family_name", "genus_name", "species_name")) %>% select(-Confidence)
 taxa <- as.data.frame(apply(taxa, 2, function(y) gsub(".__", "", y)))
 taxa <- as.data.frame(apply(taxa, 2, function(y) gsub("^$|^ $", NA, y)))
 taxa <- as.data.frame(apply(taxa, 2, function(y) gsub("Ambiguous_taxa", NA, y)))
 taxa <- as.data.frame(apply(taxa, 2, function(y) gsub("Unassigned", NA, y)))
 colnames(taxa)[1] <- "ASVid"
+row.names(taxa) <- taxa$ASVid
 
 ## import metadata
-meta <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/metadata/mangan_metadata.csv.gz", col_names = TRUE) %>% 
+meta <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/metadata/mangan_metadata.csv", col_names = TRUE) %>% 
   filter(SampleType == "sample") %>% select(SampleID, BatchType, Roost, CollectionMonth, Site)
 meta$Site <- ifelse(meta$Site == "Egner", gsub("Egner", "EN", meta$Site), meta$Site)
 meta$Site <- ifelse(meta$Site == "HickoryBottoms", gsub("HickoryBottoms", "HB", meta$Site), meta$Site)
@@ -237,8 +237,8 @@ ggplot(order_sumry, aes(x=Month, y=order_name, fill=pReads)) +
   scale_y_discrete(position = "left") +
   theme_devon()
 
-## notice how different the impressions are between occurrence and abundance..
-## ..diptera dominate abundance, but not occurrence
+  ## notice how different the impressions are between occurrence and abundance..
+  ## ..diptera dominate abundance, but not occurrence
 
 ## going to merge Orders that have less than 1% of overall abundance across entire dataset into a single group, then replot
 ## summarize the per-Order number of reeds

@@ -25,7 +25,7 @@ theme_devon <- function () {
 ########################################################################
 
 ## import metadata 
-meta <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/metadata/mangan_metadata.csv.gz", col_names = TRUE)
+meta <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/metadata/mangan_metadata.csv", col_names = TRUE)
 meta <- meta %>% 
   select(SampleID, Roost, CollectionMonth, SampleType, Site, ContamArea) %>% 
   rename(Month = CollectionMonth)
@@ -38,7 +38,7 @@ meta$Month <- ifelse(meta$Month == "9", gsub("9", "September", meta$Month), meta
 meta <- meta %>% filter(SampleType == "sample")
 
 ## import taxonomy info
-taxa <- read_delim(file = "https://github.com/devonorourke/mysosoup/raw/master/data/taxonomy/mangan_tax_vs.tsv.gz", col_names = TRUE, delim = "\t")
+taxa <- read_delim(file = "https://github.com/devonorourke/mysosoup/raw/master/data/taxonomy/mangan_tax_p97c94.tsv", delim = "\t", col_names = TRUE)
 taxa <- taxa %>% separate(., col = Taxon, sep=';', into = c("kingdom_name", "phylum_name", "class_name", "order_name", "family_name", "genus_name", "species_name")) %>% select(-Confidence)
 taxa <- as.data.frame(apply(taxa, 2, function(y) gsub(".__", "", y)))
 taxa <- as.data.frame(apply(taxa, 2, function(y) gsub("^$|^ $", NA, y)))
@@ -57,11 +57,11 @@ phy_tax <- as.matrix(taxa) %>% tax_table(.)
 ## import sequence data from QZA artifact, filter out reads all non-Arthropod reads without (at least) Family-rank info, .. 
 ## ..filter out remaining ASVs present exclusively in control samples, then import as physeq object
 ## download qza file:
-# download.file("https://github.com/devonorourke/mysosoup/raw/master/data/qiime_qza/asvTables/Mangan.nonbatASVs.table.qza", "tmp.qza")
+# download.file("https://github.com/devonorourke/mysosoup/raw/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.rarefied-table_noNegSamps_noSingleASVs.qza", "tmp.qza")
 # then set PATH to whatever directory needed:
 # qzapath = "PATH/TO/tmp.qza"
 
-## alternatively run from local: qzapath = "~/Repos/mysosoup/data/qiime_qza/asvTables/Mangan.nonbatASVs.table.qza"
+## alternatively run from local: qzapath = "~/Repos/mysosoup/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.rarefied-table_noNegSamps_noSingleASVs.qza"
 featuretable <- read_qza(qzapath)
 mat.tmp <- featuretable$data
 rm(featuretable)
@@ -74,11 +74,8 @@ rm(df.tmp)
 colnames(tmp) <- c("ASVid", "SampleID", "Reads")
 df.tmp <- merge(tmp, taxa)
 rm(tmp)
-df.tmp <- merge(df.tmp, tinymeta)
-onlyControlASVs <- setdiff(df.tmp %>% filter(SampleType=="control") %>% select(ASVid) %>% pull(), df.tmp %>% filter(SampleType=="sample") %>% select(ASVid) %>% pull())
-df_filt.tmp <- df.tmp %>% filter(!ASVid %in% onlyControlASVs) %>% filter(phylum_name=="Arthropoda") %>% filter(!is.na(family_name)) %>% filter(SampleType == "sample")
-rm(df.tmp)
-mat.tmp <- dcast(data = df_filt.tmp, formula = SampleID ~ ASVid, value.var='Reads', fill = 0)
+df.tmp <- merge(df.tmp, meta)
+mat.tmp <- dcast(data = df.tmp, formula = SampleID ~ ASVid, value.var='Reads', fill = 0)
 row.names(mat.tmp) <- mat.tmp$SampleID
 mat.tmp$SampleID <- NULL
 OTU <- otu_table(mat.tmp, taxa_are_rows = FALSE) ## import as physeq object 
@@ -86,18 +83,10 @@ phydat <- phyloseq(OTU, phy_tax, phy_meta)
 rm(mat.tmp, phy_tax, OTU, qzapath, phy_meta)
 
 ## sanity check:
-nsamples(phydat)  ## 288 samples remain (from 304, 11 of which were NTCs)
-ntaxa(phydat) ## 2659 taxa remain
+nsamples(phydat)  ## 277 samples remain (from 304, 11 of which were NTCs)
+ntaxa(phydat) ## 2573 taxa remain
 sample_names(phydat)  ## all contaminant samples removed
   ## all good.
-
-
-## rarefy table; rarefying at 5200 reads (what we observed from QIIME alpha rarefaction work previously; see 'classify_sequences.md' file)
-rphydat = rarefy_even_depth(phydat, sample.size=5200, replace = FALSE, rngseed = 123)
-nsamples(rphydat)  ## 280 samples remain; drops 8 samples
-ntaxa(rphydat)  ## 2571; we've dropped 88 ASVs
-#unused: filt_rphydat = filter_taxa(rphydat, function(x) max(x) >= 2, TRUE)  ## keep only ASVs seen in at least 3 samples
-#unused: ntaxa(filt_rphydat) ## keeps 2492 taxa (so 79 ASVs are detected in just a single sample)
 
 ########################################################################
 ## Part 2 == calculate distances using 5 unique distance measures
@@ -112,47 +101,42 @@ ntaxa(rphydat)  ## 2571; we've dropped 88 ASVs
 
 ## alternatively run from local: tree <- read.tree(file = "~/Repos/mysosoup/data/trees/rooted-tree.wNTCasvs.nwk")
 
-## dropping samples that (following rarefying) contain just a single ASV:
-dropSamples <- c('7272017EGC1', '7272017EGC2', '7272017HBA6')
-
-'%!in%' <- function(x,y)!('%in%'(x,y))
+## add tree info to physeq object
+phy_wTree <- merge_phyloseq (phydat, tree)
 
 ## calculate distances for each method; group into single data.frame for plot
-rphy_wTree <- merge_phyloseq (rphydat, tree)
-rphy_wTree <- subset_samples(rphy_wTree, SampleID %!in% dropSamples)
-
-dist_bc <- phyloseq::distance(rphy_wTree, "bray", binary = FALSE)
-pcoa_bc <- ordinate(rphy_wTree, method = "PCoA", distance = dist_bc)
+dist_bc <- phyloseq::distance(phy_wTree, "bray", binary = FALSE)
+pcoa_bc <- ordinate(phy_wTree, method = "PCoA", distance = dist_bc)
 dat_bc <- data.frame(pcoa_bc$vectors[,1:3]) %>% mutate(SampleID = row.names(.)) %>% mutate(Measure="bc")
 
-dist_ds <- phyloseq::distance(rphy_wTree, "bray", binary = TRUE)
-pcoa_ds <- ordinate(rphy_wTree, method = "PCoA", distance = dist_ds)
+dist_ds <- phyloseq::distance(phy_wTree, "bray", binary = TRUE)
+pcoa_ds <- ordinate(phy_wTree, method = "PCoA", distance = dist_ds)
 dat_ds <- data.frame(pcoa_ds$vectors[,1:3]) %>% mutate(SampleID = row.names(.)) %>% mutate(Measure="ds")
 
-dist_mh <- phyloseq::distance(rphy_wTree, "morisita", binary = FALSE)
-pcoa_mh <- ordinate(rphy_wTree, method = "PCoA", distance = dist_mh)
+dist_mh <- phyloseq::distance(phy_wTree, "morisita", binary = FALSE)
+pcoa_mh <- ordinate(phy_wTree, method = "PCoA", distance = dist_mh)
 dat_mh <- data.frame(pcoa_mh$vectors[,1:3]) %>% mutate(SampleID = row.names(.)) %>% mutate(Measure="mh")
 
-pcoa_wu = ordinate(rphy_wTree, method="PCoA", distance="unifrac", weighted=TRUE)
+pcoa_wu = ordinate(phy_wTree, method="PCoA", distance="unifrac", weighted=TRUE)
 dat_wu <- data.frame(pcoa_wu$vectors[,1:3]) %>% mutate(SampleID = row.names(.)) %>% mutate(Measure="wu")
 
-pcoa_uu = ordinate(rphy_wTree, method="PCoA", distance="unifrac", weighted=FALSE) ## note the Phyloseq impelentation normalizes branch length values
+pcoa_uu = ordinate(phy_wTree, method="PCoA", distance="unifrac", weighted=FALSE) ## note the Phyloseq impelentation normalizes branch length values
 dat_uu <- data.frame(pcoa_uu$vectors[,1:3]) %>% mutate(SampleID = row.names(.)) %>% mutate(Measure="uu")
 
 bigplot_df <- rbind(dat_bc, dat_ds, dat_mh, dat_wu, dat_uu)
 rm(dat_bc, dat_ds, dat_mh, dat_wu, dat_uu)
-bigplot_df <- merge(bigplot_df, tinymeta)
+bigplot_df <- merge(bigplot_df, meta)
 
 ## plot setup
 v3pal <- viridis::plasma(3, begin = 0.35, end = 0.9, direction = -1)
 bigplot_df$Month <- factor(bigplot_df$Month, levels=c("June", "July", "September"))
 bigplot_df$Measure <- factor(bigplot_df$Measure, levels=c('ds', 'bc', 'mh', 'uu', 'wu'))
 
-## save plot as 'pcoa_fiveMetric'; export at 1000x817
+## save plot as 'pcoa_fiveMetric_onlyGuano'; export at 1000x817
 ## note ethis plot isn't doing as good a job as the individual plots because:
 ## ... it's not showing the proportion of variation on each PC (which varies by plot)
 ## ... so maybe better not to facet except to use as a '30,000 foot' view to show broad trends at once
-ggplot(bigplot_df, aes(x=PC1, y=Axis.2, color=Month, shape=Site)) +
+ggplot(bigplot_df, aes(x=Axis.1, y=Axis.2, color=Month, shape=Site)) +
   geom_point() +
   scale_color_manual(values=v3pal) +
   facet_wrap(Measure ~ ., nrow=2) +
@@ -160,7 +144,7 @@ ggplot(bigplot_df, aes(x=PC1, y=Axis.2, color=Month, shape=Site)) +
   theme(legend.position = "top")
 
 ## plotting individually directly with phyloseq is faster and better, with a bit of ggplot help
-plot_bc <- plot_ordination(rphy_wTree, pcoa_bc, color = "Month", shape = "Site")
+plot_bc <- plot_ordination(phy_wTree, pcoa_bc, color = "Month", shape = "Site")
 plot_bc$data$Month <- factor(plot_bc$data$Month, levels = c("June", "July", "September"))
 ## plot; save as 'pcoa_bc_wellipse'; export at 650x550
 pbc <- plot_bc + 
@@ -169,57 +153,62 @@ pbc <- plot_bc +
   theme_devon() +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   theme(legend.position = "none") +
-  labs(caption="Bray-Curtis distance estimate") +
-  stat_ellipse(data = plot_bc$data %>% filter(Site == "EN"), linetype = "dashed") + ## ellipse for EN months
-  stat_ellipse(data = plot_bc$data %>% filter(Site == "HB"), linetype = "solid")  ## ellips for HB months
-  #stat_ellipse(aes(group = Month), linetype="longdash") ## this makes centroids just ~Month
-  #stat_ellipse(aes(group = Site), linetype="solid", color="black")
+  labs(subtitle="Bray-Curtis distance estimate")
+#labs(subtitle="Bray-Curtis distance estimate") +
+#stat_ellipse(data = plot_bc$data %>% filter(Site == "EN"), linetype = "dashed") + ## ellipse for EN months
+#stat_ellipse(data = plot_bc$data %>% filter(Site == "HB"), linetype = "solid")  ## ellips for HB months
+#stat_ellipse(aes(group = Month), linetype="longdash") ## this makes centroids just ~Month
+#stat_ellipse(aes(group = Site), linetype="solid", color="black")
 rm(plot_bc)
 
 ## plot; save as 'pcoa_ds_wellipse'; export at 650x550
-plot_ds <- plot_ordination(rphy_wTree, pcoa_ds, color = "Month", shape = "Site")
+plot_ds <- plot_ordination(phy_wTree, pcoa_ds, color = "Month", shape = "Site")
 plot_ds$data$Month <- factor(plot_ds$data$Month, levels = c("June", "July", "September"))
 pds <- plot_ds + 
   geom_point(size = 4, alpha=0.8) + scale_color_manual(values=v3pal) +
   theme_devon() + theme(legend.position = "none", panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-  labs(caption="Dice-Sorensen distance estimate") +
-  stat_ellipse(data = plot_ds$data %>% filter(Site == "EN"), linetype = "dashed") + ## ellipse for EN months
-  stat_ellipse(data = plot_ds$data %>% filter(Site == "HB"), linetype = "solid")  ## ellips for HB months
+  labs(subtitle="Dice-Sorensen distance estimate")
+#labs(subtitle="Dice-Sorensen distance estimate") +
+#stat_ellipse(data = plot_ds$data %>% filter(Site == "EN"), linetype = "dashed") + ## ellipse for EN months
+#stat_ellipse(data = plot_ds$data %>% filter(Site == "HB"), linetype = "solid")  ## ellips for HB months
 rm(plot_ds)
 
 ## plot; save as 'pcoa_mh_wellipse'; export at 650x550
-plot_mh <- plot_ordination(rphy_wTree, pcoa_mh, color = "Month", shape = "Site")
+plot_mh <- plot_ordination(phy_wTree, pcoa_mh, color = "Month", shape = "Site")
 plot_mh$data$Month <- factor(plot_mh$data$Month, levels = c("June", "July", "September"))
 pmh <- plot_mh + 
   geom_point(size = 4, alpha=0.8) + scale_color_manual(values=v3pal) +
   theme_devon() + theme(legend.position = "none", panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-  labs(caption="Morisita-Horn distance estimate") +
-  stat_ellipse(data = plot_mh$data %>% filter(Site == "EN"), linetype = "dashed") + ## ellipse for EN months
-  stat_ellipse(data = plot_mh$data %>% filter(Site == "HB"), linetype = "solid")  ## ellips for HB months
+  labs(subtitle="Morisita-Horn distance estimate")
+#labs(subtitle="Morisita-Horn distance estimate") +
+#stat_ellipse(data = plot_mh$data %>% filter(Site == "EN"), linetype = "dashed") + ## ellipse for EN months
+#stat_ellipse(data = plot_mh$data %>% filter(Site == "HB"), linetype = "solid")  ## ellips for HB months
 rm(plot_mh)
 
 
 ## plot; save as 'pcoa_uu_wellipse'; export at 650x550
-plot_uu <- plot_ordination(rphy_wTree, pcoa_uu, color = "Month", shape = "Site")
+plot_uu <- plot_ordination(phy_wTree, pcoa_uu, color = "Month", shape = "Site")
 plot_uu$data$Month <- factor(plot_uu$data$Month, levels = c("June", "July", "September"))
 puu <- plot_uu + 
   geom_point(size = 4, alpha=0.8) + scale_color_manual(values=v3pal) +
   theme_devon() + theme(legend.position = "none", panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-  labs(caption="Unweighted Unifrac distance estimate") +
-  stat_ellipse(data = plot_uu$data %>% filter(Site == "EN"), linetype = "dashed") + ## ellipse for EN months
-  stat_ellipse(data = plot_uu$data %>% filter(Site == "HB"), linetype = "solid")  ## ellips for HB months
+  labs(subtitle="Unweighted Unifrac distance estimate")
+#labs(subtitle="Unweighted Unifrac distance estimate") +
+#stat_ellipse(data = plot_uu$data %>% filter(Site == "EN"), linetype = "dashed") + ## ellipse for EN months
+#stat_ellipse(data = plot_uu$data %>% filter(Site == "HB"), linetype = "solid")  ## ellips for HB months
 rm(plot_uu)
 
 ## plot; save as 'pcoa_wu_wellipse'; export at 650x550
-plot_wu <- plot_ordination(rphy_wTree, pcoa_wu, color = "Month", shape = "Site")
+plot_wu <- plot_ordination(phy_wTree, pcoa_wu, color = "Month", shape = "Site")
 plot_wu$data$Month <- factor(plot_wu$data$Month, levels = c("June", "July", "September"))
 pwu <- plot_wu + 
   geom_point(size = 4, alpha=0.8) + scale_color_manual(values=v3pal) +
   theme_devon() + theme(legend.position = "right", panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-  labs(caption="Weighted Unifrac distance estimate") +
-  stat_ellipse(data = plot_wu$data %>% filter(Site == "EN"), linetype = "dashed") + ## ellipse for EN months
-  stat_ellipse(data = plot_wu$data %>% filter(Site == "HB"), linetype = "solid")  ## ellips for HB months
-rm(plot_wu)
+  labs(subtitle="Weighted Unifrac distance estimate")
+  #labs(subtitle="Weighted Unifrac distance estimate") +
+  #stat_ellipse(data = plot_wu$data %>% filter(Site == "EN"), linetype = "dashed") + ## ellipse for EN months
+  #stat_ellipse(data = plot_wu$data %>% filter(Site == "HB"), linetype = "solid")  ## ellips for HB months
+  rm(plot_wu)
 
 ### can plot all of these five with their unique axes % variance collectively:
 require(cowplot)
@@ -237,14 +226,14 @@ rm(pds, pbc, pmh, puu, pwu)
 ########################################################################
 
 ## calculate distances individually, then run PERMANOVA (via Adonis in Vegan); one per distance method
-dist_bc <- phyloseq::distance(rphy_wTree, "bray")
-dist_ds <- phyloseq::distance(rphy_wTree, "bray", binary = TRUE)
-dist_mh <- phyloseq::distance(rphy_wTree, "morisita", binary = FALSE)
-dist_uu <- phyloseq::distance(rphy_wTree, "unifrac", weighted=FALSE)
-dist_wu <- phyloseq::distance(rphy_wTree, "wunifrac")
+dist_bc <- phyloseq::distance(phy_wTree, "bray")
+dist_ds <- phyloseq::distance(phy_wTree, "bray", binary = TRUE)
+dist_mh <- phyloseq::distance(phy_wTree, "morisita", binary = FALSE)
+dist_uu <- phyloseq::distance(phy_wTree, "unifrac", weighted=FALSE)
+dist_wu <- phyloseq::distance(phy_wTree, "wunifrac")
 
 ## export metadata from physeq object; do this because you've dropped a few samples for the ordination...
-tmp.meta <- data.frame(sample_data(rphy_wTree))
+tmp.meta <- data.frame(sample_data(phy_wTree))
 
 ## run Adonis per distance method
 adonis_ds <- adonis(dist_ds ~ Month * Site, data = tmp.meta) 
@@ -266,7 +255,7 @@ capture.output(data.frame(adonis_wu$aov.tab), file = "~/Repos/mysosoup/data/text
 ########################################################################
 ## Part 4 == PERMDISP (multi factorial PERMANOVA) testing if within-group distances to group centroid differ across groups
 ##        == p < 0.xx result here complicates interpretation of Adoins (groups might be different because ..
-##        == .. their within-group dispersions are variable among groups (not just differences among gropu centroids)
+##        == .. their within-group dispersions are variable among groups (not just differences among group centroids)
 ## For dispersions discussion, see: https://esajournals.onlinelibrary.wiley.com/doi/abs/10.1890/12-2010.1 
 ########################################################################
 
@@ -281,22 +270,30 @@ capture.output(anova(ds_disper_Month), file="~/Repos/mysosoup/data/text_tables/p
 bc_disper_Site <- betadisper(d = dist_bc, group =  tmp.meta$Site, type = c("median"))
 bc_disper_Month <- betadisper(d = dist_bc, group =  tmp.meta$Month, type = c("median"))
 capture.output(anova(bc_disper_Site), file="~/Repos/mysosoup/data/text_tables/permdisp/bc_Site_disper.txt")
-capture.output(anxova(bc_disper_Month), file="~/Repos/mysosoup/data/text_tables/permdisp/bc_Month_disper.txt")
+capture.output(anova(bc_disper_Month), file="~/Repos/mysosoup/data/text_tables/permdisp/bc_Month_disper.txt")
+##notrun: plot(bc_disper_Site)
+##notrun: plot(bc_disper_Month)
 
 mh_disper_Site <- betadisper(d = dist_mh, group =  tmp.meta$Site, type = c("median"))
 mh_disper_Month <- betadisper(d = dist_mh, group =  tmp.meta$Month, type = c("median"))
 capture.output(anova(mh_disper_Site), file="~/Repos/mysosoup/data/text_tables/permdisp/mh_Site_disper.txt")
 capture.output(anova(mh_disper_Month), file="~/Repos/mysosoup/data/text_tables/permdisp/mh_Month_disper.txt")
+##notrun: plot(mh_disper_Site)
+##notrun: plot(mh_disper_Month)
 
 uu_disper_Site <- betadisper(d = dist_uu, group =  tmp.meta$Site, type = c("median"))
 uu_disper_Month <- betadisper(d = dist_uu, group =  tmp.meta$Month, type = c("median"))
 capture.output(anova(uu_disper_Site), file="~/Repos/mysosoup/data/text_tables/permdisp/uu_Site_disper.txt")
 capture.output(anova(uu_disper_Month), file="~/Repos/mysosoup/data/text_tables/permdisp/uu_Month_disper.txt")
+##notrun: plot(uu_disper_Site)
+##notrun: plot(uu_disper_Month)
 
 wu_disper_Site <- betadisper(d = dist_wu, group =  tmp.meta$Site, type = c("median"))
 wu_disper_Month <- betadisper(d = dist_wu, group =  tmp.meta$Month, type = c("median"))
 capture.output(anova(wu_disper_Site), file="~/Repos/mysosoup/data/text_tables/permdisp/wu_Site_disper.txt")
 capture.output(anova(wu_disper_Month), file="~/Repos/mysosoup/data/text_tables/permdisp/wu_Month_disper.txt")
+##notrun: plot(wu_disper_Site)
+##notrun: plot(wu_disper_Month)
 
 ## finally running Tukey's HSD on each dataset to identify any pairwise differences that were significant 
 ## doing so only for Month (given that there are only 2 levels for Site factor)
@@ -310,4 +307,3 @@ uu_month_hsd <- TukeyHSD(uu_disper_Month)
 capture.output(data.frame(uu_month_hsd[[1]]) %>% mutate(Pairs=row.names(.)), file="~/Repos/mysosoup/data/text_tables/permdisp/uu_Month_tukeyHSD.txt")
 wu_month_hsd <- TukeyHSD(wu_disper_Month)
 capture.output(data.frame(wu_month_hsd[[1]]) %>% mutate(Pairs=row.names(.)), file="~/Repos/mysosoup/data/text_tables/permdisp/wu_Month_tukeyHSD.txt")
-

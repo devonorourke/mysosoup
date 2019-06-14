@@ -37,7 +37,7 @@ colnames(taxa)[1] <- "ASVid"
 
 ## import dataset, filter out reads all non-Arthropod reads without (at least) Family-rank info, ..
 # alternatively: download files:
-## download.file("https://github.com/devonorourke/mysosoup/raw/master/data/qiime_qza/asvTables/Mangan.nonbatASVs.table.qza", "tmp.qza")
+## download.file("https://github.com/devonorourke/mysosoup/raw/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.rarefied-table_noNegSamps.qza", "tmp.qza")
 # then set PATH to whatever directory needed:
 # qzapath = "PATH/TO/tmp.qza"
 

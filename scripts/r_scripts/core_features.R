@@ -28,7 +28,7 @@ tableimport.function <- function(table){
 tmp1 <- tableimport.function('nonbat.qza')
 
 ## add metadata  
-tmp2 <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/metadata/mangan_metadata.csv.gz", col_names = TRUE) %>% 
+tmp2 <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/metadata/mangan_metadata.csv", col_names = TRUE) %>% 
   select(SampleID, SampleType, CollectionMonth, Site) %>% 
   merge(tmp1, .) %>% 
   filter(SampleType == "sample") %>% 
@@ -41,7 +41,7 @@ tmp2$Month <- ifelse(tmp2$Month == "9", gsub("9", "September", tmp2$Month), tmp2
 tmp2$SiteMonth <- paste(tmp2$Site, tmp2$Month, sep="-")
 
 ## add taxonomy information
-tmp3 <- read_delim(file = "https://github.com/devonorourke/mysosoup/raw/master/data/taxonomy/mangan_tax_vs.tsv.gz", delim = "\t", col_names = TRUE)
+tmp3 <- read_delim(file = "https://github.com/devonorourke/mysosoup/raw/master/data/taxonomy/mangan_tax_p97c94.tsv", delim = "\t", col_names = TRUE)
 tmp3 <- tmp3 %>% separate(., col = Taxon, sep=';', into = c("kingdom_name", "phylum_name", "class_name", "order_name", "family_name", "genus_name", "species_name")) %>% select(-Confidence)
 tmp3 <- as.data.frame(apply(tmp3, 2, function(y) gsub(".__", "", y)))
 tmp3 <- as.data.frame(apply(tmp3, 2, function(y) gsub("^$|^ $", NA, y)))

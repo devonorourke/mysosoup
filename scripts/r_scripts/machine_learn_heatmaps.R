@@ -20,12 +20,12 @@ mlSiteMonth_raw <- data.frame(read_delim(file="https://github.com/devonorourke/m
 row.names(mlSiteMonth_raw) <- mlSiteMonth_raw$X1
 mlSiteMonth_df <- mlSiteMonth_raw[c(1:6), c(1:7)] %>% 
   melt(., id.vars = c("X1")) %>% 
-  rename(X1 = 'actual', variable = 'predicted')
+  rename(actual = X1, predicted = variable)
 
 mlSiteMonth_predict <- data.frame(read_delim(file="https://github.com/devonorourke/mysosoup/raw/master/data/MachineLearn/rarefy/SiteMonth_predictions.tsv", delim= "\t", col_names=TRUE)) %>% 
   group_by(prediction) %>% 
   summarise(counts=n()) %>% 
-  rename(prediction='SiteMonth')
+  rename(SiteMonth=prediction)
 
 mlSiteMonth_plot <- merge(mlSiteMonth_df, mlSiteMonth_predict, by.x='actual', by.y='SiteMonth') %>% 
   mutate(xLabeler = paste(actual, paste("(n = ", counts, ")", sep=""), sep = "\n"))
@@ -60,12 +60,12 @@ mlMonth_raw <- data.frame(read_delim(file="https://github.com/devonorourke/mysos
 row.names(mlMonth_raw) <- mlMonth_raw$X1
 mlMonth_df <- mlMonth_raw[c(1:3), c(1:4)] %>% 
   melt(., id.vars = c("X1")) %>% 
-  rename(X1 = 'actual', variable = 'predicted')
+  rename(actual = X1, predicted = variable)
 
 mlMonth_predict <- data.frame(read_delim(file="https://github.com/devonorourke/mysosoup/raw/master/data/MachineLearn/rarefy/Month_predictions.tsv", delim= "\t", col_names=TRUE)) %>% 
   group_by(prediction) %>% 
   summarise(counts=n()) %>% 
-  rename(prediction='group')
+  rename(group=prediction)
 
 mlMonth_plot <- merge(mlMonth_df, mlMonth_predict, by.x='actual', by.y='group') %>% 
   mutate(xLabeler = paste(actual, paste("(n = ", counts, ")", sep=""), sep = "\n"))

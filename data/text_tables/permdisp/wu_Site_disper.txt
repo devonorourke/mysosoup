@@ -2,7 +2,7 @@ Analysis of Variance Table
 
 Response: Distances
            Df  Sum Sq   Mean Sq F value  Pr(>F)  
-Groups      1 0.00749 0.0074868  3.3012 0.07032 .
-Residuals 275 0.62367 0.0022679                  
+Groups      1 0.00756 0.0075590  3.3406 0.06867 .
+Residuals 275 0.62226 0.0022628                  
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1

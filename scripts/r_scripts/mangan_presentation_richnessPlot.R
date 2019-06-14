@@ -2,6 +2,7 @@ library(tidyverse)
 library(scales)
 library(ggrepel)
 library(cowplot)
+library(qiime2R)
 
 ## function for plot theme:
 theme_devon <- function () { 
@@ -15,17 +16,17 @@ theme_devon <- function () {
 }
 
 ## import taxa data, modify ambiguous_taxa as NA
-taxa <- read_delim("~/Repos/mysosoup/data/taxonomy/mangan_tax_p97c94.tsv.gz", delim = "\t")
-taxa <- taxa %>% separate(., col = Taxon, sep=';',
-                          into = c("kingdom_name", "phylum_name", "class_name", "order_name", "family_name", "genus_name", "species_name")) %>%
-  select(-Confidence)
+taxa <- read_delim(file = "https://github.com/devonorourke/mysosoup/raw/master/data/taxonomy/mangan_tax_p97c94.tsv", delim = "\t", col_names = TRUE)
+taxa <- taxa %>% separate(., col = Taxon, sep=';', into = c("kingdom_name", "phylum_name", "class_name", "order_name", "family_name", "genus_name", "species_name")) %>% select(-Confidence)
 taxa <- as.data.frame(apply(taxa, 2, function(y) gsub(".__", "", y)))
 taxa <- as.data.frame(apply(taxa, 2, function(y) gsub("^$|^ $", NA, y)))
 taxa <- as.data.frame(apply(taxa, 2, function(y) gsub("Ambiguous_taxa", NA, y)))
+taxa <- as.data.frame(apply(taxa, 2, function(y) gsub("Unassigned", NA, y)))
 colnames(taxa)[1] <- "ASVid"
+row.names(taxa) <- taxa$ASVid
 
 ## import metadata and add/modify labels for plot
-meta <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/metadata/mangan_metadata.csv.gz", col_names = TRUE) %>%
+meta <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/metadata/mangan_metadata.csv", col_names = TRUE) %>%
   select(-RoostDay, -RoostMonth, -RoostYear)
 meta$Site <- ifelse(meta$Site == "Egner", gsub("Egner", "EN", meta$Site), meta$Site)
 meta$Site <- ifelse(meta$Site == "HickoryBottoms", gsub("HickoryBottoms", "HB", meta$Site), meta$Site)
@@ -36,23 +37,30 @@ meta$CollectionMonth <- ifelse(meta$CollectionMonth == "9", gsub("9", "September
 meta$ContamArea[is.na(meta$ContamArea)] <- "isolate"
 meta$SiteMonth <- paste(meta$Site, meta$CollectionMonth, sep="-")
 meta <- meta %>% rename(Month=CollectionMonth)
-selectmeta <- meta %>% select(SiteMonth, Roost, Site, Month, SampleID)
-rm(meta)
 
 ## import read data; filter out samples not included in Machine Learning analysis
-## Add ASValias as "ASV-###' where the number reflects per-ASV abundance (highest abundance is first number)
-reads <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/mangan.asvtable.long.csv.gz")
+## import dataset, filter out reads all non-Arthropod reads without (at least) Family-rank info, ..
+# alternatively: download files:
+## download.file("https://github.com/devonorourke/mysosoup/raw/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza", "tmp.qza")
+# then set PATH to whatever directory needed:
+# qzapath = "PATH/TO/tmp.qza"
 
-## remove "Control" samples
-SelectSamples <- meta %>% filter(SampleType == "sample") %>% select(SampleID) %>% pull
-selectReads <- reads %>% filter(SampleID %in% SelectSamples)
-rm(reads, SelectSamples)
-
-## summarize taxa Orders, Families
-data <- merge(selectReads, taxa)
-rm(taxa, selectReads)
-data <- merge(data, selectmeta)
-rm(selectmeta)
+## ..filter out remaining ASVs present exclusively in control samples, then calculate Hill Number values
+## run from local: qzapath = "~/Repos/mysosoup/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza"
+featuretable <- read_qza(qzapath)
+mat.tmp <- featuretable$data
+rm(featuretable)
+df.tmp <- as.data.frame(mat.tmp)
+rm(mat.tmp)
+df.tmp$OTUid <- rownames(df.tmp)
+rownames(df.tmp) <- NULL
+tmp <- melt(df.tmp, id = "OTUid") %>% filter(value != 0)
+rm(df.tmp) 
+colnames(tmp) <- c("ASVid", "SampleID", "Reads")
+df.tmp <- merge(tmp, taxa)
+rm(tmp)
+data <- merge(df.tmp, meta)
+rm(df.tmp, meta)
 
 selectClass <- c("Arachnida", "Insecta")
 order_by_month_Sumry <- data %>% 
@@ -81,14 +89,15 @@ plot_df$order_name <- factor(plot_df$order_name, levels = c("Araneae", "Coleopte
                                                             "Hemiptera", "Hymenoptera", "Lepidoptera", 
                                                             "Trichoptera", "Psocodea", "other"))
 
+plot_df$Month <- factor(plot_df$Month, 
+                        levels = c("June", "July", "September"))
+
 ggplot(plot_df %>% filter(!is.na(order_name)), aes(x=Month, y=counts, fill=order_name), color='black') +
   geom_bar(stat="identity") +
-  facet_wrap(~ Site, nrow=2) +
+  facet_wrap(~ Site, nrow=2) + coord_flip() +
   scale_fill_manual(values=pal9) +
   labs(x="", y="observations of taxa", fill="Taxa Order") +
   theme_devon()
-
-
 
 
 ## summarize number of distinct ASVs per sample... distributions of ASVs per sample observed per Site/Month

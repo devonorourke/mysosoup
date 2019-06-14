@@ -21,7 +21,17 @@ qiime feature-table filter-samples \
   --o-filtered-table Mangan.wNTCasvs-filt.rarefied-table_noNegSamps.qza
 ```
 
-In addition, we similarly dropped negative control samples and ASVs from the unrarefied dataset also. However, in this case we also dropped any sample that contained only a single ASV (as these confound distance estimates). There were just 3 of the original 297 guano samples that were removed by this additional filter:
+In addition, we created a separate file for rarefied data containing only guano sample, but removed additional samples that contained only a single ASV. There were just 3 of the original 297 guano samples that were removed by this additional filter:
+```
+qiime feature-table filter-samples \
+  --i-table Mangan.wNTCasvs-filt.rarefied-table_wNegSamps.qza \
+  --m-metadata-file $META \
+  --p-where "SampleType='sample'" \
+  --p-min-features 2 \
+  --o-filtered-table Mangan.wNTCasvs-filt.rarefied-table_noNegSamps_noSingleASVs.qza
+```
+
+Finally, we applied those same two filters to the unrarefied dataset:
 ```
 qiime feature-table filter-samples \
   --i-table Mangan.wNTCasvs-filt.table.qza \
@@ -31,126 +41,92 @@ qiime feature-table filter-samples \
   --o-filtered-table Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza
 ```
 
-The resulting [Mangan.wNTCasvs-filt.rarefied-table_noNegSamps.qza]() and [Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza]() tables were used in the subsequent diversity measures described below.
+The [Mangan.wNTCasvs-filt.rarefied-table_noNegSamps.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.rarefied-table_noNegSamps.qza) file served as input in the alpha diversity measures, while the [Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.rarefied-table_noNegSamps_noSingleASVs.qza) artifact was used in beta diversity and supervised learning analyses. We used the [Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza) file in the separate supervised learning  also to compare how model accuracy differed based on whether the input data was rarefied or not.
 
-## Alpha diversity
-We used a [Alpha-HillEstimates.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/Alpha-HillEstimates.R) script to produce the Hill Number estimates at each artificial roost site. We generated the plot of diversity estimates faceted by Hill Number, and generated a series of statistical summaries determining if diversity estimates varied by the Month or Site a sample was associated with. Multifactorial [ANOVA](https://github.com/devonorourke/mysosoup/tree/master/data/text_tables/anovas), [Kruskal-Wallis](https://github.com/devonorourke/mysosoup/tree/master/data/text_tables/kruskal), and [Dunn test](https://github.com/devonorourke/mysosoup/tree/master/data/text_tables/dunn) summaries are available for each of the three Hill Number diversity estimates.
 
-## Beta diversity
-See `betadiv_analyses.R`. Includes NMDS plots and Adonis estimates.
+# Alpha diversity
+We used a [Alpha-HillEstimates.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/Alpha-HillEstimates.R) script to produce the Hill Number estimates at each artificial roost site. The [Mangan.wNTCasvs-filt.rarefied-table_noNegSamps.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.rarefied-table_noNegSamps.qza) file served as input for this analysis.
 
-## Machine learning
-Generating a .qza table and repSeq file that reflects:
-  1. ASVs we want (Arthropod only, Family-rank required); ASVs only in control samples removed
-  2. Samples we want (Samples used in beta diversity estimates; dropping 3 samples with just one ASV)
+This script generated a plot of diversity estimates faceted by Hill Number, as well as a series of statistical summaries determining if diversity estimates varied by the Month or Site a sample was associated with. Multifactorial [ANOVA](https://github.com/devonorourke/mysosoup/tree/master/data/text_tables/anovas), [Kruskal-Wallis](https://github.com/devonorourke/mysosoup/tree/master/data/text_tables/kruskal), and [Dunn test](https://github.com/devonorourke/mysosoup/tree/master/data/text_tables/dunn) summaries are available for each of the three Hill Number diversity estimates.
 
-```
-echo sampleid > samples2drop.txt
-echo 7272017EGC1 >> samples2drop.txt
-echo 7272017EGC2 >> samples2drop.txt
-echo 7272017HBA6 >> samples2drop.txt
+# Beta diversity
+Multiple phylogenetic (Unifrac weighted and unweighted) and non-phylogenetic (Dice-Sorensen, Bray-Curtis, Morisita-Horn) distances were estimated in the [betadiver_work.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/betadiver_work.R) script using the [Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.rarefied-table_noNegSamps_noSingleASVs.qza) rarefied data table. The script resulted in three groups of output figures, tables, or summaries:
+1. We ordinated each distance measure to examine if patterns of collection Month and Location associated with sample ASV composition.
+2. The Vegan function Adonis (multi factorial PERMANOVA) tested for Site and Month main effects using our five distance estimates. Summaries are available for each measure [in this directory](https://github.com/devonorourke/mysosoup/tree/master/data/text_tables/adonis).
+3. We also measured whether the significant main effects observed in the Adonis tests were due to dispersion, thus we also used the Vegan PERMDISP (multi factorial PERMANOVA) function to test if within-group distances to group centroid differ across groups. Site and Month effects were tested separately, and a Tukey's HSD significance test was performed for each group within each distance measure. Summaries are [available in this directory](https://github.com/devonorourke/mysosoup/tree/master/data/text_tables/permdisp).
 
-qiime feature-table filter-samples \
-  --p-exclude-ids \
-  --i-table Mangan.wNTCasvs-filt.rarefied-table_noNegSamps.qza \
-  --m-metadata-file samples2drop.txt \
-  --o-filtered-table tmp.input.qza
+# Machine learning
+The QIIME 2 [classify-samples](https://docs.qiime2.org/2019.1/plugins/available/sample-classifier/classify-samples/?highlight=classify%20samples) plugin offers a means to test a cross-validated supervised learning classifier - in this case, a Random Forest classifier. The goal is to take an input ASV table and a set of metadata variables (in our case, Site and/or Location when/where guano was collected) and train the classifier on a subset of these data. The resulting decision trees of the classifier are then applied to the other subset of data not used in training, and the accuracy of the classifier is assessed based upon how frequently the class variable prediction matches the truth. The individual ASV features used in training the classifier are individually removed and the subsequent accuracy of the model lacking that information can be evaluated to the original model to determine each features relative importance to the predictive power of the classifier. This key feature enables us to determine which ASVs are more or less important at distinguishing among the class variables like Site or Month. Thus, while ordinations can help understand if the overall composition of samples differ by these variables, a supervised learning approach helps identify the individual ASVs that are driving the largest differences among these variables.
 
-qiime feature-table filter-features \
-  --i-table tmp.input.qza \
-  --p-min-samples 1 \
-  --o-filtered-table Mangan.wNTCasvs-filt.rarefied-table_noNegSamps_noSingleASVs.qza
+We used the [Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.rarefied-table_noNegSamps_noSingleASVs.qza) and [Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza) artifacts as inputs in our supervised learning model because we were not clear whether randomly subsampling the data would have an impact on the overall model accuracy predictions. Note that subsampling these samples to a depth of 10,000 sequences resulted in discarding 7 of the 297 guano samples, and removed 84 ASVs from the original ASV table. However, those ASVs represent just 0.03% of the overall read abundance, thus it's highly unlikely that those ASVs discarded will significantly contribute to differences in our class variables of interest.
 
-rm tmp.input.qza  
-```
+We executed scripts in QIIME 2 using the default settings with one exception: we increased the number of estimators from 100 to 1000 to potentially increase our model accuracy by increasing the number of trees in each forest. Models for Site, SiteMonth, CollectionMonth, and BatchType were performed as follows:
 
-## Machine learning
+> `$TABLE` represents the [Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.rarefied-table_noNegSamps_noSingleASVs.qza) rarefied dataset   
+> `$METAFILE` represents the full path to the QIIME-formatted [qiime_meta.tsv](https://github.com/devonorourke/mysosoup/blob/master/data/metadata/qiime_meta.tsv) file
 
-Running tests for the following metadata: Site, SiteMonth, CollectionMonth, BatchType
 
 ```
-READS=/mnt/lustre/macmaneslab/devon/guano/NAU/Mangan/qiime/reads/Mangan.wNTCasvs-filt.rarefied-table_noNegSamps_noSingleASVs.qza
-METAFILE=/mnt/lustre/macmaneslab/devon/guano/NAU/Mangan/qiime/meta/qiime_meta.tsv
-
 qiime sample-classifier classify-samples \
-  --i-table "$READS" --m-metadata-file "$METAFILE" \
+  --i-table "$TABLE" --m-metadata-file "$METAFILE" \
   --m-metadata-column CollectionMonth --output-dir learn-Month \
   --p-optimize-feature-selection --p-parameter-tuning --p-estimator RandomForestClassifier --p-n-estimators 1000
 
 qiime sample-classifier classify-samples \
-  --i-table "$READS" --m-metadata-file "$METAFILE" \
+  --i-table "$TABLE" --m-metadata-file "$METAFILE" \
   --m-metadata-column Site --output-dir learn-Site \
   --p-optimize-feature-selection --p-parameter-tuning --p-estimator RandomForestClassifier --p-n-estimators 1000
 
 qiime sample-classifier classify-samples \
-  --i-table "$READS" --m-metadata-file "$METAFILE" \
+  --i-table "$TABLE" --m-metadata-file "$METAFILE" \
   --m-metadata-column SiteMonth --output-dir learn-SiteMonth \
   --p-optimize-feature-selection --p-parameter-tuning --p-estimator RandomForestClassifier --p-n-estimators 1000
 
 qiime sample-classifier classify-samples \
-  --i-table "$READS" --m-metadata-file "$METAFILE" \
+  --i-table "$TABLE" --m-metadata-file "$METAFILE" \
   --m-metadata-column BatchType --output-dir learn-BatchType \
   --p-optimize-feature-selection --p-parameter-tuning --p-estimator RandomForestClassifier --p-n-estimators 1000
 ```
 
-The `feature_importance.qza` files were exported as `.tsv` files for use in subsequent R analyses:
+The `feature_importance.qza` files were exported as `.tsv` files for use in subsequent R analyses. The `*accuracy.tsv` files [in this directory](https://github.com/devonorourke/mysosoup/tree/master/data/MachineLearn/rarefy) served as inputs to generating the heatmap plots made with the [machine_learn_heatmaps.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/machine_learn_heatmaps.R) script. The `fi*.tsv` files are used in the [machine_learn_analyses.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/machine_learn_analyses.R) script to generate several figures used in the analysis.
+
+
+One of our first considerations was determining if we should be using rarefied or unrarefied data as input for the Random Forest classifier. We therefore applied the same set of scripts as noted above, but switched the input table to the [Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza) unrarefied table.
+> `$TABLE` represents the unrarefied [Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza) table  
+> `$METAFILE` represents the full path to the QIIME-formatted [qiime_meta.tsv](https://github.com/devonorourke/mysosoup/blob/master/data/metadata/qiime_meta.tsv) file
+
 ```
-qiime tools export --input-path ./{$DIR}/feature_importance.qza --output-path fi
-```
-
-Also rerunning the same Machine-leanring tests, but inputting a data set that isn't rarefied. Same ASVs, same samples:
-```
-echo sampleid > moresamples2drop.txt
-echo 7272017EGC1 >> moresamples2drop.txt
-echo 7272017EGC2 >> moresamples2drop.txt
-echo 7272017HBA6 >> moresamples2drop.txt
-echo ExtractionNTC1S1 >> moresamples2drop.txt
-echo ExtractionNTC7S55 >> moresamples2drop.txt
-echo ExtractionNTC11S115 >> moresamples2drop.txt
-echo ExtractionNTC3S19 >> moresamples2drop.txt
-echo ExtractionNTC8S64 >> moresamples2drop.txt
-echo ExtractionNTC4S28 >> moresamples2drop.txt
-echo ExtractionNTC2S10 >> moresamples2drop.txt
-echo blankS39 >> moresamples2drop.txt
-
-qiime feature-table filter-samples \
-  --p-exclude-ids \
-  --i-table Mangan.wNTCasvs-filt.table.qza \
-  --m-metadata-file moresamples2drop.txt \
-  --o-filtered-table tmp.input.qza
-
-qiime feature-table filter-features \
-  --i-table tmp.input.qza \
-  --p-min-samples 1 \
-  --o-filtered-table Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza
-
-READS=/mnt/lustre/macmaneslab/devon/guano/NAU/Mangan/qiime/reads/Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza
-METAFILE=/mnt/lustre/macmaneslab/devon/guano/NAU/Mangan/qiime/meta/qiime_meta.tsv
-
 qiime sample-classifier classify-samples \
-  --i-table "$READS" --m-metadata-file "$METAFILE" \
+  --i-table "$TABLE" --m-metadata-file "$METAFILE" \
   --m-metadata-column CollectionMonth --output-dir learn-Month \
   --p-optimize-feature-selection --p-parameter-tuning --p-estimator RandomForestClassifier --p-n-estimators 1000
 
 qiime sample-classifier classify-samples \
-  --i-table "$READS" --m-metadata-file "$METAFILE" \
+  --i-table "$TABLE" --m-metadata-file "$METAFILE" \
   --m-metadata-column Site --output-dir learn-Site \
   --p-optimize-feature-selection --p-parameter-tuning --p-estimator RandomForestClassifier --p-n-estimators 1000
 
 qiime sample-classifier classify-samples \
-  --i-table "$READS" --m-metadata-file "$METAFILE" \
+  --i-table "$TABLE" --m-metadata-file "$METAFILE" \
   --m-metadata-column SiteMonth --output-dir learn-SiteMonth \
   --p-optimize-feature-selection --p-parameter-tuning --p-estimator RandomForestClassifier --p-n-estimators 1000
 
 qiime sample-classifier classify-samples \
-  --i-table "$READS" --m-metadata-file "$METAFILE" \
+  --i-table "$TABLE" --m-metadata-file "$METAFILE" \
   --m-metadata-column BatchType --output-dir learn-BatchType \
   --p-optimize-feature-selection --p-parameter-tuning --p-estimator RandomForestClassifier --p-n-estimators 1000
 ```
 
+Files were exported as noted above. The question of whether it is more appropriate to use rarefied data or unrarefied data was addressed in the initial portion of the [machine_learn_heatmaps.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/machine_learn_heatmaps.R) script. What quickly became clear was that rarefying the data increases the proportion of accuracy to the features (ASVs) that are most significant to the model, though the rank order of the important features tends not to vary substantially between rarefied or unrarefied datasets. In other words, if the point of the classifier is to identify the ASVs that best discriminate between Site or Month in which a sample is collected, whether or not you rarefy the data table isn't going to substantially change the top candidate ASVs. However, this comes with the caveat that _many more_ ASVs are considered as contributing to some fraction of variation in the unrarefied setting, and this may be because of differences in sequencing depth. Much like distance estimates needing some type of normalization to account for differences in abundances due to sampling/sequencing depth (we rarefy to address this, for instance), it's possible that the supervised learning estimates are more variable when per-sample sequencing depths aren't accounted for.
 
-## Common ASVs
-We examined what ASVs were identified in a high proportion of samples:
+We plotted the cummulative sum of the feature importance (the relative change in model accuracy when it is removed from the classifier training set) in [this plot](https://github.com/devonorourke/mysosoup/blob/master/figures/feature_importance_Rarefied.vs.Nonrarefied.png) and were struck by how many more features are required to account for the top 90% model accuracy (red dotted line) in the unrarefied dataset for the **Month** and **SiteMonth** variables.
+
+![SL_rare_nonrare_comp](https://github.com/devonorourke/mysosoup/blob/master/figures/feature_importance_Rarefied.vs.Nonrarefied.png)
+
+We observed that rarefying data reduces the number of ASVs that contribute to the majority of model accuracy, thus, our analyses that went into plotting how these ASVs changed over Month or Site were selected from the rarefied supervised learning feature importance tables.
+
+# Common ASVs
+We examined what ASVs were identified in a high proportion of samples using the QIIME 2 [core-features](https://docs.qiime2.org/2019.4/plugins/available/feature-table/core-features/) plugin.
 
 ```
 qiime feature-table core-features \
@@ -159,3 +135,5 @@ qiime feature-table core-features \
 --p-steps 10 \
 --o-visualization corefeatures.wNTCasvs.noNegs.noSingleASVs.qzv
 ```
+
+These data are available in the [corefeatures.wNTCasvs.noNegs.noSingleASVs.qzv](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qzv/core_features/corefeatures.wNTCasvs.noNegs.noSingleASVs.qzv) visualization file. We used the [core_features.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/core_features.R) script to process these data and retained summaries of the information at [this directory](https://github.com/devonorourke/mysosoup/tree/master/data/text_tables/core_features).
