@@ -51,7 +51,7 @@ This script generated a plot of diversity estimates faceted by Hill Number, as w
 
 # Beta diversity
 Multiple phylogenetic (Unifrac weighted and unweighted) and non-phylogenetic (Dice-Sorensen, Bray-Curtis, Morisita-Horn) distances were estimated in the [betadiver_work.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/betadiver_work.R) script using the [Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.rarefied-table_noNegSamps_noSingleASVs.qza) rarefied data table. The script resulted in three groups of output figures, tables, or summaries:
-1. We ordinated each distance measure to examine if patterns of collection Month and Location associated with sample ASV composition.
+1. We ordinated each distance measure using PCoA to examine if patterns of collection Month and Location associated with sample ASV composition.
 2. The Vegan function Adonis (multi factorial PERMANOVA) tested for Site and Month main effects using our five distance estimates. Summaries are available for each measure [in this directory](https://github.com/devonorourke/mysosoup/tree/master/data/text_tables/adonis).
 3. We also measured whether the significant main effects observed in the Adonis tests were due to dispersion, thus we also used the Vegan PERMDISP (multi factorial PERMANOVA) function to test if within-group distances to group centroid differ across groups. Site and Month effects were tested separately, and a Tukey's HSD significance test was performed for each group within each distance measure. Summaries are [available in this directory](https://github.com/devonorourke/mysosoup/tree/master/data/text_tables/permdisp).
 

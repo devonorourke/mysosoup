@@ -5,6 +5,7 @@ library(xkcdcolors)
 library(reshape2)
 library(scales)
 library(gganimate)
+library(ggpubr)
 
 ## function for plot theme:
 theme_devon <- function () { 
@@ -215,30 +216,66 @@ order_sumry$Month <- factor(order_sumry$Month, levels = c("June", "July", "Septe
 
 ## plot ALL occurrence data:
 ## save as 'heatmap_order_ocur_allOrders_rfydat', export at 800x800
-ggplot(order_sumry, aes(x=Month, y=order_name, fill=pSamples)) +
+hm_order_rfy_occur <- ggplot(order_sumry, aes(x=Month, y=order_name, fill=pSamples)) +
   geom_tile(color='gray70') + 
-  coord_equal() +
+  #coord_equal() +
   facet_wrap(~ Site) +
   scale_x_discrete(labels = c("Jun", "Jul", "Sep")) +
-  scale_fill_gradient(low = 'gray99', high = '#7f5e00') +
-  labs(x="", y="Taxa Order\n", fill="fraction of\nSamples\nper group") +
+  scale_fill_gradient(low = 'gray99', high = '#6f7c00', breaks=c(0,0.08,0.16)) +
+  labs(x="", y="Arthropod Order\n", fill="fraction of\nSamples") +
   scale_y_discrete(position = "left") +
-  theme_devon()
+  theme_devon() +
+  theme(legend.position = "top",
+        axis.title = element_text(angle=0, hjust = .5, vjust=.5, face = "bold"))
 
 ## plot ALL abundance data:
 ## save as 'heatmap_order_abun_allOrders_rfydat', export at 800x800
-ggplot(order_sumry, aes(x=Month, y=order_name, fill=pReads)) +
+hm_order_rfy_abund <- ggplot(order_sumry, aes(x=Month, y=order_name, fill=pReads)) +
   geom_tile(color='gray70') + 
-  coord_equal() +
+  #coord_equal() +
   facet_wrap(~ Site) +
   scale_x_discrete(labels = c("Jun", "Jul", "Sep")) +
-  scale_fill_gradient(low = 'gray99', high = '#7f5e00') +
-  labs(x="", y="Taxa Order\n", fill="fraction of\nSequences \nper group") +
+  scale_fill_gradient(low = 'gray99', high = '#7f5e00', breaks=c(0,0.3,0.6)) +
+  labs(x="", y="\n", fill="fraction of\nSequences") +
   scale_y_discrete(position = "left") +
-  theme_devon()
+  theme_devon() +
+  theme(legend.position = "top")
 
-  ## notice how different the impressions are between occurrence and abundance..
-  ## ..diptera dominate abundance, but not occurrence
+## can plot together, but keep the separate scales in view:
+## save as "Order_sumry_heatmap_TwoScale"; export at 900x450
+plot_grid(hm_order_rfy_occur, hm_order_rfy_abund, labels = c("A", "B"), ncol=2)
+
+## plot together:
+## reshape data for single plot to facet (doing this to keep constant "Fill" values in same legend)
+allOrder_plotdat <- order_sumry %>% 
+  select(Site, Month, order_name, pReads, pSamples) %>%
+  melt(data = ., 
+       id.vars = c("Month", "order_name", "Site"),
+       value.name = "Fill_value",
+       variable.name = "Value_type") %>% 
+  mutate(Value_type = gsub("^p", "", .$Value_type)) %>%  
+  mutate(FacetName = paste(Site, Value_type, sep = "-"))
+
+## set levels
+allOrder_plotdat$Month <- factor(order_sumry$Month, levels = c("June", "July", "September"))
+allOrder_plotdat$FacetName <- factor(allOrder_plotdat$FacetName,
+                                     levels = c('EN-Samples', 'HB-Samples',
+                                                'EN-Reads', 'HB-Reads'))
+
+## plot; save as 'Order_sumry_heatmap_oneScale'; export at 700x350
+ggplot(allOrder_plotdat, 
+       aes(x=Month, y=order_name, fill=Fill_value)) +
+         geom_tile(color='gray70') +
+         #coord_equal() +
+         facet_grid(~ FacetName) +
+         scale_x_discrete(labels = c("Jun", "Jul", "Sep")) +
+         scale_fill_gradient(low = 'gray99', high = '#7f5e00') +
+         labs(x="", y="Arthropod Order\n", fill="fraction of data") +
+         scale_y_discrete(position = "left") +
+         theme_devon()
+       
+## notice how different the impressions are between occurrence and abundance..
+## ..diptera dominate abundance, but not occurrence
 
 ## going to merge Orders that have less than 1% of overall abundance across entire dataset into a single group, then replot
 ## summarize the per-Order number of reeds
@@ -278,6 +315,7 @@ ggplot(grouped_order_sumry, aes(x=Month, y=order_name, fill=pReads)) +
   labs(x="", y="Taxa Order\n", fill="fraction of\nSequences \nper group") +
   scale_y_discrete(position = "left") +
   theme_devon()
+
 
 
 ################################################################################
@@ -332,39 +370,43 @@ ASV_sumry$order_name <- factor(ASV_sumry$order_name, levels = c("Araneae","Coleo
 pal6 <- c('#3778bf', '#efb435', 'gray50', '#7bb274', '#825f87', '#d9544d')
 
 ## plotting read abundances with GENUS + ASV as label; save as 'slopeplot_abund_rfydat_bySiteMonth', export at 800x1000
-ggplot(data = ASV_sumry, aes(x = Month, y = pReads, group=ASValias, label = Labeler, color=order_name)) +
-  facet_wrap( ~ Site, nrow=2) +
+ml_sp_abu <- ggplot(data = ASV_sumry, aes(x = Month, y = pReads, group=ASValias, label = Labeler, color=order_name)) +
+  facet_wrap( ~ Site, ncol=2) +
   geom_jitter(data = ASV_sumry %>% filter(order_name!="Diptera"), size=1, width=0.01) +
   geom_line(data = ASV_sumry %>% filter(order_name!="Diptera"), size=.9) +
   geom_jitter(data = ASV_sumry %>% filter(order_name=="Diptera"), size=1, width = 0.01) +
   geom_line(data = ASV_sumry %>% filter(order_name=="Diptera"), alpha=0.7) +
   scale_color_manual(values=pal6) +
-  labs(x="", y="fraction of Sequences per ASV\n", color="Taxa Order") +
+  labs(x="", y="fraction of Sequences per ASV\n", color="Arthropod Order") +
   geom_label_repel(data = ASV_sumry %>% filter(Month=="June" & pReads > 0.02), 
                    aes(color=order_name), fill="white", nudge_x = -5, direction = "y", size=4, segment.size = 0.2, segment.alpha=0.5, segment.colour = "gray50") +
   geom_label_repel(data = ASV_sumry %>% filter(Month=="September" & pReads > 0.02), 
                    aes(color=order_name), fill="white", nudge_x = 5, direction = "y", size=4, segment.size = 0.2, segment.alpha=0.5, segment.colour = "gray50") +
   theme_devon() +
+  guides(colour = guide_legend(nrow = 1)) +
   theme(legend.position = "top", legend.text = element_text(size=14),
         axis.text.y = element_text(size=14), axis.text.x = element_text(size=14), strip.text = element_text(size=16))
 
 ## plotting read ocurrences with GENUS + ASV as label; save as 'slopeplot_occur_rfydat_bySiteMonth', export at 1000x1000
-ggplot(data = ASV_sumry, aes(x = Month, y = pSamples, group=ASValias, label = Labeler, color=order_name)) +
-  facet_wrap( ~ Site, nrow=2) +
+ml_sp_ocr <- ggplot(data = ASV_sumry, aes(x = Month, y = pSamples, group=ASValias, label = Labeler, color=order_name)) +
+  facet_wrap( ~ Site, ncol=2) +
   geom_jitter(data = ASV_sumry %>% filter(order_name!="Diptera"), size=1, width=0.01) +
   geom_line(data = ASV_sumry %>% filter(order_name!="Diptera"), size=.9) +
   geom_jitter(data = ASV_sumry %>% filter(order_name=="Diptera"), size=1, width = 0.01) +
   geom_line(data = ASV_sumry %>% filter(order_name=="Diptera"), alpha=0.7) +
   scale_color_manual(values=pal6) +
-  labs(x="", y="fraction of Samples per ASV\n", color="Taxa Order") +
+  labs(x="", y="fraction of Samples per ASV\n", color="Arthropod Order") +
   geom_label_repel(data = ASV_sumry %>% filter(Month=="June" & pSamples > 0.04), 
                    aes(color=order_name), fill="white", nudge_x = -5, direction = "y", size=4, segment.size = 0.2, segment.alpha=0.5, segment.colour = "gray50") +
   geom_label_repel(data = ASV_sumry %>% filter(Month=="September" & pSamples > 0.04), 
                    aes(color=order_name), fill="white", nudge_x = 5, direction = "y", size=4, segment.size = 0.2, segment.alpha=0.5, segment.colour = "gray50") +
   theme_devon() +
+  guides(colour = guide_legend(nrow = 1)) +
   theme(legend.position = "top", legend.text = element_text(size=14),
         axis.text.y = element_text(size=14), axis.text.x = element_text(size=14), strip.text = element_text(size=16))
 
+## plot all in a giant plot; save as "slopeplot_allDat_bySiteMonth"; export at 
+ggarrange(ml_sp_ocr, ml_sp_abu, common.legend = TRUE, nrow = 2, labels = c("A", "B"))
 
 ## alternative to slopePlot: use animation
 ## just running a xy scatterplot with abundance/occurence info, with facet by Site and ...
@@ -589,3 +631,80 @@ dip.ani <- ggplot(ASV_Month_sumry_fulldat %>% filter(order_name == "Diptera"),
 ## render:
 animate(dip.ani, renderer = gifski_renderer(loop=TRUE), width=1000)
 anim_save("~/Repos/mysosoup/figures/gifs/dipteran_only.gif")
+
+
+################################################################################
+## unused plot info... unrarefied plot data produces plots for heatmaps just like rarefied
+################################################################################
+
+## merge the data
+nonorfy_plotdat <- merge(nonfyd_reads, taxa) %>% merge(., meta)
+## replace any NA in the species_name or genus_name with "Unassigned" - used in the slope plots later..
+norfy_plotdat <- norfy_plotdat %>% 
+  mutate_if(is.factor, as.character) %>% 
+  mutate(genus_name = replace_na(genus_name, "unassigned")) %>% 
+  mutate(Labeler = paste(ASValias, genus_name, sep=" | "))
+
+
+
+################################################################################
+## Gathering the Order-rank information: 
+## Plotting both occurrence and abundance information
+
+## 1. Order rank heatmap: all rarefied reads, all ASVs 
+nofy_order_ocr_sumry <- norfy_plotdat %>% 
+  group_by(order_name, SiteMonth) %>% 
+  summarise(nSamples = n_distinct(SampleID)) %>% 
+  spread(SiteMonth, nSamples, fill = 0) %>% 
+  gather(`EN-June`, `EN-July`, `EN-September`, `HB-June`, `HB-July`, `HB-September`, key = "SiteMonth", value="nSamples") %>%
+  group_by(SiteMonth) %>%
+  mutate(mSamples=sum(nSamples)) %>% 
+  mutate(pSamples=round((nSamples/mSamples),2))
+
+nofy_order_abu_sumry <- norfy_plotdat %>% 
+  group_by(order_name, SiteMonth) %>% 
+  summarise(nReads = sum(Reads)) %>% 
+  spread(SiteMonth, nReads, fill = 0) %>% 
+  gather(`EN-June`, `EN-July`, `EN-September`, `HB-June`, `HB-July`, `HB-September`, key = "SiteMonth", value="nReads") %>%
+  group_by(SiteMonth) %>%
+  mutate(mReads=sum(nReads)) %>% 
+  mutate(pReads=round((nReads/mReads),2))
+
+## group ocurrence and abundance information:
+nofy_order_sumry <- merge(nofy_order_ocr_sumry, nofy_order_abu_sumry, by = c('order_name', 'SiteMonth')) %>% 
+  mutate(splitter=SiteMonth) %>% separate(., col=splitter, into=c("Site", "Month"), sep="-")
+
+## set levels for plot 
+nofy_order_sumry$SiteMonth <- factor(nofy_order_sumry$SiteMonth, levels = c("EN-June", "EN-July", "EN-September", "HB-June", "HB-July", "HB-September"))
+nofy_order_sumry$Month <- factor(nofy_order_sumry$Month, levels = c("June", "July", "September"))
+
+## plot ALL occurrence data:
+## save as 'heatmap_order_ocur_allOrders_rfydat', export at 800x800
+nofy_hm_order_rfy_occur <- ggplot(nofy_order_sumry, aes(x=Month, y=order_name, fill=pSamples)) +
+  geom_tile(color='gray70') + 
+  #coord_equal() +
+  facet_wrap(~ Site) +
+  scale_x_discrete(labels = c("Jun", "Jul", "Sep")) +
+  scale_fill_gradient(low = 'gray99', high = '#7f5e00') +
+  labs(x="", y="Arthropod Order\n", fill="fraction of\nSamples") +
+  scale_y_discrete(position = "right") +
+  theme_devon() +
+  theme(legend.position = "left")
+
+
+## plot ALL abundance data:
+## save as 'heatmap_order_abun_allOrders_rfydat', export at 800x800
+nofy_hm_order_rfy_abund <- ggplot(nofy_order_sumry, aes(x=Month, y=order_name, fill=pReads)) +
+  geom_tile(color='gray70') + 
+  #coord_equal() +
+  facet_wrap(~ Site) +
+  scale_x_discrete(labels = c("Jun", "Jul", "Sep")) +
+  scale_fill_gradient(low = 'gray99', high = '#7f5e00') +
+  labs(x="", y=" \n", fill="fraction of\nSequences") +
+  scale_y_discrete(position = "left") +
+  theme_devon()
+
+## can plot together, but keep the separate scales in view:
+## save as "nonrarefied_Order_sumry_heatmap_TwoScale"; export at 1000x500
+plot_grid(hm_order_rfy_occur, hm_order_rfy_abund, 
+          labels = c("A", "B"))

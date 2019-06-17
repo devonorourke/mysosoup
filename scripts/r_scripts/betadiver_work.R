@@ -144,8 +144,28 @@ ggplot(bigplot_df, aes(x=Axis.1, y=Axis.2, color=Month, shape=Site)) +
   theme(legend.position = "top")
 
 ## plotting individually directly with phyloseq is faster and better, with a bit of ggplot help
+## going to add in the Egienvectors for Axis1/2 for each plot here
+labaxisnames <- function(data, distance_type){
+  axis1_name = data$values$Eigenvalues[1]
+  axis2_name = data$values$Eigenvalues[2]
+  tmp_df = data.frame(axis1_name, axis2_name)
+  tmp_df %>% mutate(Measure=distance_type)
+}
+
+ds_name <- labaxisnames(pcoa_ds, "ds")
+bc_name <- labaxisnames(pcoa_bc, "bc")
+mh_name <- labaxisnames(pcoa_mh, "mh")
+uu_name <- labaxisnames(pcoa_uu, "uu")
+wu_name <- labaxisnames(pcoa_wu, "wu")
+
+axis_names <- rbind(ds_name, bc_name, mh_name, uu_name, wu_name)
+
+bigplot_df <- merge(bigplot_df, axis_names)
+
+## gather each dataset
 plot_bc <- plot_ordination(phy_wTree, pcoa_bc, color = "Month", shape = "Site")
 plot_bc$data$Month <- factor(plot_bc$data$Month, levels = c("June", "July", "September"))
+
 ## plot; save as 'pcoa_bc_wellipse'; export at 650x550
 pbc <- plot_bc + 
   geom_point(size = 4, alpha=0.8) + 
@@ -153,7 +173,7 @@ pbc <- plot_bc +
   theme_devon() +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   theme(legend.position = "none") +
-  labs(subtitle="Bray-Curtis distance estimate")
+  labs(subtitle="Bray-Curtis")
 #labs(subtitle="Bray-Curtis distance estimate") +
 #stat_ellipse(data = plot_bc$data %>% filter(Site == "EN"), linetype = "dashed") + ## ellipse for EN months
 #stat_ellipse(data = plot_bc$data %>% filter(Site == "HB"), linetype = "solid")  ## ellips for HB months
@@ -164,25 +184,26 @@ rm(plot_bc)
 ## plot; save as 'pcoa_ds_wellipse'; export at 650x550
 plot_ds <- plot_ordination(phy_wTree, pcoa_ds, color = "Month", shape = "Site")
 plot_ds$data$Month <- factor(plot_ds$data$Month, levels = c("June", "July", "September"))
+
 pds <- plot_ds + 
-  geom_point(size = 4, alpha=0.8) + scale_color_manual(values=v3pal) +
-  theme_devon() + theme(legend.position = "none", panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-  labs(subtitle="Dice-Sorensen distance estimate")
-#labs(subtitle="Dice-Sorensen distance estimate") +
-#stat_ellipse(data = plot_ds$data %>% filter(Site == "EN"), linetype = "dashed") + ## ellipse for EN months
-#stat_ellipse(data = plot_ds$data %>% filter(Site == "HB"), linetype = "solid")  ## ellips for HB months
+  geom_point(size = 4, alpha=0.8) + 
+  scale_color_manual(values=v3pal) +
+  theme_devon() +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+  theme(legend.position = "none") +
+  labs(subtitle="Dice-Sorensen")
 rm(plot_ds)
 
 ## plot; save as 'pcoa_mh_wellipse'; export at 650x550
 plot_mh <- plot_ordination(phy_wTree, pcoa_mh, color = "Month", shape = "Site")
 plot_mh$data$Month <- factor(plot_mh$data$Month, levels = c("June", "July", "September"))
 pmh <- plot_mh + 
-  geom_point(size = 4, alpha=0.8) + scale_color_manual(values=v3pal) +
-  theme_devon() + theme(legend.position = "none", panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-  labs(subtitle="Morisita-Horn distance estimate")
-#labs(subtitle="Morisita-Horn distance estimate") +
-#stat_ellipse(data = plot_mh$data %>% filter(Site == "EN"), linetype = "dashed") + ## ellipse for EN months
-#stat_ellipse(data = plot_mh$data %>% filter(Site == "HB"), linetype = "solid")  ## ellips for HB months
+  geom_point(size = 4, alpha=0.8) + 
+  scale_color_manual(values=v3pal) +
+  theme_devon() +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+  theme(legend.position = "none") +
+  labs(subtitle="Morisita-Horn")
 rm(plot_mh)
 
 
@@ -190,31 +211,32 @@ rm(plot_mh)
 plot_uu <- plot_ordination(phy_wTree, pcoa_uu, color = "Month", shape = "Site")
 plot_uu$data$Month <- factor(plot_uu$data$Month, levels = c("June", "July", "September"))
 puu <- plot_uu + 
-  geom_point(size = 4, alpha=0.8) + scale_color_manual(values=v3pal) +
-  theme_devon() + theme(legend.position = "none", panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-  labs(subtitle="Unweighted Unifrac distance estimate")
-#labs(subtitle="Unweighted Unifrac distance estimate") +
-#stat_ellipse(data = plot_uu$data %>% filter(Site == "EN"), linetype = "dashed") + ## ellipse for EN months
-#stat_ellipse(data = plot_uu$data %>% filter(Site == "HB"), linetype = "solid")  ## ellips for HB months
+  geom_point(size = 4, alpha=0.8) + 
+  scale_color_manual(values=v3pal) +
+  theme_devon() +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+  theme(legend.position = "none") +
+  labs(subtitle="Unweighted Unifrac")
 rm(plot_uu)
 
 ## plot; save as 'pcoa_wu_wellipse'; export at 650x550
 plot_wu <- plot_ordination(phy_wTree, pcoa_wu, color = "Month", shape = "Site")
 plot_wu$data$Month <- factor(plot_wu$data$Month, levels = c("June", "July", "September"))
 pwu <- plot_wu + 
-  geom_point(size = 4, alpha=0.8) + scale_color_manual(values=v3pal) +
-  theme_devon() + theme(legend.position = "right", panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-  labs(subtitle="Weighted Unifrac distance estimate")
-  #labs(subtitle="Weighted Unifrac distance estimate") +
-  #stat_ellipse(data = plot_wu$data %>% filter(Site == "EN"), linetype = "dashed") + ## ellipse for EN months
-  #stat_ellipse(data = plot_wu$data %>% filter(Site == "HB"), linetype = "solid")  ## ellips for HB months
-  rm(plot_wu)
+  geom_point(size = 4, alpha=0.8) + 
+  scale_color_manual(values=v3pal) +
+  theme_devon() +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+  theme(legend.position = "right") +
+  labs(subtitle="Weighted Unifrac")
+rm(plot_wu)
+
 
 ### can plot all of these five with their unique axes % variance collectively:
 require(cowplot)
 top_row <- plot_grid(pds, pbc, pmh, nrow=1, labels = c("A", "B", "C"))
 bottom_row <- plot_grid(puu, pwu, NULL, nrow = 1, rel_widths = c(1, 1.3, .7), labels = c("D", "E"))
-## plot; save as 'pcoa_fiveMetric_wellipse'; export at 1200x800
+## plot; save as 'pcoa_fiveMetric_wEigVal'; export at 1200x800
 plot_grid(top_row, bottom_row, nrow=2)
 rm(pds, pbc, pmh, puu, pwu)
 
