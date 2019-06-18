@@ -1,4 +1,4 @@
-variable,nSamples,fracSamples
+variable,Samples,fracSamples
 Diptera,275,0.993
 Lepidoptera,262,0.946
 Araneae,253,0.913
