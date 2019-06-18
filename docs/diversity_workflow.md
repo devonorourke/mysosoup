@@ -49,6 +49,9 @@ We used a [Alpha-HillEstimates.R](https://github.com/devonorourke/mysosoup/blob/
 
 This script generated a plot of diversity estimates faceted by Hill Number, as well as a series of statistical summaries determining if diversity estimates varied by the Month or Site a sample was associated with. Multifactorial [ANOVA](https://github.com/devonorourke/mysosoup/tree/master/data/text_tables/anovas), [Kruskal-Wallis](https://github.com/devonorourke/mysosoup/tree/master/data/text_tables/kruskal), and [Dunn test](https://github.com/devonorourke/mysosoup/tree/master/data/text_tables/dunn) summaries are available for each of the three Hill Number diversity estimates.
 
+The same R script also generated a few animations (which we could not display in a static manuscript). These are available at [this directory](https://github.com/devonorourke/mysosoup/tree/master/figures/gifs). We've embedded these animations in the [animation_analyses.md](https://github.com/devonorourke/mysosoup/blob/master/docs/animation_analyses.md) documentation and provided a brief commentary for each visualization.
+
+
 # Beta diversity
 Multiple phylogenetic (Unifrac weighted and unweighted) and non-phylogenetic (Dice-Sorensen, Bray-Curtis, Morisita-Horn) distances were estimated in the [betadiver_work.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/betadiver_work.R) script using the [Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.rarefied-table_noNegSamps_noSingleASVs.qza) rarefied data table. The script resulted in three groups of output figures, tables, or summaries:
 1. We ordinated each distance measure using PCoA to examine if patterns of collection Month and Location associated with sample ASV composition.

@@ -411,14 +411,14 @@ ggarrange(ml_sp_ocr, ml_sp_abu, common.legend = TRUE, nrow = 2, labels = c("A", 
 ## alternative to slopePlot: use animation
 ## just running a xy scatterplot with abundance/occurence info, with facet by Site and ...
 ## ..transition state is Month
-sitmnth.ani <- ggplot(data = ASV_sumry, aes(x = pReads, y=pSamples, color=order_name, label = ASValias)) +
+sitmnth.ani <- ggplot(data = ASV_sumry, aes(y = pReads, x=pSamples, color=order_name, label = ASValias)) +
   geom_point() +
   facet_grid(~ Site) +
   scale_color_manual(values=pal6) +
   geom_label_repel(data = ASV_sumry %>% filter(pReads > 0 | pSamples > 1),
                    aes(color=order_name), fill="white", size = 2.25, force = 5, seed = 42,
                    segment.size = 0.2, segment.alpha=0.5, segment.colour = "gray50") +
-  labs(x="fraction Reads", y="fraction Samples", color="") +
+  labs(y="fraction Reads", x="fraction Samples", color="") +
   theme_devon() +
   theme(legend.position = "top") +
   guides(color = guide_legend(nrow=1)) +
@@ -560,10 +560,12 @@ ASV_Month_sumry_fulldat <- rbind(ASV_Month_Sumry_background, ASV_Month_sumry)
 ASV_Month_sumry_fulldat$Month <- factor(ASV_Month_sumry_fulldat$Month, levels = c("June", "July", "September"))
 
 ## plot the entire dataset, highlighting just the selected ASVs
-full.ani <- ggplot(data = ASV_Month_sumry_fulldat, 
-                   aes(x=nSamples, y=nReads, label=ASValias)) +
-  geom_point(data = ASV_Month_sumry_fulldat %>% filter(Highlight=="no"), color="gray70", alpha=0.8) +
-  geom_point(data = ASV_Month_sumry_fulldat %>% filter(Highlight=="yes"), aes(color=order_name), size=2) +
+full.ani <-ggplot(data = ASV_Month_sumry_fulldat, 
+                  aes(x=nSamples, y=nReads, label=ASValias)) +
+  geom_point(data = ASV_Month_sumry_fulldat %>% filter(Highlight=="no") %>% filter(order_name %in% nonselect_orderNames), 
+             aes(color=order_name), size=3) +
+  geom_point(data = ASV_Month_sumry_fulldat %>% filter(Highlight=="no"), color="gray90", size=1.5) +
+  geom_point(data = ASV_Month_sumry_fulldat %>% filter(Highlight=="yes"), aes(color=order_name), size=4) +
   geom_label(data = ASV_Month_sumry_fulldat %>% filter(Highlight=="yes") %>% filter(nSamples > 20),
              aes(color=order_name), label.size = 0.25, size=5, nudge_x = -10) +
   scale_color_manual(values=pal5) +
@@ -574,9 +576,10 @@ full.ani <- ggplot(data = ASV_Month_sumry_fulldat,
   theme_devon() + 
   theme(legend.position = "top") +
   transition_states(Month, transition_length = 1, state_length = 4) + ggtitle('Month: {closest_state}')
+
 ## render:
 animate(full.ani, renderer = gifski_renderer(loop=TRUE))
-anim_save("~/Repos/mysosoup/data/gifs/alldat_selectOrders_onepane.gif")
+anim_save("~/Repos/mysosoup/figures/gifs/alldat_selectOrders_onepane.gif")
 
 
 ## now we plot just the top 8 Orders, grouping all other order_name as "others" 
