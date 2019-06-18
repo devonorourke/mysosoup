@@ -1,0 +1,64 @@
+Order Family Genus Species nSamples nReads
+Araneae Araneidae Eustala  204 117864
+Diptera Limoniidae Rhipidia  164 56294
+Diptera Limoniidae Epiphragma Epiphragma_solatrix 141 42300
+Diptera Limoniidae Erioptera Erioptera_caliptera 138 58751
+Diptera Culicidae Aedes Aedes_vexans 136 23606
+Diptera Limoniidae Erioptera Erioptera_parva 122 55561
+Diptera Culicidae Culex Culex_erraticus 98 19355
+Diptera Limoniidae   89 27673
+Araneae Araneidae Eustala  88 22392
+Diptera Chironomidae Chironomus  88 4484
+Diptera Limoniidae   87 13096
+Diptera Culicidae Culex Culex_erraticus 73 12992
+Lepidoptera Tineidae Acrolophus Acrolophus_mortipennella 71 23219
+Diptera Chironomidae Chironomus  69 3219
+Diptera Tipulidae Nephrotoma Nephrotoma_ferruginea 69 14503
+Psocodea Psocidae Metylophorus Metylophorus_novaescotiae 67 17802
+Diptera Limoniidae Metalimnobia Metalimnobia_triocellata 66 22461
+Diptera Chironomidae Glyptotendipes  65 8803
+Diptera Culicidae Uranotaenia Uranotaenia_sapphirina 62 4438
+Lepidoptera Tortricidae Choristoneura  62 4915
+Trichoptera Hydropsychidae Potamyia Potamyia_flava 60 20588
+Diptera Culicidae Culex Culex_erraticus 60 8475
+Diptera Limoniidae Helius Helius_flavipes 58 13877
+Diptera Limoniidae Rhipidia  58 11069
+Diptera Chironomidae Glyptotendipes  56 2255
+Diptera Culicidae Coquillettidia Coquillettidia_perturbans 55 4468
+Diptera Chironomidae Glyptotendipes Glyptotendipes_meridionalis 55 8187
+Hemiptera Flatidae   53 5212
+Lepidoptera Tortricidae   50 4388
+Araneae Anyphaenidae Anyphaena Anyphaena_pectorosa 46 3293
+Coleoptera Ptilodactylidae Ptilodactyla  44 10300
+Diptera Tipulidae Nephrotoma Nephrotoma_ferruginea 43 3683
+Diptera Culicidae Culex Culex_erraticus 43 5687
+Diptera Chironomidae Axarus Axarus_festivus 43 9152
+Diptera Chironomidae   41 985
+Diptera Tabanidae Chrysops  41 32612
+Diptera Psychodidae   41 48202
+Diptera Tipulidae Nephrotoma Nephrotoma_okefenoke 39 3718
+Diptera Limoniidae Pseudolimnophila Pseudolimnophila_luteipennis 38 4568
+Diptera Limoniidae   38 2258
+Diptera Limoniidae   37 3276
+Diptera Chironomidae   36 771
+Diptera Tabanidae Tabanus  36 11529
+Diptera Psychodidae   35 14041
+Diptera Culicidae Culex Culex_erraticus 35 5685
+Diptera Limoniidae Rhipidia  34 10437
+Diptera Chironomidae   34 813
+Diptera Limoniidae   33 6090
+Lepidoptera Oecophoridae Inga Inga_sparsiciliella 33 2818
+Diptera Tabanidae Hybomitra  33 6646
+Diptera Culicidae Culex  32 4027
+Araneae Araneidae Eustala Eustala_cepina 32 1932
+Araneae Araneidae Metepeira  32 1643
+Lepidoptera Cosmopterigidae Perimede Perimede_circitor 31 4638
+Ephemeroptera Heptageniidae Stenacron Stenacron_interpunctatum 31 6046
+Lepidoptera Erebidae Renia Renia_adspergillus 30 1899
+Diptera Limoniidae Erioptera Erioptera_parva 30 2722
+Diptera Culicidae   29 811
+Diptera Tipulidae Nephrotoma Nephrotoma_eucera 29 6678
+Coleoptera Ptilodactylidae Ptilodactyla  29 3635
+Hemiptera Cicadellidae Gyponana  28 19765
+Diptera Culicidae Culex Culex_territans 28 989
+Araneae Tetragnathidae Tetragnatha Tetragnatha_elongata 28 1337

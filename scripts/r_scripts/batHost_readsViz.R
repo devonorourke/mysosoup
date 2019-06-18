@@ -44,3 +44,14 @@ ggplot(data = bat_plotdat %>% filter(!is.na(multihit)),
   theme(legend.position = "top")
 
 
+### How many samples contained a particular bat species?
+bat_sumry %>% 
+  filter(SampleType == "sample") %>% 
+  filter(multihit == FALSE) %>% 
+  select(SampleID, BatchType, `Myotis lucifugus`, `Myotis sodalis`, `Nycticeius humeralis`, multihit) %>% 
+  melt(id.vars = c("SampleID", "BatchType", "multihit"),
+       variable.name = "batSpecies", 
+       value.name = "Reads") %>% 
+  filter(!is.na(Reads)) %>%
+  group_by(batSpecies) %>% 
+  summarise(counts = n())

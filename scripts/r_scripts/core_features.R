@@ -3,13 +3,14 @@ library(tidyverse)
 library(reshape2)
 library(qiime2R)
 library(scales)
+library(formattable)
 
 ################################################################################
 ## part 1 - loading read, meta, and taxa information
 ################################################################################
 
 ## import read data
-# notrun: download.file("https://github.com/devonorourke/mysosoup/raw/master/data/qiime_qza/asvTables/Mangan_noBats_ASVtable.qza", "nonbat.qza")
+# notrun: download.file("https://github.com/devonorourke/mysosoup/raw/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.rarefied-table_noNegSamps.qza", "nonbat.qza")
 
 ## function to convert .qza to matrix, then convert wide-format matrix to long-format data.frame object
 tableimport.function <- function(table){
@@ -24,7 +25,7 @@ tableimport.function <- function(table){
   rename(ASVid = OTUid, SampleID = variable, Reads = value)
 }
 
-## run from local: tmp1 <- tableimport.function('~/Repos/mysosoup/data/qiime_qza/asvTables/Mangan.nonbatASVs.table.qza')
+## run from local: tmp1 <- tableimport.function('~/Repos/mysosoup/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.rarefied-table_noNegSamps.qza')
 tmp1 <- tableimport.function('nonbat.qza')
 
 ## add metadata  
@@ -71,20 +72,13 @@ coreASVsumry <- data.frame(data %>% group_by(ASVid, phylum_name, class_name, ord
 
 ## which of these are not what we expect?
 p10samps <- coreASVsumry %>% filter(p10samp == TRUE)
-p10oddballs <- p10samps %>% filter(is.na(phylum_name) | phylum_name != "Arthropoda")
-p10oddASVs <- data.frame(p10oddballs) %>% select(ASVid) %>% mutate_if(is.factor, as.character) %>% pull()
-  ## manually BLASTed these 9 ASVs and only one is a likely arthropod; 
-  ## others either undetectable or have pid < 0.8, or are fungus/mold
-  ## going to restrict our analyses to those sequences with matching Arthropod taxa and family-level info
 
-filt_samps <- coreASVsumry %>% filter(phylum_name == "Arthropoda") %>% filter(!is.na(family_name))
-
-## how many of each taxa Order are represented in the Nth percentile?
-perc5tbl <- filt_samps %>% filter(p5samp == TRUE) %>% group_by(order_name) %>% summarise(counts=n()) %>% mutate(percentile='p05')
-perc10tbl <- filt_samps %>% filter(p10samp == TRUE) %>% group_by(order_name) %>% summarise(counts=n()) %>% mutate(percentile='p10')
-perc20tbl <- filt_samps %>% filter(p20samp == TRUE) %>% group_by(order_name) %>% summarise(counts=n()) %>% mutate(percentile='p20')
-perc30tbl <- filt_samps %>% filter(p30samp == TRUE) %>% group_by(order_name) %>% summarise(counts=n()) %>% mutate(percentile='p30')
-perc50tbl <- filt_samps %>% filter(p50samp == TRUE) %>% group_by(order_name) %>% summarise(counts=n()) %>% mutate(percentile='p50')
+## how many of each taxa Order are represented in at least 5%, 10% 50% of samples?
+perc5tbl <- p10samps %>% filter(p5samp == TRUE) %>% group_by(order_name) %>% summarise(counts=n()) %>% mutate(percentile='p05')
+perc10tbl <- p10samps %>% filter(p10samp == TRUE) %>% group_by(order_name) %>% summarise(counts=n()) %>% mutate(percentile='p10')
+perc20tbl <- p10samps %>% filter(p20samp == TRUE) %>% group_by(order_name) %>% summarise(counts=n()) %>% mutate(percentile='p20')
+perc30tbl <- p10samps %>% filter(p30samp == TRUE) %>% group_by(order_name) %>% summarise(counts=n()) %>% mutate(percentile='p30')
+perc50tbl <- p10samps %>% filter(p50samp == TRUE) %>% group_by(order_name) %>% summarise(counts=n()) %>% mutate(percentile='p50')
 perc_alltbl <- rbind(perc5tbl, perc10tbl, perc20tbl, perc30tbl, perc50tbl)
 
 perc_alltbl <- perc_alltbl %>% spread(order_name, counts, fill=NA) %>% arrange(percentile)
@@ -97,4 +91,55 @@ perc5names <- filt_samps %>%
   filter(p5samp == TRUE)
 write.table(perc5names, 
             file="~/Repos/mysosoup/data/text_tables/core_features/summary_corefeatures_table.txt",
+            quote=FALSE, row.names=FALSE)
+
+## which Orders have the most of the ASVs we see?
+perc5names %>% 
+  group_by(order_name) %>% 
+  summarise(counts=n_distinct(ASVid)) %>% 
+  arrange(-counts)
+
+## which Orders have the most of the Families we see?
+perc5names %>% 
+  group_by(order_name) %>% 
+  summarise(counts=n_distinct(family_name)) %>% 
+  arrange(-counts)
+
+## which Families are most frequent?
+perc5names %>% 
+  group_by(order_name, family_name) %>% 
+  summarise(counts=n()) %>% 
+  arrange(-counts)
+
+## reduce the `perc5names` dataset to just taxa info and nSample/nRead data:
+perc5names_reduced <- perc5names %>% 
+  select(ASVid, order_name, family_name, genus_name, species_name, nSamples, nReads) %>% 
+  rename(Order=order_name, Family=family_name, Genus=genus_name, Species=species_name) %>% 
+  arrange(-nSamples)
+
+perc5names_reduced <- perc5names_reduced %>% 
+  mutate_if(is.factor, as.character)
+
+perc5names_reduced[is.na(perc5names_reduced)] <- ""
+
+## export raw text table:
+write.table(perc5names_reduced, 
+            file="~/Repos/mysosoup/data/text_tables/core_features/corefeatures_simple.txt",
+            quote=FALSE, row.names=FALSE)
+
+## or save as fancy colored table/plot;
+## could save as web page, but don't have current infrastructure to embed...
+formattable(perc5names_reduced, list(
+  nSamples = color_tile("white", "#ff796c"),
+  nReads = color_tile("white", "#bf9005")
+))
+
+
+## export raw text table without any ASV info (to fit on single page):
+perc5names_reduced_noASV <- perc5names_reduced %>% 
+  select(-ASVid) %>% 
+  arrange(-nSamples) %>% 
+  mutate(Species = gsub(" ", "_", .$Species))
+write.table(perc5names_reduced_noASV, 
+            file="~/Repos/mysosoup/data/text_tables/core_features/corefeatures_simple_noASV.txt",
             quote=FALSE, row.names=FALSE)
