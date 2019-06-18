@@ -17,13 +17,16 @@ theme_devon <- function () {
 
 ## import metadata 
 meta <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/metadata/mangan_metadata.csv", col_names = TRUE)
-tinymeta <- meta %>% select(SampleID, Roost, CollectionMonth, Site, SampleType, BatchType)
-tinymeta$Site <- ifelse(tinymeta$Site == "Egner", gsub("Egner", "EN", tinymeta$Site), tinymeta$Site)
-tinymeta$Site <- ifelse(tinymeta$Site == "HickoryBottoms", gsub("HickoryBottoms", "HB", tinymeta$Site), tinymeta$Site)
-tinymeta$CollectionMonth[is.na(tinymeta$CollectionMonth)] <- "control"
-tinymeta$Labeler <- paste(tinymeta$Site, tinymeta$Roost, sep="-")
-tinymeta$Labeler <- ifelse(tinymeta$Labeler == "control-control", gsub("control-control", "control", tinymeta$Labeler), tinymeta$Labeler)
-tinymeta$CollectionMonth <- as.factor(tinymeta$CollectionMonth)
+meta <- meta %>% select(SampleID, Roost, CollectionMonth, Site, SampleType, BatchType)
+meta$Site <- ifelse(meta$Site == "Egner", gsub("Egner", "EN", meta$Site), meta$Site)
+meta$Site <- ifelse(meta$Site == "HickoryBottoms", gsub("HickoryBottoms", "HB", meta$Site), meta$Site)
+meta$CollectionMonth[is.na(meta$CollectionMonth)] <- "control"
+meta$CollectionMonth <- ifelse(meta$CollectionMonth == "6", gsub("6", "June", meta$CollectionMonth), meta$CollectionMonth)
+meta$CollectionMonth <- ifelse(meta$CollectionMonth == "7", gsub("7", "July", meta$CollectionMonth), meta$CollectionMonth)
+meta$CollectionMonth <- ifelse(meta$CollectionMonth == "9", gsub("9", "September", meta$CollectionMonth), meta$CollectionMonth)
+meta$Labeler <- paste(meta$Site, meta$Roost, sep="-")
+meta$Labeler <- ifelse(meta$Labeler == "control-control", gsub("control-control", "control", meta$Labeler), meta$Labeler)
+meta$CollectionMonth <- as.factor(meta$CollectionMonth)
 
 
 ## add taxonomy information
@@ -55,7 +58,7 @@ rm(df.tmp)
 colnames(tmp) <- c("ASVid", "SampleID", "Reads")
 df.tmp <- merge(tmp, taxa)
 rm(tmp)
-df.tmp <- merge(df.tmp, tinymeta)
+df.tmp <- merge(df.tmp, meta)
 onlyControlASVs <- setdiff(df.tmp %>% filter(SampleType=="control") %>% select(ASVid) %>% pull(), df.tmp %>% filter(SampleType=="sample") %>% select(ASVid) %>% pull())
 df_filt.tmp <- df.tmp %>% filter(!ASVid %in% onlyControlASVs) %>% filter(phylum_name=="Arthropoda") %>% filter(!is.na(family_name)) %>% filter(SampleType == "sample")
 rm(df.tmp)
@@ -65,16 +68,26 @@ mat.tmp$SampleID <- NULL
 tmp.hill <- data.frame(renyi(mat.tmp, scales = c(0,1,2), hill=TRUE)) %>% mutate(SampleID = row.names(.))
 colnames(tmp.hill)[1:3] <- c("q=0", "q=1", "q=2")
 Alpha_df <- gather(tmp.hill, key="Hill_qType", value = "Hill_value", c('q=0', 'q=1', 'q=2'))
-mangan_hill_df <- merge(Alpha_df, tinymeta)
+mangan_hill_df <- merge(Alpha_df, meta)
 rm(tmp.hill, mat.tmp, Alpha_df)
 
 
 ## plot parameter setup
-mangan_hill_df$CollectionMonth <- factor(mangan_hill_df$CollectionMonth, levels = c("6", "7", "9"))
+mangan_hill_df$CollectionMonth <- factor(mangan_hill_df$CollectionMonth, levels = c("June", "July", "September"))
 v3pal <- viridis::plasma(3, begin = 0.35, end = 0.9, direction = -1)
 
 ## plot alpha diversity collectively
 ## save as all_Alpha_Hillvals; export at 900x697
+ggplot(mangan_hill_df, aes(x=Site, y=Hill_value, color=CollectionMonth)) + 
+  geom_boxplot(outlier.shape = NA, color="gray30") +
+  geom_jitter(width = 0.2, alpha=0.6) + 
+  scale_color_manual(values = c(v3pal, "gray40"), labels=c("June", "July", "September")) +
+  facet_grid(Hill_qType ~ CollectionMonth) +
+  labs(x="", y="Estimated diversity", color = "Month") +
+  theme_devon() + theme(legend.position = "none")
+
+## alternative plot groups all data by Site, not by Roost
+## save as all_Alpha_Hillvals_separateRoosts; export at 900x697
 ggplot(mangan_hill_df, aes(x=Labeler, y=Hill_value, color=CollectionMonth)) + 
   geom_jitter(width = 0.2, alpha=0.8) + 
   scale_color_manual(values = c(v3pal, "gray40"), labels=c("June", "July", "September")) +
@@ -83,7 +96,6 @@ ggplot(mangan_hill_df, aes(x=Labeler, y=Hill_value, color=CollectionMonth)) +
   theme_devon() +
   theme(axis.text.x = element_text(angle = 22.5, hjust=1),
         legend.position = "top")
-
 
 ##### Run ANOVA for group significance:
 #### Run ANOVA for group significance:
@@ -115,8 +127,12 @@ library(FSA)
 dunnfunction <- function(data, qfilt){
   data$Grouper <- paste(data$CollectionMonth, data$Site, sep="-")
   data$Grouper <- as.factor(data$Grouper)
-  tmp <- dunnTest(Hill_value ~ Grouper, data=tmpdf %>% filter(Hill_qType==qfilt), method = "bh") 
-  tmp$res %>% arrange(P.adj)
+  tmp <- dunnTest(Hill_value ~ Grouper, data=data %>% filter(Hill_qType==qfilt), method = "bh") 
+  tmp <- data.frame(tmp$res)
+  tmp <- tmp %>% mutate(P.adj=round(P.adj, 3))
+  tmp <- tmp %>% mutate(Z=round(Z, 3))
+  tmp <- tmp %>% mutate(P.unadj=round(P.unadj, 3))
+  tmp %>% arrange(P.adj)
 }
 
 capture.output(dunnfunction(mangan_hill_df, "q=0"),file="~/Repos/mysosoup/data/text_tables/dunn/dunn_mangan_alpha_q0.txt")
