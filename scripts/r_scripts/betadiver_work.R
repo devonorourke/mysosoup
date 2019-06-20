@@ -133,7 +133,7 @@ bigplot_df$Month <- factor(bigplot_df$Month, levels=c("June", "July", "September
 bigplot_df$Measure <- factor(bigplot_df$Measure, levels=c('ds', 'bc', 'mh', 'uu', 'wu'))
 
 ## save plot as 'pcoa_fiveMetric_onlyGuano'; export at 1000x817
-## note ethis plot isn't doing as good a job as the individual plots because:
+## note this plot isn't doing as good a job as the individual plots because:
 ## ... it's not showing the proportion of variation on each PC (which varies by plot)
 ## ... so maybe better not to facet except to use as a '30,000 foot' view to show broad trends at once
 ggplot(bigplot_df, aes(x=Axis.1, y=Axis.2, color=Month, shape=Site)) +
@@ -142,6 +142,7 @@ ggplot(bigplot_df, aes(x=Axis.1, y=Axis.2, color=Month, shape=Site)) +
   facet_wrap(Measure ~ ., nrow=2) +
   theme_devon() +
   theme(legend.position = "top")
+
 
 ## plotting individually directly with phyloseq is faster and better, with a bit of ggplot help
 ## going to add in the Egienvectors for Axis1/2 for each plot here
@@ -173,7 +174,8 @@ pbc <- plot_bc +
   theme_devon() +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   theme(legend.position = "none") +
-  labs(subtitle="Bray-Curtis")
+  labs(subtitle="Bray-Curtis") +
+  stat_ellipse(aes(group=Month))
 #labs(subtitle="Bray-Curtis distance estimate") +
 #stat_ellipse(data = plot_bc$data %>% filter(Site == "EN"), linetype = "dashed") + ## ellipse for EN months
 #stat_ellipse(data = plot_bc$data %>% filter(Site == "HB"), linetype = "solid")  ## ellips for HB months
@@ -191,7 +193,8 @@ pds <- plot_ds +
   theme_devon() +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   theme(legend.position = "none") +
-  labs(subtitle="Dice-Sorensen")
+  labs(subtitle="Dice-Sorensen") +
+  stat_ellipse(aes(group=Month))
 rm(plot_ds)
 
 ## plot; save as 'pcoa_mh_wellipse'; export at 650x550
@@ -203,7 +206,8 @@ pmh <- plot_mh +
   theme_devon() +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   theme(legend.position = "none") +
-  labs(subtitle="Morisita-Horn")
+  labs(subtitle="Morisita-Horn") +
+  stat_ellipse(aes(group=Month))
 rm(plot_mh)
 
 
@@ -216,7 +220,8 @@ puu <- plot_uu +
   theme_devon() +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   theme(legend.position = "none") +
-  labs(subtitle="Unweighted Unifrac")
+  labs(subtitle="Unweighted Unifrac") +
+  stat_ellipse(aes(group=Month))
 rm(plot_uu)
 
 ## plot; save as 'pcoa_wu_wellipse'; export at 650x550
@@ -228,7 +233,9 @@ pwu <- plot_wu +
   theme_devon() +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   theme(legend.position = "right") +
-  labs(subtitle="Weighted Unifrac")
+  labs(subtitle="Weighted Unifrac") +
+  stat_ellipse(aes(group=Month))
+
 rm(plot_wu)
 
 
@@ -236,7 +243,7 @@ rm(plot_wu)
 require(cowplot)
 top_row <- plot_grid(pds, pbc, pmh, nrow=1, labels = c("A", "B", "C"))
 bottom_row <- plot_grid(puu, pwu, NULL, nrow = 1, rel_widths = c(1, 1.3, .7), labels = c("D", "E"))
-## plot; save as 'pcoa_fiveMetric_wEigVal'; export at 1200x800
+## plot; save as 'pcoa_fiveMetric_wEigVal_wEllipse'; export at 1200x800
 plot_grid(top_row, bottom_row, nrow=2)
 rm(pds, pbc, pmh, puu, pwu)
 

@@ -12,7 +12,7 @@ library(viridis)
 tmpqza <- read_qza("~/Repos/mysosoup/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.rarefied-table_noNegSamps.qza")
 
 ## import metadata 
-meta <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/metadata/mangan_metadata.csv.gz", col_names = TRUE)
+meta <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/metadata/mangan_metadata.csv", col_names = TRUE)
 meta <- meta %>% 
   select(SampleID, Roost, CollectionMonth, SampleType, Site) %>% 
   rename('Month' = CollectionMonth) %>% 
