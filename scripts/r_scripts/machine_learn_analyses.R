@@ -360,7 +360,7 @@ ASV_ocr_sumry <- rfy_plotdat %>%
   gather(`EN-June`, `EN-July`, `EN-September`, `HB-June`, `HB-July`, `HB-September`, key = "SiteMonth", value="nSamples") %>% 
   merge(., nSampDat) %>%
   mutate(pSamples=round((nSamples/smSamples),2))
-  
+
 
 ## merge data sets togerther (still no ASV filtering)
 ASV_sumry <- merge(ASV_abu_Sumry, ASV_ocr_sumry, by = c('Taxa', 'SiteMonth', 'ASValias', 'Labeler')) %>% 
@@ -373,12 +373,12 @@ ASV_sumry_SLfiltd <- ASV_sumry %>% filter(ASVid %in% selectASVs)
 
 ## which orders would remain if we applied supervised learning filter?
 OrderKeepers <- ASV_sumry_SLfiltd %>% distinct(order_name) %>% pull(order_name)
-    ## eight orders would remain
+## eight orders would remain
 
 ## set levels for plot
 ASV_sumry_SLfiltd$Month <- factor(ASV_sumry_SLfiltd$Month, levels = c("June", "July", "September"))
 ASV_sumry_SLfiltd$order_name <- factor(ASV_sumry_SLfiltd$order_name, 
-                               levels = c("Araneae","Coleoptera","Diptera","Ephemeroptera", "Hemiptera","Lepidoptera","Psocodea","Trichoptera"))
+                                       levels = c("Araneae","Coleoptera","Diptera","Ephemeroptera", "Hemiptera","Lepidoptera","Psocodea","Trichoptera"))
 pal8 <- c('#3778bf', '#efb435', 'black', '#7bb274', '#ff028d', '#825f87', '#d9544d', '#a87900')
 
 ## plotting read abundances with GENUS + ASV as label; save as 'slopeplot_abund_rfydat_bySiteMonth', export at 1000x1000
@@ -428,9 +428,9 @@ ggarrange(ml_sp_ocr, ml_sp_abu, common.legend = TRUE, labels = c("A", "B"))
 ## save as 'ml_pAbu_by_pOcr_scatterplot_byMonth_andSite'; export at 1000x1000
 
 ## split up the dataset into three parts:
-  ## 1. ML data (solid circles, colored by 8 orders)
-  ## 2. non ML data in same 8 orders as #1
-  ## 3. non ML data in orders other than #2
+## 1. ML data (solid circles, colored by 8 orders)
+## 2. non ML data in same 8 orders as #1
+## 3. non ML data in orders other than #2
 
 MLasvs <- ASV_sumry_SLfiltd$ASValias %>% unique(.)
 nonML_selectOrders_ASVs <- ASV_sumry %>% filter(order_name %in% OrderKeepers) %>% filter(!ASValias %in% ASV_sumry_SLfiltd$ASValias) %>% pull(ASValias) %>% unique(.)
@@ -469,7 +469,7 @@ ggplot() +
   scale_color_manual(values=pal9) +
   scale_x_continuous(expand = c(0,0.15)) +
   geom_text_repel(data = ASV_sumry %>% filter(pSamples > 0.37),
-                   aes(y = pReads, x=pSamples, color=order_name, label=Labeler), 
+                  aes(y = pReads, x=pSamples, color=order_name, label=Labeler), 
                   nudge_x = 5, force=5, direction="y", segment.size = 0.2, segment.alpha = 0.5, seed = 42, size=3) +
   #geom_label_repel(data = ASV_sumry %>% filter(pSamples > 0.4),
   #                 aes(y = pReads, x=pSamples, color=order_name, label=Labeler), 
@@ -549,8 +549,8 @@ dipAni <- ggplot() +
                    segment.size = 0.2, segment.alpha=0.5, segment.colour = "gray50") +
   geom_label_repel(data = ASV_sumry %>% filter(order_name == "Diptera") %>% filter(MLsample_filter=='not-SL-feature') %>% filter(pReads > 0),
                    aes(y = pReads, x=pSamples, label=Labeler),
-                   color='black', fill="white", size = 4.5, force = 5, seed = 42,nudge_x = -5, direction="y",
-                   segment.size = 0.2, segment.alpha=0.5, segment.colour = "gray50") +
+                   color='black', fill=NA, size = 4.5, force = 5, seed = 42,nudge_x = -5, direction="y",
+                   segment.size = 0.3, segment.alpha=0.5, segment.colour = "black") +
   labs(y="fraction Reads", x="fraction Samples", color="") +
   theme_devon() +
   theme(legend.position = "top", legend.text = element_text(size=16), plot.title = element_text(size=22, face = "bold")) +
@@ -558,19 +558,25 @@ dipAni <- ggplot() +
   transition_states(Month, transition_length = 1, state_length = 2) + ggtitle('Month: {closest_state}')
 
 ## render:
-animate(dipAni, renderer = gifski_renderer(loop=TRUE), width=1000, height=1000)
+animate(dipAni, renderer = gifski_renderer(loop=TRUE), width=1000, height=500)
 anim_save("~/Repos/mysosoup/figures/gifs/sitemonth_ASVs_DipteraOnly.gif")
 
 
 ##########
 ## alternate animation will focus on the changes within each Order at each Site for each Month
-## removed labels - too little space and too variable within plots
+## removed most labels - too little
+## selected single ASVs per Order
+ASVs2labelbc <- c('ASV-1', 'ASV-25', 'ASV-3', 'ASV-60','ASV-7', 'ASV-9', 'ASV-14','ASV-19','ASV-81')
+
 sitmnt_byOrder.ani <- ggplot() +
+  scale_shape_manual(values=c(0,19)) +
+  scale_x_continuous(breaks = c(0, 0.5, 1)) +
+  geom_label_repel(data = ASV_sumry %>% filter(ASValias %in% ASVs2labelbc),
+                   aes(y = pReads, x=pSamples, color=plotOrder_name, label=Labeler), size = 2.75, seed = 42, nudge_y=0.03,
+                   segment.size = 0.4, segment.alpha=0.9, segment.colour = "black", fill=NA) +
   geom_point(data = ASV_sumry,
              aes(y = pReads, x=pSamples, color=plotOrder_name, shape=MLsample),
              alpha = 0.8, size=2.5) +
-  scale_shape_manual(values=c(0,19)) +
-  scale_x_continuous(breaks = c(0, 0.5, 1)) +
   facet_grid(Site ~ plotOrder_name) +
   scale_color_manual(values=pal9) +
   labs(y="fraction Reads", x="fraction Samples", color="Arthropod Order", shape="") +
@@ -580,7 +586,7 @@ sitmnt_byOrder.ani <- ggplot() +
   transition_states(Month, transition_length = 1, state_length = 2) + ggtitle('Month: {closest_state}')
 
 ## render:
-animate(sitmnt_byOrder.ani, renderer = gifski_renderer(loop=TRUE), width=800)
+animate(sitmnt_byOrder.ani, renderer = gifski_renderer(loop=TRUE), width=1000, height=500)
 anim_save("~/Repos/mysosoup/figures/gifs/sitemonth_byOrder_ASVs.gif")
 
 
@@ -678,24 +684,39 @@ trainingASVs <- rfy_plotdat %>%
 non_trainingASVs <- rfy_plotdat %>% 
   filter(SampleID %in% predictions_df$SampleID) %>% 
   distinct(ASValias)
-  ## looking at these two data.frames and realizing that the ASVs in our dipteran only plots pretty much are always in both sets
-  ## so they're probably not missing... the classifier training set has most ASVs - so they're just not important because the classifier dosn't think they're important (not because they're missing from the classifier)
+## looking at these two data.frames and realizing that the ASVs in our dipteran only plots pretty much are always in both sets
+## so they're probably not missing... the classifier training set has most ASVs - so they're just not important because the classifier dosn't think they're important (not because they're missing from the classifier)
 
-
-################################################################################
-## the changes really aren't that drastic for either occurrence or abundance data for most ASVs... this likely ..
-## .. reflects the fact that most differnces are due to Month, not the combination of Site and Month
-## Next plot does the same as above for ASV slopeplots, but pulls the ASVs from the Random Forest classifier specific for ..
-## .. training on Month (not SiteMonth)
-################################################################################
-
-
+################################################################################################################################################
+################################################################################################################################################
+################################################################################################################################################
+################################################################################################################################################
+## big change in analysis below...
+## Next set of plots do the same as above for are identifying ASVs trainied for ..
+## .. classifier to identify differences in Month WITHOUT ANY SITE class
+## Thus observed monthly differences may be due to changes in that Month ..
+## .. in one site only, or both sites
+################################################################################################################################################
+################################################################################################################################################
+################################################################################################################################################
+################################################################################################################################################
+## create new ASV summary dataset that partitions by Month but aggregates ASV information across both Sites
 ## pulling select ASVs for "Month" machine learning output
-## same 
-select_MonthASVs <- rmonth_df %>% filter(cumsum < 0.81) %>% select(ASVid) %>% pull()
+## selecting features in 75th percentile of "Importance" 
+filt75_m <- quantile(rmonth_df$importance, .75)
+select_MonthASVs <-rmonth_df %>% filter(importance >= filt75_m) %>% pull(ASVid)
+
 ## how many of these are the same ASVs? 
-length(intersect(select_MonthASVs, selectASVs)) ## 22 are shared (among 28 and 30 for SiteMonth and Month, respectively)
-  ## that's important - the two different models are converging on a similar set of winners
+length(intersect(select_MonthASVs, selectASVs)) ## 30 are shared (among 60 and 32 for SiteMonth and Month, respectively)
+## that's important - the two different models are converging on a similar set of winners
+
+## are any of these actually not listed, or just not in the 75th percentiles?
+all_month_importance_ASVs <- rmonth_df$ASVid
+length(all_month_importance_ASVs) ## 128 ASVs used in that classifier (about half as many as SiteMonth)
+all_sitemonth_importance_ASVs <- rsitemonth_df$ASVid
+length(all_sitemonth_importance_ASVs) ## 237 ASVs
+intersect(all_month_importance_ASVs, all_sitemonth_importance_ASVs)
+## every "Month" ASV is found in "SiteMonth" classifier !!
 
 ## generate abundance summary data, filtering from SiteMonth list of potentially informative ASVs
 ASV_abu_Month_Sumry <- rfy_plotdat %>% filter(ASVid %in% select_MonthASVs) %>%
@@ -750,7 +771,6 @@ ggplot(data = ASV_Month_sumry, aes(x = Month, y = pReads, group=Labeler, label =
                    aes(color=order_name), fill="white", nudge_x = 5, direction = "y", size=4, segment.size = 0.2, segment.alpha=0.5, segment.colour = "gray50") +
   guides(color = guide_legend(nrow=1))
 
-
 ## plotting read ocurruences with GENUS + ASV as label; save as 'slopeplot_occur_rfydat_byMonth', export at 1200x800
 ggplot(data = ASV_Month_sumry, aes(x = Month, y = pSamples, group=Labeler, label = Labeler, color=order_name)) +
   geom_point(data = ASV_Month_sumry %>% filter(order_name!="Diptera"), size=1, width=0.01) +
@@ -768,124 +788,137 @@ ggplot(data = ASV_Month_sumry, aes(x = Month, y = pSamples, group=Labeler, label
                    aes(color=order_name), fill="white", nudge_x = 5, direction = "y", size=4, segment.size = 0.2, segment.alpha=0.5, segment.colour = "gray50") +
   guides(color = guide_legend(nrow=1))
 
+## plot all in a giant plot; save as "slopeplot_allDat_byMonth"; export at 1000x500
+ggarrange(ml_sp_ocr_Monthly, ml_sp_abu_Monthly, common.legend = TRUE, labels = c("A", "B"))
 
-################################################################################
-## one foray into gganimate to show the entire dataset moving by Month 
-## plotting nReads ~ nSamples, with points as ASVs, and labels as ASValias 
-require(gganimate)
-# see: https://cran.r-project.org/web/packages/gganimate/vignettes/gganimate.html for more information
+## set sample detections and fractions of read abundances as X/Y scatterplot
+## save as 'ml_pAbu_by_pOcr_scatterplot_byMonth'; export at 1000x1000
 
-## generate per-ASV summary using all ASVs, then separate amongst MachineLearning taggeed and not...
-## generate abundance summary data, filtering OUT SiteMonth list of potentially informative ASVs
-ASV_abu_Month_Sumry_background <- rfy_plotdat %>% filter(!ASVid %in% select_MonthASVs) %>%
-  mutate(Taxa = paste(order_name, ASValias, sep = "-")) %>% 
-  group_by(CollectionMonth, Taxa, Labeler, ASValias, ASVid) %>%
-  summarise(nReads = sum(Reads)) %>%
-  spread(CollectionMonth, nReads, fill = 0) %>% 
-  gather(June, July, September, key = "Month", value="nReads") %>% 
-  group_by(Month) %>%
-  mutate(mReads=sum(nReads)) %>% 
-  mutate(pReads=round((nReads/mReads),2))
+## split up the dataset into three parts:
+## 1. ML data (solid circles, colored by 5 Orders now)
+## 2. non ML data in same 5 Orders as #1
+## 3. non ML data in Orders other than #2
 
-## genearte occurrence information with same selected ASVs
-ASV_ocr_Month_Sumry_background <- rfy_plotdat %>% filter(!ASVid %in% select_MonthASVs) %>%
-  mutate(Taxa = paste(order_name, ASValias, sep = "-")) %>% 
-  group_by(CollectionMonth, Taxa, Labeler, ASValias, ASVid) %>%
-  summarise(nSamples=n_distinct(SampleID)) %>% 
-  spread(CollectionMonth, nSamples, fill = 0) %>% 
-  gather(June, July, September, key = "Month", value="nSamples") %>% 
-  group_by(Month) %>%
-  mutate(mSamples=sum(nSamples)) %>% 
-  mutate(pSamples=round((nSamples/mSamples),2))
+MLasvs_Monthly <- ASV_sumry_SLfiltd_Monthly$ASValias %>% unique(.)
+nonML_selectOrders_ASVs_Monthly <- ASV_sumry_Monthly %>%
+  filter(order_name %in% OrderKeepers_monthOnly) %>%
+  filter(!ASValias %in% ASV_sumry_SLfiltd_Monthly$ASValias) %>%
+  pull(ASValias) %>% unique(.)
+nonML_otherOrders_ASVs <- ASV_sumry_Monthly %>% filter(!order_name %in% OrderKeepers_monthOnly) %>% pull(ASValias) %>% unique(.)
 
-## merge data together:
-ASV_Month_Sumry_background <- merge(ASV_abu_Month_Sumry_background, ASV_ocr_Month_Sumry_background,
-                                    by=c('Taxa', 'Month', 'Labeler', 'ASVid', 'ASValias')) %>% 
-  separate(., col = Taxa, into=c("order_name", "delete1", "delete2"), sep="-") %>% 
-  select(-delete1, -delete2) %>% 
-  mutate(Highlight="no")
+## use ASV_sumry_Monthly data.frame but rename "order_name" to "plotOrder_name" and subsitute all other Orders not in OrderKeeper to "Other"
+ASV_sumry_Monthly$plotOrder_name <- ASV_sumry_Monthly$order_name
+xm <- unique(ASV_sumry_Monthly$order_name) ## all Order names
+ym <- setdiff(xm, OrderKeepers) ## all "Other" Order names
+  ## type all "ym" entries manually in 'pats_m' vector
+pats_m <- c('Blattodea|Entomobryomorpha|Hymenoptera|Isopoda|Mecoptera|Mesostigmata|Neuroptera|Odonata|Orthoptera|Poduromorpha|Sarcoptiformes|Strepsiptera|Trombidiformes|Coleoptera|Ephemeroptera|Trichoptera')
+## note we've added 3 new Orders to the previous list for SiteMonth (the 3 Orders dropped form the original 8 colored Orders: Coleoptera, Ephemeroptera, and Trichoptera)  
+ASV_sumry_Monthly$plotOrder_name <- str_replace_all(ASV_sumry_Monthly$plotOrder_name, pats_m, "Other")  ## this does the substitution
 
-## combine with selected ASVs into single df
-ASV_Month_sumry_fulldat <- rbind(ASV_Month_Sumry_background, ASV_Month_sumry)
+## use ASV_sumry_Monthly data.frame, but add in field that distinguishes ML-labeled ASVs or not w/ TRUE/FALSE statement
+ASV_sumry_Monthly <- ASV_sumry_Monthly %>% mutate(MLsample = ASValias %in% MLasvs_Monthly)
+## add in filterer for later faceting probs
+ASV_sumry_Monthly$MLsample_filter <- ASV_sumry_Monthly$MLsample
+ASV_sumry_Monthly$MLsample_filter <- ifelse(ASV_sumry_Monthly$MLsample_filter==TRUE, "SL-feature", "not-SL-feature")
 
-## set levels for plot
-ASV_Month_sumry_fulldat$Month <- factor(ASV_Month_sumry_fulldat$Month, levels = c("June", "July", "September"))
+## add in new color to 5-color palette to reflect "Other" now...
+pal6 <- c(pal5, "gray60")
 
-## plot the entire dataset, highlighting just the selected ASVs
-full.ani <-ggplot(data = ASV_Month_sumry_fulldat, 
-                  aes(x=nSamples, y=nReads, label=ASValias)) +
-  geom_point(data = ASV_Month_sumry_fulldat %>% filter(Highlight=="no") %>% filter(order_name %in% nonselect_orderNames), 
-             aes(color=order_name), size=3) +
-  geom_point(data = ASV_Month_sumry_fulldat %>% filter(Highlight=="no"), color="gray90", size=1.5) +
-  geom_point(data = ASV_Month_sumry_fulldat %>% filter(Highlight=="yes"), aes(color=order_name), size=4) +
-  geom_label(data = ASV_Month_sumry_fulldat %>% filter(Highlight=="yes") %>% filter(nSamples > 20),
-             aes(color=order_name), label.size = 0.25, size=5, nudge_x = -10) +
-  scale_color_manual(values=pal5) +
-  scale_y_continuous(labels=comma) +
-  labs(x="Samples", y="Sequences", color="", 
-       subtitle = "gray points reflect all ASVs in all Taxa not selected as significant to RF model") +
-  guides(color = guide_legend(nrow=1)) +
-  theme_devon() + 
-  theme(legend.position = "top") +
-  transition_states(Month, transition_length = 1, state_length = 4) + ggtitle('Month: {closest_state}')
+## set levels so that "Other" is placed at bottom of legend:
+ASV_sumry_Monthly$plotOrder_name <- factor(ASV_sumry_Monthly$plotOrder_name, levels = c(
+  "Araneae", "Diptera","Hemiptera","Lepidoptera","Psocodea","Other"))
+ASV_sumry_Monthly$Month <- factor(ASV_sumry_Monthly$Month, levels=c("June", "July", "September"))
 
-## render:
-animate(full.ani, renderer = gifski_renderer(loop=TRUE))
-anim_save("~/Repos/mysosoup/figures/gifs/alldat_selectOrders_onepane.gif")
-
-
-## now we plot just the top 8 Orders, grouping all other order_name as "others" 
-## this let's us see how dynamic each order is separately, which we couldn't see in the other plot
-# set palette; adding in hymenopteran and trichopteran to earlier palette schemes
-pal8 <- c('#3778bf', '#efb435', 'black', '#7bb274', '#ff028d', '#825f87', '#d9544d', '#a87900')
-
-## levels for plot
-ASV_Month_sumry_fulldat$order_name <- factor(ASV_Month_sumry_fulldat$order_name, levels = c(
-  "Araneae","Coleoptera","Diptera","Hemiptera","Hymenoptera","Lepidoptera","Psocodea","Trichoptera"))
-ASV_Month_sumry_fulldat$Month <- factor(ASV_Month_sumry_fulldat$Month, levels = c("June", "July", "September"))
-
-## ASValias label list
-plotlist <- c('ASV-1', 'ASV-13', 'ASV-25', 'ASV-74', 'ASV-135', 'ASV-61', 'ASV-7', 'ASV-12', 'ASV-48', 'ASV-9', 'ASV-14', 'ASV-19')
-
-## plot
-byorder.ani <- ggplot(ASV_Month_sumry_fulldat %>% filter(order_name %in% keepOrders), 
-                      aes(x=nSamples, y=nReads, color=order_name, label=Labeler)) +
-  geom_point(data = ASV_Month_sumry_fulldat %>% filter(!ASVid %in% rmonth_df$ASVid) %>% filter(order_name %in% keepOrders),
-             color="gray70", alpha=0.8) +
-  geom_point(data = ASV_Month_sumry_fulldat %>% filter(ASVid %in% rmonth_df$ASVid) %>% filter(order_name %in% keepOrders), 
-             aes(color=order_name), size=1.5, alpha=0.7) +
-  geom_label(data = ASV_Month_sumry_fulldat %>% filter(ASValias %in% plotlist), nudge_x = -5, size = 4) +
-  scale_color_manual(values=pal8) +
-  facet_wrap(~ order_name, nrow=2) +
-  scale_y_continuous(labels=comma, limits = c(0, 40000)) +
-  labs(x="Samples", y="Sequences") +
+## plot; save as 'ml_pAbu_by_pOcr_scatterplot_byMonth'; export at 1200x400
+## removed labels to avoid artibrary text labeling (we're already discriminating among ML and non-ML sites...)
+ggplot() +
+  geom_point(data = ASV_sumry_Monthly,
+             aes(y = pReads, x=pSamples, color=plotOrder_name, shape=MLsample),
+             alpha = 0.8, size=2.5) +
+  facet_wrap(~Month) +
+  scale_shape_manual(values=c(0,19)) +
+  scale_color_manual(values=pal6) +
+  scale_x_continuous(expand = expand_scale(add = 0.3)) +
+  geom_text_repel(data = ASV_sumry_Monthly %>% filter(pSamples > 0.37),
+                  aes(y = pReads, x=pSamples, color=order_name, label=Labeler), 
+                  nudge_x = 5, force=5, direction="y", segment.size = 0.2, segment.alpha = 0.5, seed = 42, size=3) +
+  labs(y="fraction Reads", x="fraction Samples", color="Arthropod Order", shape="") +
   theme_devon() +
-  theme(legend.position = "none") +
-  guides(color = guide_legend(nrow=2)) +
-  transition_states(Month, transition_length = 1, state_length = 4) + ggtitle('Month: {closest_state}')
+  theme(legend.position = "top", legend.text = element_text(size=12)) +
+  guides(color = guide_legend(nrow=1),
+         shape=FALSE)
 
-animate(byorder.ani, renderer = gifski_renderer(loop=TRUE), width=1100)
-anim_save("~/Repos/mysosoup/figures/gifs/alldat_selectOrders_byOrder.gif")
-
-
-## final plot looks at just those crazy dipterans...
-dip.ani <- ggplot(ASV_Month_sumry_fulldat %>% filter(order_name == "Diptera"), 
-       aes(x=nSamples, y=nReads, label=Labeler)) +
-  geom_point(data = ASV_Month_sumry_fulldat %>% filter(!ASVid %in% rmonth_df$ASVid) %>% filter(order_name == "Diptera"),
-             color="gray70", alpha=0.8) +
-  geom_point(data = ASV_Month_sumry_fulldat %>% filter(ASVid %in% rmonth_df$ASVid) %>% filter(order_name == "Diptera"), 
-             color='black', size=1.5, alpha=0.7) +
-  geom_label(data = ASV_Month_sumry_fulldat %>% filter(order_name == "Diptera") %>% filter(nSamples > 30 | nReads > 5000), 
-             nudge_x = -2, size = 4) +
-  scale_color_manual(values=pal8) +
-  labs(x="Samples", y="Sequences") +
+## can make these facets easier to identify differences with animation
+## same plot as above, but eliminating Month facet with animation
+## ..transition state is Month
+mnth.ani <- ggplot() +
+  geom_point(data = ASV_sumry_Monthly,
+             aes(y = pReads, x=pSamples, color=plotOrder_name, shape=MLsample),
+             alpha = 0.8, size=4) +
+  scale_shape_manual(values=c(0,19)) +
+  scale_color_manual(values=pal6) +
+  scale_x_continuous(expand = expand_scale(add = 0.3)) +
+  geom_text_repel(data = ASV_sumry_Monthly %>% filter(pSamples > 0.37 | pReads > 0.03),
+                  aes(y = pReads, x=pSamples, color=order_name, label=Labeler), 
+                  nudge_x = 5, force=5, direction="y", segment.size = 0.2, segment.alpha = 0.5, seed = 42, size=5) +
+  labs(y="fraction Reads", x="fraction Samples", color="Arthropod Order", shape="") +
   theme_devon() +
-  theme(legend.position = "none") +
-  guides(color = guide_legend(nrow=2)) +
+  theme(legend.position = "top", legend.text = element_text(size=12),
+        plot.title = element_text(size=20)) +
+  guides(color = guide_legend(nrow=2), shape=FALSE) +
   transition_states(Month, transition_length = 1, state_length = 2) + ggtitle('Month: {closest_state}')
+
 ## render:
-animate(dip.ani, renderer = gifski_renderer(loop=TRUE), width=1000)
-anim_save("~/Repos/mysosoup/figures/gifs/dipteran_only.gif")
+animate(mnth.ani, renderer = gifski_renderer(loop=TRUE), width=600, height = 600)
+anim_save("~/Repos/mysosoup/figures/gifs/month_ASVs.gif")
+
+## Plot to focus on Dipterans
+## plot; save as ml_pAbu_by_pOcr_scatterplot_byMonth_DipteraOnly; export at 1200x600
+ggplot() +
+  geom_point(data = ASV_sumry_Monthly %>% filter(order_name=="Diptera"),
+             aes(y = pReads, x=pSamples, shape=MLsample),
+             alpha = 0.8, size=2.5, color="black") +
+  scale_shape_manual(values=c(0,19)) +
+  facet_wrap(~ Month, nrow = 3) +
+  scale_x_continuous(expand = expand_scale(add = 0.3)) +
+  geom_label_repel(data = ASV_sumry_Monthly %>% filter(order_name == "Diptera") %>% filter(MLsample==TRUE) %>% filter(pSamples > 0.3),
+                   aes(y = pReads, x=pSamples, label=Labeler),
+                   color='black', fill="white", size = 2.25, force = 5, seed = 42, nudge_x = 5, direction = "y",
+                   segment.size = 0.2, segment.alpha=0.5, segment.colour = "black") +
+  geom_label_repel(data = ASV_sumry_Monthly %>% filter(order_name == "Diptera") %>% filter(MLsample==FALSE) %>% filter(pReads > 0),
+                   aes(y = pReads, x=pSamples, label=Labeler),
+                   color='black', fill="white", size = 2.25, force = 5, seed = 42, nudge_x = -5, direction = "y",
+                   segment.size = 0.2, segment.alpha=0.5, segment.colour = "black") +
+  labs(y="fraction Reads", x="fraction Samples", color="") +
+  theme_devon() +
+  theme(legend.position = "top", legend.text = element_text(size=16),
+        plot.title = element_text(size=20, face = "bold")) +
+  guides(color = FALSE, shape=FALSE)
+
+## Animation for Dipteran only:
+dipAni_monthly <- ggplot() +
+  geom_point(data = ASV_sumry_Monthly %>% filter(order_name=="Diptera"),
+             aes(y = pReads, x=pSamples, shape=MLsample),
+             alpha = 0.8, size=4, color="black") +
+  scale_shape_manual(values=c(0,19)) +
+  scale_x_continuous(expand = expand_scale(add = 0.33)) +
+  geom_label_repel(data = ASV_sumry_Monthly %>% filter(order_name == "Diptera") %>% filter(MLsample_filter=='SL-feature') %>% filter(pSamples > 0.3),
+                   aes(y = pReads, x=pSamples, label=Labeler),
+                   color='black', fill="white", size = 3, force = 5, seed = 42, nudge_x = 5, direction="y",
+                   segment.size = 0.2, segment.alpha=0.5, segment.colour = "black") +
+  geom_label_repel(data = ASV_sumry_Monthly %>% filter(order_name == "Diptera") %>% filter(MLsample_filter=='not-SL-feature') %>% filter(pReads > 0),
+                   aes(y = pReads, x=pSamples, label=Labeler),
+                   color='black', fill=NA, size = 3, force = 5, seed = 42,nudge_x = -5, direction="y",
+                   segment.size = 0.3, segment.alpha=0.5, segment.colour = "black") +
+  labs(y="fraction Reads", x="fraction Samples", color="") +
+  theme_devon() +
+  theme(legend.position = "top", legend.text = element_text(size=16), plot.title = element_text(size=22, face = "bold")) +
+  guides(color = FALSE, shape=FALSE) +
+  transition_states(Month, transition_length = 1, state_length = 2) + ggtitle('Month: {closest_state}')
+
+## render:
+animate(dipAni_monthly, renderer = gifski_renderer(loop=TRUE), width=800, height=800)
+anim_save("~/Repos/mysosoup/figures/gifs/month_ASVs_DipteraOnly.gif")
 
 
 ################################################################################
