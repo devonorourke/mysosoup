@@ -9,18 +9,21 @@ The ASVs highlighted in this first animation present the same dataset as in the 
 There are several ways in which features are likely important for the classifier to make distinctions among groups:
 1. Some features are highly abundant and frequently detected in all groups (e.g. `ASV-1|Eustala`), yet these proportions vary enough for differences to be meaningful for the decision tree to discriminate among Site and Month classes. For example, with `ASV-1|Eustala` the key distinction is likely the June to July transition between sites, where we see a _decrease_ in read abundance at the Egner site, but a slight increase at Hickory Bottoms.
 2. Other groups tend to have Monthly changes in abundance or detections that follow similar patterns for each Site, but the magnitude of these differences are what help the model discriminate among Site and Month. For example, `ASV-4|Erioptera` tends to increase in abundance and detections from June into July and September at both Sites, however, the total number of detections and read abundances are generally larger for Hickory Bottoms than Egner.
-3. Some features are simply unique to a given Site or Month. For instance, ASV's **12, 31, 33, and 47** are distinct to Egner, while ASVs **42, 56, 59, and 70** are private to Hickroy Bottoms. While some of these ASVs may be rare variants, many are not. Among those ASVs mentioned above:
+3. Some features are simply unique to a given Site or Month. For instance, ASV's **12, 31, 33, and 47** are distinct to Egner, while ASVs **42, 56, 59, and 70** are private to Hickory Bottoms. While some of these ASVs may be rare variants, many are not. Among those ASVs mentioned above:
 
-| ASV | nSamples |
-| --- | -------- |
-| 12 | 28 |
-| 31 | 1 |
-| 33 | 4 |
-| 37 | 8 |
-| 42 | 11 |
-| 56 | 1 |
-| 59 | 4 |
-| 70 | 4 |
+| ASV | nSamples | Order | Family | Genus | Species |
+| --- | -------- | ----- | ------ | ----- | ------- |
+| 12 | 28 | Hemiptera | Cicadellidae | Gyponana | |
+| 31 | 1 | Lepidoptera | Tortricidae | Gymnandrosoma | Gymnandrosoma punctidiscanum|
+| 33 | 4 | Coleoptera | Curculionidae | Cossonus | Cossonus impressifrons |
+| 37 | 8 | Araneae | Tetragnathidae | Leucauge | Leucauge venusta |
+| 42 | 11 | Diptera | Limoniidae | | |
+| 56 | 1 | Diptera | Limoniidae | Erioptera | Erioptera parva |
+| 59 | 4 | Diptera | Limoniidae | Erioptera | Erioptera caliptera |
+| 70 | 4 | Trichoptera | Hydropsychidae | Hydropsyche | Hydropsyche orris |
+
+However, an ASV unique to a particular Site does not necessarily indicate the the taxa it is classified to is also unique to the Site. For example, `ASV-56` is classified as _Erioptera parva_. While this ASV may be unique to Hickory Bottoms, that Species name was assigned to 36 unique sequence variants, including `ASV4` which was detected in 122 samples, 55 of which were present in Egner samples, and 67 of which were detected in Hickory Bottom samples. We observed a similar outcome for `ASV-31`, with 8 unique ASVs classified as _Gymnandrosoma punctidiscanum_, among which both Sites contained repeated detections of that species.
+
 
 # Animation-2: Month + Site, all Samples, each Order in unique facet
 Because there are so many different ASVs in flux for a given Site or Month, we revised the animation above to subset each arthropod Order into it's own plot. Thus the same data used in the previous plot is used for the follow animation.
