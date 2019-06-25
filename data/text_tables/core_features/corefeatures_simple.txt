@@ -1,65 +1,64 @@
-|ASVid|Order|Family|Genus|Species|nSamples|nRead$
-|65d5fa6d7e70a2048699fd898caf1fca|Araneae|Araneidae|Eustala||204|11786$
-|3cfeeb16701da023d483c4bca6e37a3e|Diptera|Limoniidae|Rhipidia||164|5629$
-|ee428b867f1c0aa2d56e7c61d744bf56|Diptera|Limoniidae|Epiphragma|Epiphragma|solatrix|141|4230$
-|d18b9b0d9c0501fc4310fd74dbfc5a16|Diptera|Limoniidae|Erioptera|Erioptera|caliptera|138|5875$
-|106866132fd52b9d5c96c38bde87c51f|Diptera|Culicidae|Aedes|Aedes|vexans|136|2360$
-|4622cb135cf309852ac4289aacbb7f5b|Diptera|Limoniidae|Erioptera|Erioptera|parva|122|5556$
-|fa0da7ffc3332383518acba7efc25952|Diptera|Culicidae|Culex|Culex|erraticus|98|1935$
-|89e5597a9643af8cc7fe80ac924b8d76|Diptera|Limoniidae|||89|2767$
-|4486a2c60a1eeb1e9e651102734f0aa4|Araneae|Araneidae|Eustala||88|2239$
-|f1c7baf332ebaa98a4381b5c5de74f64|Diptera|Chironomidae|Chironomus||88|448$
-|c0ba220cf5cce50c45e4b4eacbc601a7|Diptera|Limoniidae|||87|1309$
-|6a5c7f2f53495aec6dc9eea864305059|Diptera|Culicidae|Culex|Culex|erraticus|73|1299$
-|46f68fb7accd2cf2419ca3cd22da3646|Lepidoptera|Tineidae|Acrolophus|Acrolophus|mortipennella|71|2321$
-|406451f6312e57f8c264a94242b049e6|Diptera|Chironomidae|Chironomus||69|321$
-|67571657f9bc42a71d6c402661be1d97|Diptera|Tipulidae|Nephrotoma|Nephrotoma|ferruginea|69|1450$
-|2c11ea64de16805e25ed359888baabf6|Psocodea|Psocidae|Metylophorus|Metylophorus|novaescotiae|67|1780$
-|0800bfd0a4fdce8c3928b79bc5cf1698|Diptera|Limoniidae|Metalimnobia|Metalimnobia|triocellata|66|2246$
-|954ba86f46a17e332fb8f7e065d5c196|Diptera|Chironomidae|Glyptotendipes||65|880$
-|2066a2ef9e7c8048b1af441a0d9614b1|Diptera|Culicidae|Uranotaenia|Uranotaenia|sapphirina|62|443$
-|86d824f733d61170ef80a4235cb32238|Lepidoptera|Tortricidae|Choristoneura||62|491$
-|6280a664e750c88afb6069f05b2a29a7|Trichoptera|Hydropsychidae|Potamyia|Potamyia|flava|60|2058$
-|6868fa68c66d6b641ff8d94e83b79372|Diptera|Culicidae|Culex|Culex|erraticus|60|847$
-|3c5423c213cf0027257b844a9c89b19d|Diptera|Limoniidae|Helius|Helius|flavipes|58|1387$
-|53afa5b48c087c19568802a7136d95c6|Diptera|Limoniidae|Rhipidia||58|1106$
-|502e4582f52a371da24811f3668cd636|Diptera|Chironomidae|Glyptotendipes||56|225$
-|4d6844e2e1aaa41f64bbcee1d9dea924|Diptera|Culicidae|Coquillettidia|Coquillettidia|perturbans|55|446$
-|5cac244b7bc2b762706cf1e5898f59a9|Diptera|Chironomidae|Glyptotendipes|Glyptotendipes|meridionalis|55|818$
-|9b9c0238bfb28edb2cddb188980bfb9f|Hemiptera|Flatidae|||53|521$
-|ea1049842c518a849f88a3a1f3981ff5|Lepidoptera|Tortricidae|||50|438$
-|79f33868abee420faa529b31aefc8d10|Araneae|Anyphaenidae|Anyphaena|Anyphaena|pectorosa|46|329$
-|f5bb9eb4107ebf5ac9f7c18398485e9b|Coleoptera|Ptilodactylidae|Ptilodactyla||44|1030$
-|1c6dbfff0c98a1080a9ef8847d7af550|Diptera|Tipulidae|Nephrotoma|Nephrotoma|ferruginea|43|368$
-|5b897311f2eb82ef521745e27588f457|Diptera|Culicidae|Culex|Culex|erraticus|43|568$
-|ed1aad37a270547a75cba148aca2723b|Diptera|Chironomidae|Axarus|Axarus|festivus|43|915$
-|1351291e85fddedd6f274098d8131237|Diptera|Chironomidae|||41|98$
-|9c1759410185e12aa041d91bef2484d5|Diptera|Tabanidae|Chrysops||41|3261$
-|b0c4de8c62edbae4e6ff051a2cc68aeb|Diptera|Psychodidae|||41|4820$
-|190ab3993d54d0eb9f0262c75311072e|Diptera|Tipulidae|Nephrotoma|Nephrotoma|okefenoke|39|371$
-|011ab6fb9eeaf3923e29b2419f37925b|Diptera|Limoniidae|Pseudolimnophila|Pseudolimnophila|luteipennis|38|456$
-|8d20fe3b061cf6d4675a338e37222192|Diptera|Limoniidae|||38|225$
-|19c7fb4fd8d5fd98923f0011765d8f5e|Diptera|Limoniidae|||37|327$
-|54b1db250664d848cd63a3a640536ad1|Diptera|Chironomidae|||36|77$
-|9333dd0039cca5f8971e32f3d3badb2d|Diptera|Tabanidae|Tabanus||36|1152$
-|59a5c4341e412755fffe9915f73073ed|Diptera|Psychodidae|||35|1404$
-|5c7b4ae8c0a5fba99d78884078bc2714|Diptera|Culicidae|Culex|Culex|erraticus|35|568$
-|68b467c1b5a07faca9412c38f779f507|Diptera|Limoniidae|Rhipidia||34|1043$
-|c1b305dcd78bb77c09ff85032e57f691|Diptera|Chironomidae|||34|81$
-|26a257f94e8e6109221965efdbf26392|Diptera|Limoniidae|||33|609$
-|62f3f2d32c53e9c0fa0183f78539af1d|Lepidoptera|Oecophoridae|Inga|Inga|sparsiciliella|33|281$
-|d4aa1704bc85aca2c0e1e898e5586c0d|Diptera|Tabanidae|Hybomitra||33|664$
-|43dcc5a07f9d10fdd355a358de425469|Diptera|Culicidae|Culex||32|402$
-|a1cfe0335c0c447b1e4944f81e472a0c|Araneae|Araneidae|Eustala|Eustala|cepina|32|193$
-|d4ebdfff2f632287ba46e8dbea1da61c|Araneae|Araneidae|Metepeira||32|164$
-|183cc807f31d7bd4fda10446cbbae15a|Lepidoptera|Cosmopterigidae|Perimede|Perimede|circitor|31|463$
-|22d6941e40741a993930e52eda93b955|Ephemeroptera|Heptageniidae|Stenacron|Stenacron|interpunctatum|31|604$
-|69a268dae0c24eb609014e75a2ba5100|Lepidoptera|Erebidae|Renia|Renia|adspergillus|30|189$
-|e7a7d20b407bbcd2da8ad0849d305a72|Diptera|Limoniidae|Erioptera|Erioptera|parva|30|272$
-|154245fda1eade3340224209c85cb24c|Diptera|Culicidae|||29|81$
-|8b79c3f59fd520aeb1e6e134baf51d23|Diptera|Tipulidae|Nephrotoma|Nephrotoma|eucera|29|667$
-|f3cfa7b35761ffd5bcb10fa5257278f8|Coleoptera|Ptilodactylidae|Ptilodactyla||29|363$
-|2b424f267586a3e6fb471ae154a1e97c|Hemiptera|Cicadellidae|Gyponana||28|1976$
-|94cac66ecd39a4d5332e6a65750d9719|Diptera|Culicidae|Culex|Culex|territans|28|98$
-|eae35ebb8aff8fa1779e68fc1cd63e6e|Araneae|Tetragnathidae|Tetragnatha|Tetragnatha|elongata|28|133$
-$
+ASValias Order Family Genus Species nSamples nReads
+ASV-1 Araneae Araneidae Eustala  204 117864
+ASV-3 Diptera Limoniidae Rhipidia  164 56294
+ASV-6 Diptera Limoniidae Epiphragma Epiphragma solatrix 141 42300
+ASV-5 Diptera Limoniidae Erioptera Erioptera caliptera 138 58751
+ASV-10 Diptera Culicidae Aedes Aedes vexans 136 23606
+ASV-4 Diptera Limoniidae Erioptera Erioptera parva 122 55561
+ASV-20 Diptera Culicidae Culex Culex erraticus 98 19355
+ASV-11 Diptera Limoniidae   89 27673
+ASV-13 Araneae Araneidae Eustala  88 22392
+ASV-64 Diptera Chironomidae Chironomus  88 4484
+ASV-17 Diptera Limoniidae   87 13096
+ASV-18 Diptera Culicidae Culex Culex erraticus 73 12992
+ASV-9 Lepidoptera Tineidae Acrolophus Acrolophus mortipennella 71 23219
+ASV-16 Diptera Tipulidae Nephrotoma Nephrotoma ferruginea 69 14503
+ASV-85 Diptera Chironomidae Chironomus  69 3219
+ASV-14 Psocodea Psocidae Metylophorus Metylophorus novaescotiae 67 17802
+ASV-15 Diptera Limoniidae Metalimnobia Metalimnobia triocellata 66 22461
+ASV-34 Diptera Chironomidae Glyptotendipes  65 8803
+ASV-58 Lepidoptera Tortricidae Choristoneura  62 4915
+ASV-80 Diptera Culicidae Uranotaenia Uranotaenia sapphirina 62 4438
+ASV-19 Trichoptera Hydropsychidae Potamyia Potamyia flava 60 20588
+ASV-36 Diptera Culicidae Culex Culex erraticus 60 8475
+ASV-21 Diptera Limoniidae Rhipidia  58 11069
+ASV-23 Diptera Limoniidae Helius Helius flavipes 58 13877
+ASV-110 Diptera Chironomidae Glyptotendipes  56 2255
+ASV-32 Diptera Chironomidae Glyptotendipes Glyptotendipes meridionalis 55 8187
+ASV-73 Diptera Culicidae Coquillettidia Coquillettidia perturbans 55 4468
+ASV-48 Hemiptera Flatidae   53 5212
+ASV-67 Lepidoptera Tortricidae   50 4388
+ASV-78 Araneae Anyphaenidae Anyphaena Anyphaena pectorosa 46 3293
+ASV-25 Coleoptera Ptilodactylidae Ptilodactyla  44 10300
+ASV-29 Diptera Chironomidae Axarus Axarus festivus 43 9152
+ASV-54 Diptera Tipulidae Nephrotoma Nephrotoma ferruginea 43 3683
+ASV-55 Diptera Culicidae Culex Culex erraticus 43 5687
+ASV-2 Diptera Psychodidae   41 48202
+ASV-202 Diptera Chironomidae   41 985
+ASV-8 Diptera Tabanidae Chrysops  41 32612
+ASV-90 Diptera Tipulidae Nephrotoma Nephrotoma okefenoke 39 3718
+ASV-76 Diptera Limoniidae Pseudolimnophila Pseudolimnophila luteipennis 38 4568
+ASV-99 Diptera Limoniidae   38 2258
+ASV-100 Diptera Limoniidae   37 3276
+ASV-201 Diptera Chironomidae   36 771
+ASV-24 Diptera Tabanidae Tabanus  36 11529
+ASV-22 Diptera Psychodidae   35 14041
+ASV-62 Diptera Culicidae Culex Culex erraticus 35 5685
+ASV-244 Diptera Chironomidae   34 813
+ASV-27 Diptera Limoniidae Rhipidia  34 10437
+ASV-101 Lepidoptera Oecophoridae Inga Inga sparsiciliella 33 2818
+ASV-28 Diptera Tabanidae Hybomitra  33 6646
+ASV-40 Diptera Limoniidae   33 6090
+ASV-104 Araneae Araneidae Eustala Eustala cepina 32 1932
+ASV-158 Araneae Araneidae Metepeira  32 1643
+ASV-69 Diptera Culicidae Culex  32 4027
+ASV-49 Lepidoptera Cosmopterigidae Perimede Perimede circitor 31 4638
+ASV-60 Ephemeroptera Heptageniidae Stenacron Stenacron interpunctatum 31 6046
+ASV-118 Diptera Limoniidae Erioptera Erioptera parva 30 2722
+ASV-126 Lepidoptera Erebidae Renia Renia adspergillus 30 1899
+ASV-239 Diptera Culicidae   29 811
+ASV-63 Diptera Tipulidae Nephrotoma Nephrotoma eucera 29 6678
+ASV-74 Coleoptera Ptilodactylidae Ptilodactyla  29 3635
+ASV-12 Hemiptera Cicadellidae Gyponana  28 19765
+ASV-140 Araneae Tetragnathidae Tetragnatha Tetragnatha elongata 28 1337
+ASV-182 Diptera Culicidae Culex Culex territans 28 989

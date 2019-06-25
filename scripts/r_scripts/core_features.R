@@ -10,8 +10,7 @@ library(formattable)
 ################################################################################
 
 ## import read data
-# notrun: download.file("https://github.com/devonorourke/mysosoup/raw/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.rarefied-table_noNegSamps.qza", "nonbat.qza")
-
+  # notrun: download.file("https://github.com/devonorourke/mysosoup/raw/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.rarefied-table_noNegSamps.qza", "nonbat.qza")
 ## function to convert .qza to matrix, then convert wide-format matrix to long-format data.frame object
 tableimport.function <- function(table){
   featuretable <- read_qza(table)
@@ -52,13 +51,35 @@ colnames(tmp3)[1] <- "ASVid"
 data <- merge(tmp3, tmp2) %>% select(-SampleType)
 rm(tmp1, tmp2, tmp3)
 
+## need ASValias too...
+tmpqzaimport.function <- function(qzapath){
+  featuretable <- read_qza(qzapath)
+  mat.tmp <- featuretable$data
+  rm(featuretable)
+  df.tmp <- as.data.frame(mat.tmp)
+  rm(mat.tmp)
+  df.tmp$OTUid <- rownames(df.tmp)
+  rownames(df.tmp) <- NULL
+  tmp <- melt(df.tmp, id = "OTUid") %>% filter(value != 0)
+  colnames(tmp) <- c("ASVid", "SampleID", "Reads")
+  tmp
+}
+## download file: download.file("https://github.com/devonorourke/mysosoup/raw/master/data/qiime_qza/seqs/Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza", "nonfyd.qza")
+# save path for each file.. for example: nonpath="~/Downloads/nonfyd.qza"
+## or run from local: nonpath="/Users/do/Repos/mysosoup/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza"
+nonfyd_reads <- tmpqzaimport.function(nonpath)
+tmp4 <- nonfyd_reads %>% group_by(ASVid) %>%  summarise(nReads=sum(Reads)) %>% arrange(-nReads) %>% mutate(ASValias=paste0("ASV-", row.names(.))) %>% select(-nReads)
+rm(nonfyd_reads)
+data <- merge(data, tmp4, all.x = TRUE) %>% 
+  drop_na(ASValias) ## this drops 3 rows where a couple of unrarefied samples with just one ASV per sample were dropped... 
+rm(tmp4)
 
 ################################################################################
 ## part 2 - calculating shared features
 ################################################################################
 tSamples <- n_distinct(data$SampleID)
 
-coreASVsumry <- data.frame(data %>% group_by(ASVid, phylum_name, class_name, order_name, family_name, genus_name, species_name) %>% 
+coreASVsumry <- data.frame(data %>% group_by(ASValias, phylum_name, class_name, order_name, family_name, genus_name, species_name) %>% 
   summarise(nSamples = n_distinct(SampleID), nReads = sum(Reads)) %>% 
   mutate(p5samp = (nSamples >= (round(0.1*tSamples)))) %>% 
   mutate(p10samp = (nSamples >= (round(0.1*tSamples)))) %>% 
@@ -87,7 +108,7 @@ write.table(perc_alltbl,
             quote=FALSE, row.names = FALSE)
 
 ## which ASVs and taxa are among these top 5th percentile features?
-perc5names <- filt_samps %>% 
+perc5names <- coreASVsumry %>% 
   filter(p5samp == TRUE)
 write.table(perc5names, 
             file="~/Repos/mysosoup/data/text_tables/core_features/summary_corefeatures_table.txt",
@@ -96,9 +117,10 @@ write.table(perc5names,
 ## which Orders have the most of the ASVs we see?
 perc5names %>% 
   group_by(order_name) %>% 
-  summarise(counts=n_distinct(ASVid)) %>% 
+  summarise(counts=n_distinct(ASValias)) %>% 
   arrange(-counts)
-
+  ## 44 of the 63 are Dipteran!
+  
 ## which Orders have the most of the Families we see?
 perc5names %>% 
   group_by(order_name) %>% 
@@ -113,7 +135,7 @@ perc5names %>%
 
 ## reduce the `perc5names` dataset to just taxa info and nSample/nRead data:
 perc5names_reduced <- perc5names %>% 
-  select(ASVid, order_name, family_name, genus_name, species_name, nSamples, nReads) %>% 
+  select(ASValias, order_name, family_name, genus_name, species_name, nSamples, nReads) %>% 
   rename(Order=order_name, Family=family_name, Genus=genus_name, Species=species_name) %>% 
   arrange(-nSamples)
 
@@ -137,9 +159,40 @@ formattable(perc5names_reduced, list(
 
 ## export raw text table without any ASV info (to fit on single page):
 perc5names_reduced_noASV <- perc5names_reduced %>% 
-  select(-ASVid) %>% 
+  select(-ASValias) %>% 
   arrange(-nSamples) %>% 
   mutate(Species = gsub(" ", "_", .$Species))
 write.table(perc5names_reduced_noASV, 
             file="~/Repos/mysosoup/data/text_tables/core_features/corefeatures_simple_noASV.txt",
             quote=FALSE, row.names=FALSE)
+
+## try setting up a table with top 10% targets (same ASVs as top 5%), but add in 20, 40, 60%, and highlight with red/green FALSE/TRUE in columns
+prettyTable <- coreASVsumry %>% 
+  filter(p20samp == TRUE) %>% 
+  select(ASValias, order_name, family_name, genus_name, species_name, nSamples, nReads, p30samp, p50samp, p70samp) %>% 
+  rename(Order=order_name, Family=family_name, Genus=genus_name, Species=species_name,
+         Top30p=p30samp, Top50p=p50samp, Top70p=p70samp,
+         Samples=nSamples, SeqCounts=nReads) %>% 
+  arrange(-Top70p, -Top50p, -Top30p, Order, Family, Genus, Species, Samples)
+prettyTable$Order <- as.character(prettyTable$Order)
+prettyTable$Family <- as.character(prettyTable$Family)
+prettyTable$Genus <- as.character(prettyTable$Genus)
+prettyTable$Species <- as.character(prettyTable$Species)
+prettyTable[is.na(prettyTable)] <- ""
+
+## this file is exported as .html, then screen shots i sused to make the .png file
+## current version of Formattable doesn't support direct export to .png or .pdf, but alternative wrappers are in GitHub issues page
+formattable(prettyTable, list(
+  Samples = color_tile("white", "#ff796c"),
+  SeqCounts = color_tile("white", "#bf9005"),
+  Top30p = formatter("span",
+                         style = x ~ style(color = ifelse(x, "green", "red")),
+                         x ~ icontext(ifelse(x, TRUE, FALSE), ifelse(x, "Yes", "No"))),
+  Top50p = formatter("span",
+                     style = x ~ style(color = ifelse(x, "green", "red")),
+                     x ~ icontext(ifelse(x, TRUE, FALSE), ifelse(x, "Yes", "No"))),
+  Top70p = formatter("span",
+                     style = x ~ style(color = ifelse(x, "green", "red")),
+                     x ~ icontext(ifelse(x, TRUE, FALSE), ifelse(x, "Yes", "No")))
+  
+))
