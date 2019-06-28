@@ -922,6 +922,57 @@ anim_save("~/Repos/mysosoup/figures/gifs/month_ASVs_DipteraOnly.gif")
 
 
 ################################################################################
+## to show that the ASVs that are generating high read counts / observations aren't being ..
+## skewed by a single outlier, let's show the distribution of some of the highest ASVs among ..
+## dipteran and non-Dipteran ASVs
+################################################################################
+
+## get a list of the top counts/abundances for Dipteran taxa only
+diptop5 <- alldat %>% filter(order_name=="Diptera") %>% group_by(SampleID) %>% top_n(5, Reads)
+diptop5 %>% group_by(ASValias) %>% tally() %>% arrange(-n)
+diptop5 %>% group_by(ASValias) %>% summarise(sumReads=sum(Reads), nSamples=n()) %>% arrange(-sumReads)
+## 8 of 10 in top counts/reads are overlapping; keeping all 12 and making a list manually from this output
+dipASVs = paste("ASV-", c(6,3,10,5,20,4,18,15,17,8,2,11), sep = "")
+
+
+## repeat to generate a list of the top counts/abundances for all non-Dipteran taxa
+nondiptop5 <- alldat %>% filter(order_name!="Diptera") %>% group_by(SampleID) %>% top_n(5, Reads)
+nondiptop5 %>% group_by(ASValias) %>% summarise(sumReads=sum(Reads), nSamples=n()) %>% arrange(-sumReads)
+nondiptop5 %>% group_by(ASValias) %>% tally() %>% arrange(-n)
+## same as above: keeping 12, though not all non-Dipteran Orders represented here
+nondipASVs = paste("ASV-", c(1, 13, 9, 14, 19, 25, 7, 58, 12, 48, 26, 30), sep = "")
+
+topASVdf <- alldat %>% filter(ASValias %in% topASVs)
+topASVdf$colorlabel <- ifelse(topASVdf$order_name=="Diptera", "Diptera", "nonDiptera")
+## set levels for plot
+topASVdf$order_name <- factor(topASVdf$order_name, 
+                              levels = c("Araneae","Coleoptera","Diptera","Hemiptera","Lepidoptera","Psocodea","Trichoptera"))
+topASVdf$ASValias <- factor(topASVdf$ASValias, levels = c(
+  'ASV-2', 'ASV-3', 'ASV-4', 'ASV-5', 'ASV-6', 'ASV-8', 'ASV-10', 'ASV-11', 'ASV-15', 'ASV-17', 'ASV-18', 'ASV-20',
+  'ASV-1', 'ASV-13', 'ASV-25', 'ASV-7', 'ASV-12', 'ASV-48', 'ASV-9', 'ASV-26', 'ASV-58', 'ASV-14', 'ASV-19', 'ASV-30'))
+## keep same color palette scheme from previous styles
+pal7 <- c('#3778bf', '#efb435', 'black', '#ff028d', '#825f87', '#d9544d', '#a87900')
+
+## plot; save as 'perSample_topASV_read_and_counts'; export at 
+ggplot(topASVdf, 
+       aes(x=ASValias, y=Reads, fill=order_name, color=order_name)) +
+  geom_point() +
+  scale_y_continuous(trans="log2", labels=comma) +
+  #geom_violin(alpha=0.5) +
+  geom_boxplot(outlier.shape = NA, alpha=0.5) +
+  scale_color_manual(values=pal7) +
+  scale_fill_manual(values=pal7) +
+  facet_wrap(~colorlabel, scales = "free_x") +
+  labs(x="", y="log2 sequence counts") +
+  theme_devon()
+
+nondiptop5 %>% group_by(ASValias) %>% summarise(sumReads=sum(Reads), nSamples=n()) %>% arrange(-sumReads)
+nondiptop5 %>% group_by(ASValias) %>% tally() %>% arrange(-n)
+
+
+
+
+################################################################################
 ## unused plot info... unrarefied plot data produces plots for heatmaps just like rarefied
 ################################################################################
 
