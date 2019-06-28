@@ -97,6 +97,13 @@ ggplot(mangan_hill_df, aes(x=Labeler, y=Hill_value, color=CollectionMonth)) +
   theme(axis.text.x = element_text(angle = 22.5, hjust=1),
         legend.position = "top")
 
+##########
+## collect some mean/sd stats per Site/Month for each Hill Val
+##########
+hillstats <- mangan_hill_df %>% group_by(Site, CollectionMonth, Hill_qType) %>% summarise(meanQ=mean(Hill_value), sdQ=sd(Hill_value)) %>% arrange(Hill_qType, Site) %>% mutate(meanQ=round(meanQ, 2), sdQ=round(sdQ, 2))
+write.csv(hillstats, file="~/Repos/mysosoup/data/text_tables/Hill_mean_and_SD_stats.csv",
+          row.names = FALSE, quote = FALSE)
+
 ##### Run ANOVA for group significance:
 #### Run ANOVA for group significance:
 anovafunction <- function(data, qval, filename) {
