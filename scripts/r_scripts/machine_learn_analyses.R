@@ -6,6 +6,7 @@ library(reshape2)
 library(scales)
 library(gganimate)
 library(ggpubr)
+library(cowplot)
 
 ## function for plot theme:
 theme_devon <- function () { 
@@ -188,14 +189,17 @@ rfy_plotdat <- rfy_plotdat %>%
 ## Plotting both occurrence and abundance information
 
 ## 1. Order rank heatmap: all rarefied reads, all ASVs 
+nSampDat <- rfy_plotdat %>%
+  select(SampleID, SiteMonth) %>% 
+  group_by(SiteMonth) %>% 
+  summarise(smSamples=n_distinct(SampleID))
 order_ocr_sumry <- rfy_plotdat %>% 
   group_by(order_name, SiteMonth) %>% 
-  summarise(nSamples = n_distinct(SampleID)) %>% 
+  summarise(nSamples = n_distinct(SampleID)) %>%
   spread(SiteMonth, nSamples, fill = 0) %>% 
-  gather(`EN-June`, `EN-July`, `EN-September`, `HB-June`, `HB-July`, `HB-September`, key = "SiteMonth", value="nSamples") %>%
-  group_by(SiteMonth) %>%
-  mutate(mSamples=sum(nSamples)) %>% 
-  mutate(pSamples=round((nSamples/mSamples),2))
+  gather(`EN-June`, `EN-July`, `EN-September`, `HB-June`, `HB-July`, `HB-September`, key = "SiteMonth", value="nSamples") %>% 
+  merge(., nSampDat) %>%
+  mutate(pSamples=round((nSamples/smSamples),2))
 
 order_abu_sumry <- rfy_plotdat %>% 
   group_by(order_name, SiteMonth) %>% 
@@ -221,7 +225,7 @@ hm_order_rfy_occur <- ggplot(order_sumry, aes(x=Month, y=order_name, fill=pSampl
   #coord_equal() +
   facet_wrap(~ Site) +
   scale_x_discrete(labels = c("Jun", "Jul", "Sep")) +
-  scale_fill_gradient(low = 'gray99', high = '#6f7c00', breaks=c(0,0.08,0.16)) +
+  scale_fill_gradient(low = 'gray99', high = '#6f7c00', breaks=c(0,0.5,1.0)) +
   labs(x="", y="Arthropod Order\n", fill="fraction of\nSamples") +
   scale_y_discrete(position = "left") +
   theme_devon() +
@@ -928,7 +932,7 @@ anim_save("~/Repos/mysosoup/figures/gifs/month_ASVs_DipteraOnly.gif")
 ################################################################################
 
 ## get a list of the top counts/abundances for Dipteran taxa only
-diptop5 <- alldat %>% filter(order_name=="Diptera") %>% group_by(SampleID) %>% top_n(5, Reads)
+diptop5 <- rfy_plotdat %>% filter(order_name=="Diptera") %>% group_by(SampleID) %>% top_n(5, Reads)
 diptop5 %>% group_by(ASValias) %>% tally() %>% arrange(-n)
 diptop5 %>% group_by(ASValias) %>% summarise(sumReads=sum(Reads), nSamples=n()) %>% arrange(-sumReads)
 ## 8 of 10 in top counts/reads are overlapping; keeping all 12 and making a list manually from this output
@@ -936,13 +940,13 @@ dipASVs = paste("ASV-", c(6,3,10,5,20,4,18,15,17,8,2,11), sep = "")
 
 
 ## repeat to generate a list of the top counts/abundances for all non-Dipteran taxa
-nondiptop5 <- alldat %>% filter(order_name!="Diptera") %>% group_by(SampleID) %>% top_n(5, Reads)
+nondiptop5 <- rfy_plotdat %>% filter(order_name!="Diptera") %>% group_by(SampleID) %>% top_n(5, Reads)
 nondiptop5 %>% group_by(ASValias) %>% summarise(sumReads=sum(Reads), nSamples=n()) %>% arrange(-sumReads)
 nondiptop5 %>% group_by(ASValias) %>% tally() %>% arrange(-n)
 ## same as above: keeping 12, though not all non-Dipteran Orders represented here
 nondipASVs = paste("ASV-", c(1, 13, 9, 14, 19, 25, 7, 58, 12, 48, 26, 30), sep = "")
 
-topASVdf <- alldat %>% filter(ASValias %in% topASVs)
+topASVdf <- rfy_plotdat %>% filter(ASValias %in% c(dipASVs, nondipASVs))
 topASVdf$colorlabel <- ifelse(topASVdf$order_name=="Diptera", "Diptera", "nonDiptera")
 ## set levels for plot
 topASVdf$order_name <- factor(topASVdf$order_name, 
@@ -953,7 +957,7 @@ topASVdf$ASValias <- factor(topASVdf$ASValias, levels = c(
 ## keep same color palette scheme from previous styles
 pal7 <- c('#3778bf', '#efb435', 'black', '#ff028d', '#825f87', '#d9544d', '#a87900')
 
-## plot; save as 'perSample_topASV_read_and_counts'; export at 
+## plot; save as 'perSample_topASV_read_and_counts'; export at 1600x800
 ggplot(topASVdf, 
        aes(x=ASValias, y=Reads, fill=order_name, color=order_name)) +
   geom_point() +
@@ -968,8 +972,6 @@ ggplot(topASVdf,
 
 nondiptop5 %>% group_by(ASValias) %>% summarise(sumReads=sum(Reads), nSamples=n()) %>% arrange(-sumReads)
 nondiptop5 %>% group_by(ASValias) %>% tally() %>% arrange(-n)
-
-
 
 
 ################################################################################

@@ -3,6 +3,7 @@ library(vegan)
 library(scales)
 library(qiime2R)
 library(reshape2)
+library(formattable)
 
 ## function for plot theme:
 theme_devon <- function () { 
@@ -100,9 +101,20 @@ ggplot(mangan_hill_df, aes(x=Labeler, y=Hill_value, color=CollectionMonth)) +
 ##########
 ## collect some mean/sd stats per Site/Month for each Hill Val
 ##########
-hillstats <- mangan_hill_df %>% group_by(Site, CollectionMonth, Hill_qType) %>% summarise(meanQ=mean(Hill_value), sdQ=sd(Hill_value)) %>% arrange(Hill_qType, Site) %>% mutate(meanQ=round(meanQ, 2), sdQ=round(sdQ, 2))
+hillstats <- mangan_hill_df %>% 
+  group_by(Site, CollectionMonth, Hill_qType) %>% 
+  summarise(meanQ=mean(Hill_value), sdQ=sd(Hill_value)) %>% 
+  mutate(meanQ=round(meanQ, 2), sdQ=round(sdQ, 2)) %>% 
+  rename(Month=CollectionMonth) %>% 
+  arrange(Hill_qType, Site, 
+          factor(Month, levels = c("June", "July", "September")))
+  #arrange(Hill_qType, Site, Month)
+  
 write.csv(hillstats, file="~/Repos/mysosoup/data/text_tables/Hill_mean_and_SD_stats.csv",
           row.names = FALSE, quote = FALSE)
+## or make pretty table; save as 'Hill_mean_and_SD_stats' in figure; export at 450x625
+formattable(hillstats)
+
 
 ##### Run ANOVA for group significance:
 #### Run ANOVA for group significance:
