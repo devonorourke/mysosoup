@@ -4,6 +4,8 @@ library(reshape2)
 library(qiime2R)
 library(scales)
 library(formattable)
+library(htmltools)
+library(webshot)
 
 ################################################################################
 ## part 1 - loading read, meta, and taxa information
@@ -166,23 +168,39 @@ write.table(perc5names_reduced_noASV,
             file="~/Repos/mysosoup/data/text_tables/core_features/corefeatures_simple_noASV.txt",
             quote=FALSE, row.names=FALSE)
 
-## try setting up a table with top 10% targets (same ASVs as top 5%), but add in 20, 40, 60%, and highlight with red/green FALSE/TRUE in columns
+## try setting up a table with top 10% targets (same ASVs as top 5%), but add in 30, 50, 70%, and highlight with red/green FALSE/TRUE in columns
 prettyTable <- coreASVsumry %>% 
   filter(p20samp == TRUE) %>% 
   select(ASValias, order_name, family_name, genus_name, species_name, nSamples, nReads, p30samp, p50samp, p70samp) %>% 
   rename(Order=order_name, Family=family_name, Genus=genus_name, Species=species_name,
-         Top30p=p30samp, Top50p=p50samp, Top70p=p70samp,
+         #Top30p=p30samp, Top50p=p50samp, Top70p=p70samp,
+         `Top 30 %`=p30samp, `Top 50 %`=p50samp, `Top 70 %`=p70samp,
          Samples=nSamples, SeqCounts=nReads) %>% 
-  arrange(-Top70p, -Top50p, -Top30p, Order, Family, Genus, Species, Samples)
+  arrange(-`Top 70 %`, -`Top 50 %`, -`Top 30 %`, Order, Family, Genus, Species, Samples)
 prettyTable$Order <- as.character(prettyTable$Order)
 prettyTable$Family <- as.character(prettyTable$Family)
 prettyTable$Genus <- as.character(prettyTable$Genus)
 prettyTable$Species <- as.character(prettyTable$Species)
 prettyTable[is.na(prettyTable)] <- ""
 
-## this file is exported as .html, then screen shots i sused to make the .png file
-## current version of Formattable doesn't support direct export to .png or .pdf, but alternative wrappers are in GitHub issues page
-formattable(prettyTable, list(
+## function to export formattable object properly
+export_formattable <- function(f, file, width = "95%", height = NULL,
+                               background = "white", delay = 0.2)
+{
+  w <- as.htmlwidget(f, width = width, height = height)
+  path <- html_print(w, background = background, viewer = NULL)
+  url <- paste0("file:///", gsub("\\\\", "/", normalizePath(path)))
+  webshot(url,
+          file = file,
+          selector = ".formattable_widget",
+          delay = delay)
+}
+
+
+## export here; save as 'CoreFeautres'
+setwd("~/Repos/mysosoup/figures/")
+
+corefeat <- formattable(prettyTable, list(
   Samples = color_tile("white", "#ff796c"),
   SeqCounts = color_tile("white", "#bf9005"),
   Top30p = formatter("span",
@@ -196,3 +214,6 @@ formattable(prettyTable, list(
                      x ~ icontext(ifelse(x, TRUE, FALSE), ifelse(x, "Yes", "No")))
   
 ))
+
+
+export_formattable(corefeat,"CoreFeautres.png")

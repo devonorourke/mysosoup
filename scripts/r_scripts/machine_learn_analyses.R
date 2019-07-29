@@ -722,6 +722,28 @@ length(all_sitemonth_importance_ASVs) ## 237 ASVs
 intersect(all_month_importance_ASVs, all_sitemonth_importance_ASVs)
 ## every "Month" ASV is found in "SiteMonth" classifier !!
 
+## this plot generates a bar chart of each arthropod Order for the 75th percentile scores
+## gives a sense of how many taxa per Order contribute to these top "important" ASVs, and what their scores are
+tmp_plotdat <- merge(rmonth_df, taxa)
+tmp_plotdat <- tmp_plotdat %>% arrange(order_name, -importance)
+tmp_plotdat$xorder <- row.names(tmp_plotdat)
+tmp_plotdat$xorder <- factor(tmp_plotdat$xorder, order=TRUE, levels=tmp_plotdat$xorder)
+tmp_plotdat$order_name <- factor(tmp_plotdat$order_name, 
+                                 levels = c("Araneae","Coleoptera","Diptera","Ephemeroptera", "Hemiptera", 'Hymenoptera', "Lepidoptera","Psocodea","Trichoptera"))
+pal9alt <- c('#3778bf', '#efb435', 'black', '#7bb274', '#ff028d', '#658b38', '#825f87', '#d9544d', '#a87900')
+
+## plot; save as 'quartile75_barplot_perASV_importanceScores'; export at 900x450
+ggplot(tmp_plotdat,
+       aes(x=xorder, y=importance, fill=order_name)) + 
+  #aes(x=reorder(ASVid, order_nameimportance), 
+  #   y=importance, fill=order_name)) + 
+  geom_bar(stat="identity") +
+  scale_fill_manual(values=pal9alt) +
+  theme_devon() +
+  labs(x="", y='importance score', fill="Arthropod order") +
+  theme(axis.text.x = element_blank(), axis.ticks.x = element_blank(), axis.title.x = element_blank())
+
+########################################################################################
 ## generate abundance summary data, filtering from SiteMonth list of potentially informative ASVs
 ASV_abu_Month_Sumry <- rfy_plotdat %>% filter(ASVid %in% select_MonthASVs) %>%
   mutate(Taxa = paste(order_name, ASValias, sep = "-")) %>% 
