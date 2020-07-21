@@ -16,7 +16,7 @@ theme_devon <- function () {
 
 
 
-# notrun: download.file("https://github.com/devonorourke/mysosoup/raw/master/data/qiime_qza/asvTables/Mangan.nonbatASVs.table.qza", "nonbat.qza")
+# notrun: download.file("https://github.com/devonorourke/mysosoup/raw/master/data/qiime_qza/asvTables/Mangan_noBats_ASVtable.qza", "nonbat.qza")
 
 ## convert .qza to matrix, then convert wide-format matrix to long-format data.frame object
 tableimport.function <- function(table){
@@ -108,6 +108,30 @@ ggplot(sumry1, aes(sumReads, nASVs, color=ContamArea, shape=SampleType)) +
   theme_devon()
 ## results are similar to previous plot... filtering out singletons doesn't change overall patterns
 
+## drop any ASV that doesn't have at least Family-rank information (assumption here is poor classification MAY be indicative of sequence error)
+df_taxfilt <- df %>% 
+  filter(!is.na(kingdom_name)) %>% 
+  filter(!is.na(phylum_name)) %>% 
+  filter(!is.na(class_name)) %>% 
+  filter(!is.na(order_name)) %>% 
+  filter(!is.na(family_name)) %>% 
+  filter(phylum_name == "Arthropoda")
+sumry_taxfilt <- df_taxfilt %>% group_by(ASVid) %>% summarise(sumReads=sum(Reads), nSamples=n_distinct(SampleID))
+commonASVs_taxfilt <- intersect(df_taxfilt %>% filter(SampleType == "control") %>% select(ASVid),
+                                df_taxfilt %>% filter(SampleType == "sample") %>% select(ASVid)) %>% pull()
+
+unique_controlASVs_taxfilt <- setdiff(df_taxfilt %>% filter(SampleType == "control") %>% select(ASVid),
+                                      df_taxfilt %>% filter(SampleType == "sample") %>% select(ASVid)) %>% pull()
+unique_sampleASVs_taxfilt <- setdiff(df_taxfilt %>% filter(SampleType == "sample") %>% select(ASVid),
+                                     df_taxfilt %>% filter(SampleType == "control") %>% select(ASVid)) %>% pull()
+
+## plot; save as 'contam_eval_ASV_and_SeqCounts_uniqnessColored_per_Guano_or_Control'
+ggplot(sumry_taxfilt, aes(x=sumReads, y=nSamples)) +
+  geom_point(data = sumry_taxfilt %>% filter(ASVid %in% commonASVs_taxfilt), color="black") +
+  geom_point(data = sumry_taxfilt %>% filter(ASVid %in% unique_sampleASVs_taxfilt), color="blue") +
+  geom_point(data = sumry_taxfilt %>% filter(ASVid %in% unique_controlASVs_taxfilt), color="red", size=2) +
+  theme_devon()
+
 
 ## what's up with those common ASVs in both true samples and contaminants?
 common_ASV_df <- df %>% filter(ASVid %in% commonASVs_taxfilt)
@@ -141,14 +165,29 @@ light_filt_df$more_Reads <- light_filt_df$C_nReads > light_filt_df$NC_nReads  ##
 ## Instead, we find that there are NEVER more than 4 NTCs with these common ASVs (just 4 of 79 ASVs); five examples where there are 3 NTCs with a common ASV; ..
 ## .. and the remaining 70 ASVs are only ever detected in 2 or 1 NTC samples.
 
+## we can further refind this by highlight just the ASVs which would be used in downstream analyses for diet work: ..
+## .. those ASVs that contain Arthropod phylum-classification, and at least Family-rank information:
 
-## We'll wrap up by creating a list of ASVs to filter (to remove) from our original dataset for one final step of contamination filtering - diversity measures.
-## This list will include only those ASVs present in the NTC samples
+taxfilt_contamASVs <- intersect(light_filt_df$ASVid, df_taxfilt$ASVid)
+contam_taxfilt_df <- light_filt_df %>% filter(ASVid %in% taxfilt_contamASVs)
 
-noNTC_ASVs <- df %>% filter(!ASVid %in% contam_df$ASVid) %>% distinct(ASVid)
-colnames(noNTC_ASVs)[1] <- "#OTUID"
-write.table(noNTC_ASVs, "~/github/mysosoup/data/taxonomy/ASVs_NTCdropd.txt",
-            row.names = FALSE, quote = FALSE, col.names = TRUE)
+## this further reduces our analyses to just 68 ASVs
 
-## The `ASVs_NTCdropd.txt` text file is used to filter by retaining only the ASVs listed in those files. 
-## The resulting `.qza` artifact is then rarefied and then used for diversity analyses.
+## We'll create two lists of ASVs to filter our original dataset:
+## 1) ASVs that meet our taxonomy completeness criteria (Arthropod-associated phylum_name with at least Family info) and include all ASVs whether or not they are present in NTC samples
+## 2) As with #1 above, but removing the 68 ASVs present in NTC samples 
+
+taxfilt_ASVs <- df_taxfilt %>% distinct(ASVid)
+colnames(taxfilt_ASVs)[1] <- "#OTUID"
+write.table(taxfilt_ASVs, "~/github/mysosoup/data/taxonomy/taxfiltd_ASVs_NTCincluded.txt", row.names = FALSE, quote = FALSE, col.names = TRUE)
+
+taxfilt_2_ASVs <- df_taxfilt %>% filter(!ASVid %in% contam_df$ASVid) %>% distinct(ASVid)
+colnames(taxfilt_2_ASVs)[1] <- "#OTUID"
+write.table(taxfilt_2_ASVs, "~/github/mysosoup/data/taxonomy/taxfiltd_ASVs_NTCdrops.txt", row.names = FALSE, quote = FALSE, col.names = TRUE)
+
+## These two text files are used to filter by retaining only the ASVs listed in those files. 
+## The resulting `.qza` artifacts are then rarefied and then used for diversity analyses.
+
+## double check to ensure there are NTCs (or not) in these two filtered ASV sets:
+df %>% filter(ASVid %in% taxfilt_ASVs$ASVid)
+df %>% filter(ASVid %in% taxfilt_2_ASVs$ASVid)
