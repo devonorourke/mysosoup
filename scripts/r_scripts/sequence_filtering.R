@@ -16,7 +16,7 @@ theme_devon <- function () {
 
 
 
-# notrun: download.file("https://github.com/devonorourke/mysosoup/raw/master/data/qiime_qza/asvTables/Mangan_noBats_ASVtable.qza", "nonbat.qza")
+# notrun: download.file("https://github.com/devonorourke/mysosoup/raw/master/data/qiime_qza/asvTables/Mangan.nonbatASVs.table.qza", "nonbat.qza")
 
 ## convert .qza to matrix, then convert wide-format matrix to long-format data.frame object
 tableimport.function <- function(table){
