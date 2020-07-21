@@ -50,16 +50,10 @@ You can see that clearly in the following plot showing the number of total seque
 
 ![contam_image2](https://github.com/devonorourke/mysosoup/blob/master/figures/contam_eval_ASV_and_SeqCounts_uniqnessColored_per_Guano_or_Control.png)
 
-The common ASVs are routinely those that are present in high abundances and in many samples.
-
-Because our downstream filtering for diet-taxa will require at least Family-level analyses, we concluded the sequence filtering R script by generating a pair of files:
-- [taxfiltd_ASVs_NTCdrops.txt](https://github.com/devonorourke/mysosoup/blob/master/data/taxonomy/taxfiltd_ASVs_NTCdrops.txt): the ASVs that meet our taxonomy-filtering criteria, but any ASV detected in an NTC is removed
-- [taxfiltd_ASVs_NTCincluded.txt](https://github.com/devonorourke/mysosoup/blob/master/data/taxonomy/taxfiltd_ASVs_NTCincluded.txt): the ASVs that meet our taxonomy-filtering criteria, but any ASV detected in an NTC is removed
-
-We used those two files in the following diversity measures to provide an additional means with which we could evaluate the appropriate way to filter these ASVs.
+The common ASVs are routinely those that are present in high abundances and in many samples. With widespread contamination one would predict all NTCs having the most widely observed ASVs. Instead, we find that there are NEVER more than 4 NTCs with these common ASVs (just 4 of 79 ASVs); five examples exist where there are 3 NTCs with a common ASV; the remaining 70 ASVs are only ever detected in 2 or 1 NTC samples.
 
 ## part 3 - diversity measures fail to detect trends in taxonomic composition
-As mentioned earlier, we can use diversity estimates (both alpha and beta) to compare the negative control samples to guano samples. For instance, by calculating dissimilarity (distances) among all samples and ordinating, we can evaluate whether or not the community composition of samples surrounding the wells of the negative control samples are more similar to the negative controls (an indication of local contamination in which we might just drop certain samples), or not. We investigated estimates of alpha and beta diversity below using a series of metrics to better understand whether these ASVs shared among negative control samples and guano samples should be dropped or not.
+We can use diversity estimates (both alpha and beta) to compare the negative control samples to guano samples. For instance, by calculating dissimilarity (distances) among all samples and ordinating, we can evaluate whether or not the community composition of samples surrounding the wells of the negative control samples are more similar to the negative controls (an indication of local contamination in which we might just drop certain samples), or not. We investigated estimates of alpha and beta diversity below using a series of metrics to better understand whether these ASVs shared among negative control samples and guano samples should be dropped or not.
 
 ### Creating ASV-filtered tables and sequence files
 First, we filtered the raw QIIME-formatted sequence and table artifacts using the (`taxfiltd_ASVs_NTC*.txt`) text files output from the workflow above:
