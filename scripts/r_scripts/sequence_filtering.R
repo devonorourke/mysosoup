@@ -141,4 +141,14 @@ light_filt_df$more_Reads <- light_filt_df$C_nReads > light_filt_df$NC_nReads  ##
 ## Instead, we find that there are NEVER more than 4 NTCs with these common ASVs (just 4 of 79 ASVs); five examples where there are 3 NTCs with a common ASV; ..
 ## .. and the remaining 70 ASVs are only ever detected in 2 or 1 NTC samples.
 
-## final decision is to just drop any NTC sample, and any sequence features associated exclusively with that group
+
+## We'll wrap up by creating a list of ASVs to filter (to remove) from our original dataset for one final step of contamination filtering - diversity measures.
+## This list will include only those ASVs present in the NTC samples
+
+noNTC_ASVs <- df %>% filter(!ASVid %in% contam_df$ASVid) %>% distinct(ASVid)
+colnames(noNTC_ASVs)[1] <- "#OTUID"
+write.table(noNTC_ASVs, "~/github/mysosoup/data/taxonomy/ASVs_NTCdropd.txt",
+            row.names = FALSE, quote = FALSE, col.names = TRUE)
+
+## The `ASVs_NTCdropd.txt` text file is used to filter by retaining only the ASVs listed in those files. 
+## The resulting `.qza` artifact is then rarefied and then used for diversity analyses.
