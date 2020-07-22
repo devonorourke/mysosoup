@@ -8,13 +8,16 @@ Prior to beginning diversity analyses, we completed the following steps:
 
 3. The remaining non-bat representative sequences were investigated for contamination as described in the [contamination_investigations.md](https://github.com/devonorourke/mysosoup/blob/master/docs/contamination_investigations.md) document - we failed to detect extensive contamination either during DNA extraction or PCR amplification. See also the [sequence_filtering.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/sequence_filtering.R) script related to this contamination investigation.  
 
-Thus we begin this diversity workflow with dereplicated representative sequences. We next perform the following actions prior to applying diversity measures:
-A. Remaining negative control samples are discarded, as well as any sequence feature associated exclusively with those controls. 
+Thus we begin this diversity workflow with dereplicated representative sequences. We next perform the following actions prior to applying diversity measures:  
+
+A. Remaining negative control samples are discarded, as well as any sequence feature associated exclusively with those controls.  
+
 B. Remaining representative sequences are clustered at 98.5% identity using `qiime vsearch cluster-features-de-novo`    
-C. Clustered sequence are classified using a hybrid alignment and naive Bayes approach with `qiime feature-classifier classify-hybrid-vsearch-sklearn`  
+C. Clustered sequence are classified using a hybrid alignment and naive Bayes approach with `qiime feature-classifier classify-hybrid-vsearch-sklearn`   
+
 D. Only sequences classfied as Arthropoda, with taxonomic information specific to lacking at least Family-level information, are retained. 
  - For example, any sequence classified as a fungi or chordate would be discarded
- - For example, any sequence classified as "p__:Arthropoda;c__:Insecta;o__:Hymenoptera;f__:g__:s__:" would be discarded because the family, genus, and species ranks lacked information.  
+ - For example, any sequence classified as "p__:Arthropoda;c__:Insecta;o__:Hymenoptera;f__:g__:s__:" would be discarded because the family, genus, and species ranks lacked information.   
  
 E. The remaining clustered sequences were rarified using a sampling depth of 10,000 sequences. 
 
