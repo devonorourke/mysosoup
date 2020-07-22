@@ -12,8 +12,9 @@ Thus we begin this diversity workflow with dereplicated representative sequences
 
 A. Remaining negative control samples are discarded, as well as any sequence feature associated exclusively with those controls.  
 
-B. Remaining representative sequences are clustered at 98.5% identity using `qiime vsearch cluster-features-de-novo`    
-C. Clustered sequence are classified using a hybrid alignment and naive Bayes approach with `qiime feature-classifier classify-hybrid-vsearch-sklearn`   
+B. Remaining representative sequences are clustered at 98.5% identity using `qiime vsearch cluster-features-de-novo`  
+
+C. Clustered sequence are classified using a hybrid alignment and naive Bayes approach with `qiime feature-classifier classify-hybrid-vsearch-sklearn`  
 
 D. Only sequences classfied as Arthropoda, with taxonomic information specific to lacking at least Family-level information, are retained. 
  - For example, any sequence classified as a fungi or chordate would be discarded
