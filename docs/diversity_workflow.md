@@ -1,13 +1,24 @@
 # Background
-We begin our diversity work using rarefied QIIME-formatted sequence and abundance table artifacts were created as follows:
-1. The cutadapt-trimmed, DADA2 denoised representative sequences ([Mangan.raw_linked_required.repSeqs.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/seqs/Mangan.raw_linked_required.repSeqs.qza)) had bat-host sequences removed, as described in the [classify_sequences.md](https://github.com/devonorourke/mysosoup/blob/master/docs/classify_sequences.md) document.
-2. The remaining non-bat representative sequences ([Mangan.nonbatASVs.table.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/asvTables/Mangan.nonbatASVs.table.qza)) were filtered with the [sequence_filtering.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/sequence_filtering.R) script to retain only those ASVs that met two criteria:  
-  **A.** The ASV was classified to the Arthropoda Phylum  
-  **B.** The ASV contained at least Family-name information (i.e. Genus or Species name were retained, those missing Order name were discarded)  
+
+Prior to beginning diversity analyses, we completed the following steps:
+
+1. Raw sequence reads were trimmed with cutadapt and denoised with DADA2 into representative sequences resulting in the [Mangan.raw_linked_required.repSeqs.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/seqs/Mangan.raw_linked_required.repSeqs.qza)) object, as described in the [sequence_processing.md](https://github.com/devonorourke/mysosoup/blob/master/docs/sequence_processing.md) workflow.    
+
+2. We removed bat-host sequences, as described in the [classify_sequences.md](https://github.com/devonorourke/mysosoup/blob/master/docs/classify_sequences.md) document. The host database design was described in the [host_database.md](https://github.com/devonorourke/mysosoup/blob/master/docs/host_database.md) document.  
+
+3. The remaining non-bat representative sequences were investigated for contamination as described in the [contamination_investigations.md](https://github.com/devonorourke/mysosoup/blob/master/docs/contamination_investigations.md) document - we failed to detect extensive contamination either during DNA extraction or PCR amplification. See also the [sequence_filtering.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/sequence_filtering.R) script related to this contamination investigation.  
+
+Thus we begin this diversity workflow with dereplicated representative sequences. We next perform the following actions prior to applying diversity measures:
+A. Remaining negative control samples are discarded, as well as any sequence feature associated exclusively with those controls. 
+B. Remaining representative sequences are clustered at 98.5% identity using `qiime vsearch cluster-features-de-novo`    
+C. Clustered sequence are classified using a hybrid alignment and naive Bayes approach with `qiime feature-classifier classify-hybrid-vsearch-sklearn`  
+D. Only sequences classfied as Arthropoda, with taxonomic information specific to lacking at least Family-level information, are retained. 
+ - For example, any sequence classified as a fungi or chordate would be discarded
+ - For example, any sequence classified as "p__:Arthropoda;c__:Insecta;o__:Hymenoptera;f__:g__:s__:" would be discarded because the family, genus, and species ranks lacked information.  
+E. The remaining clustered sequences were rarified using a sampling depth of 10,000 sequences. 
 
   That filtering process resulted in generating a list of taxa ([taxfiltd_ASVs_NTCincluded.txt](https://github.com/devonorourke/mysosoup/blob/master/data/taxonomy/taxfiltd_ASVs_NTCincluded.txt)) that met those criteria, but required additional filtering considerations because a few negative control samples had some sequence data in addition to the guano samples.
   
-3. The [contamination_investigations.md](https://github.com/devonorourke/mysosoup/blob/master/docs/contamination_investigations.md) document concludes with our assertion that the negative control samples are not indicative of pervasive contamination, and that ASVs detected among both guano and controls should be retained. As part of that process, the `taxfiltd_ASVs_NTCincluded.txt` list of taxonomically filtered ASVs generated from the `sequence_filtering.R` script was used to filter the original sequence ([Mangan.nonbatASVs.repSeqs.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/seqs/Mangan.nonbatASVs.repSeqs.qza)) and table ([Mangan.wNTCasvs-filt.rarefied-table_wNegSamps.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.rarefied-table_wNegSamps.qza)) artifacts to create ASV-filtered table ([Mangan.wNTCasvs-filt.table.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.table.qza)) and sequence ([Mangan.wNTCasvs.repSeqs.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/seqs/Mangan.wNTCasvs.repSeqs.qza)) artifacts.
 
 
 > A rarefied table ([Mangan.wNTCasvs-filt.rarefied-table_wNegSamps.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.rarefied-table_wNegSamps.qza)) was created by subsampling without replacement (using a sampling depth of 10,000 sequences) to perform diversity estimates as part of the `contamination_investigations.md` workflow.
