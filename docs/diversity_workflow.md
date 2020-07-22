@@ -11,6 +11,8 @@ Prior to beginning diversity analyses, we completed the following steps:
 We begin this diversity workflow using the original dereplicated representative sequences. We next perform the following actions prior to applying diversity measures:  
 
 A. All negative control samples are discarded, as well as any sequence feature associated exclusively with those controls.  
+> `$META` represents the full path to the QIIME-formatted [qiime_meta.tsv](https://github.com/devonorourke/mysosoup/blob/master/data/metadata/qiime_meta.tsv) file
+
 ```
 ## filter table to drop all negative controls
 qiime feature-table filter-samples \
@@ -60,58 +62,12 @@ D. Only sequences classfied as Arthropoda, with taxonomic information specific t
 
 E. The remaining clustered sequences were rarified using a sampling depth of 10,000 sequences. 
 
-  That filtering process resulted in generating a list of taxa ([taxfiltd_ASVs_NTCincluded.txt](https://github.com/devonorourke/mysosoup/blob/master/data/taxonomy/taxfiltd_ASVs_NTCincluded.txt)) that met those criteria, but required additional filtering considerations because a few negative control samples had some sequence data in addition to the guano samples.
   
 
 
 > A rarefied table ([Mangan.wNTCasvs-filt.rarefied-table_wNegSamps.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.rarefied-table_wNegSamps.qza)) was created by subsampling without replacement (using a sampling depth of 10,000 sequences) to perform diversity estimates as part of the `contamination_investigations.md` workflow.
 
-> `$META` represents the full path to the QIIME-formatted [qiime_meta.tsv](https://github.com/devonorourke/mysosoup/blob/master/data/metadata/qiime_meta.tsv) file
 
-```
-qiime feature-table filter-samples \
-  --i-table Mangan.wNTCasvs-filt.rarefied-table_wNegSamps.qza \
-  --m-metadata-file $META \
-  --p-where "SampleType='sample'" \
-  --o-filtered-table Mangan.wNTCasvs-filt.rarefied-table_noNegSamps.qza
-```
-
-
-4. These data were subsequently clustered using a 98.5% identity threshold.
-```
-qiime vsearch cluster-features-de-novo \
---i-sequences \
---i-table \
---p-perc-identity 0.985 \
---p-threads 4 \
---o-clustered-table \
---o-clustered-sequences
-
-```
-
-
-We start our bat diet analyses by discarding the negative control samples from the `Mangan.wNTCasvs-filt.rarefied-table_wNegSamps.qza` table artifact, and drop any sequence variants unique to those samples:
-
-
-In addition, we created a separate file for rarefied data containing only guano sample, but removed additional samples that contained only a single ASV. There were just 3 of the original 297 guano samples that were removed by this additional filter:
-```
-qiime feature-table filter-samples \
-  --i-table Mangan.wNTCasvs-filt.rarefied-table_wNegSamps.qza \
-  --m-metadata-file $META \
-  --p-where "SampleType='sample'" \
-  --p-min-features 2 \
-  --o-filtered-table Mangan.wNTCasvs-filt.rarefied-table_noNegSamps_noSingleASVs.qza
-```
-
-Finally, we applied those same two filters to the unrarefied dataset:
-```
-qiime feature-table filter-samples \
-  --i-table Mangan.wNTCasvs-filt.table.qza \
-  --m-metadata-file $META \
-  --p-where "SampleType='sample'" \
-  --p-min-features 2 \
-  --o-filtered-table Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza
-```
 
 The [Mangan.wNTCasvs-filt.rarefied-table_noNegSamps.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.rarefied-table_noNegSamps.qza) file served as input in the alpha diversity measures, while the [Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.rarefied-table_noNegSamps_noSingleASVs.qza) artifact was used in beta diversity and supervised learning analyses. We used the [Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza) file in the separate supervised learning  also to compare how model accuracy differed based on whether the input data was rarefied or not.
 
