@@ -15,6 +15,7 @@ C. Clustered sequence are classified using a hybrid alignment and naive Bayes ap
 D. Only sequences classfied as Arthropoda, with taxonomic information specific to lacking at least Family-level information, are retained. 
  - For example, any sequence classified as a fungi or chordate would be discarded
  - For example, any sequence classified as "p__:Arthropoda;c__:Insecta;o__:Hymenoptera;f__:g__:s__:" would be discarded because the family, genus, and species ranks lacked information.  
+ 
 E. The remaining clustered sequences were rarified using a sampling depth of 10,000 sequences. 
 
   That filtering process resulted in generating a list of taxa ([taxfiltd_ASVs_NTCincluded.txt](https://github.com/devonorourke/mysosoup/blob/master/data/taxonomy/taxfiltd_ASVs_NTCincluded.txt)) that met those criteria, but required additional filtering considerations because a few negative control samples had some sequence data in addition to the guano samples.
