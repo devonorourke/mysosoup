@@ -1,10 +1,6 @@
 # Filtering bat reads
-We want to separate our amplicons into three groups:
-1) Those amplicons that are likely to be associated to the bat host,
-2) Those amplicons that are likely to be associated with the diet,
-3) all amplicons that don't fit into 1 or 2.
 
-To begin separating these data  we first identifed amplicons associated with host (bat) DNA. We created two separate databases - one primarily to identify bat host sequences, and another that contains millions more COI sequences from a variety of taxa including arthropods, chordates, fungi, and other eukaryotes. While there are overlaps in bat COI sequences between those host-specific and the broad COI databases, we utilize the host-specific database as a first-pass to screen for likely host DNA sequences, then follow up with the larger COI database. The rationale is that each bat project may contain distinct hosts that may or may not be included in the broader database; rather than update the larger database for every project, we can screen out likely host sequences with this smaller database first.
+To identify amplicons associated with host (bat) DNA we created two separate databases: one primarily to identify bat host sequences, and another that contains millions more COI sequences from a variety of taxa including arthropods, chordates, fungi, and other eukaryotes. While there are overlaps in bat COI sequences between those host-specific and the broad COI databases, we utilize the host-specific database as a first-pass to screen for likely host DNA sequences, then follow up with the larger COI database. The rationale is that each bat project may contain distinct hosts that may or may not be included in the broader database; rather than update the larger database for every project, we can screen out likely host sequences with this smaller database first. I also did to better understand whether this short database of custom sequences I set up would be sufficient to catch all the sequences that might be present in a giant dataset.  
 
 ## Filtering with host database
 We begin by aligning all denoised ASVs against the host database containing a series of possible host reference sequences - see the [host_database.md](https://github.com/devonorourke/mysosoup/blob/master/docs/host_database.md) document for full details of how the samples were selected and how the database was designed. These references included the focal species of _Myotis sodalis_ as well as a range of bats found across the Midwest and Northeast. In addition, we included other bat and bird species that had guano samples processed in our lab in previous projects; inclusion of these host sequences was done as a measure of contaminant check and removal.
@@ -198,4 +194,26 @@ qiime feature-table filter-seqs \
   - [sample_abundancesummaries_wBatHostData.csv](https://github.com/devonorourke/mysosoup/blob/master/data/taxonomy/sample_abundancesummaries_wBatHostData.csv) contains similar bat-species sequence counts, albeit with the addition of metadata (to indicate which samples came from which site and what kind of sample they were)
 
 
-2. The `Mangan.nonbatASVs*` files are used in the [sequence_filtering.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/sequence_filtering.R) script  to determine which ASVs are considered diet components (arthropods) and which are likely non-diet (ex. fungal COI sequences, the deer, etc.). In addition, this script highlighted that some negative controls samples appeared to have total read abundances that were similar to typical guano samples, raising the concern about contamination. The [contamination_investigation.md](https://github.com/devonorourke/mysosoup/blob/master/docs/contamination_investigations.md) document describes how we assessed whether we should be removing certain ASVs from the entire dataset, or whether contamination risk is of minimal concern. Ultimately we were compelled to keep those ASVs present in negative controls also present in guano samples. The [diversity_workflow.md](https://github.com/devonorourke/mysosoup/blob/master/docs/diversity_workflow.md) document describes how we measured alpha and beta diversity of bat diets, as well as how we applied a supervised learning Random Forest classifier to identify ASVs that were most important to accurately predicting the Month or Site variables of our data.
+2. The `Mangan.nonbatASVs*` files are used in the [sequence_filtering.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/sequence_filtering.R) script in conjunction with the [contamination_investigation.md](https://github.com/devonorourke/mysosoup/blob/master/docs/contamination_investigations.md) document to review potential sources of contamination in these data. Some negative controls samples appeared to have total read abundances that were similar to typical guano samples, raising the concern about contamination. Ultimately we were compelled to keep those ASVs present in negative controls also present in guano samples.  
+
+3. The [diversity_workflow.md](https://github.com/devonorourke/mysosoup/blob/master/docs/diversity_workflow.md) document describes how we measured alpha and beta diversity of bat diets, as well as how we applied a supervised learning Random Forest classifier to identify ASVs that were most important to accurately predicting the Month or Site variables of our data.
+
+# Classifying and filtering our data used for diet analyses
+Ultimately, we opted to classify a set of clustered sequences. This is described in detail in the [diversity_workflow.md](https://github.com/devonorourke/mysosoup/blob/master/docs/diversity_workflow.md) document. In brief: 
+- All negative control samples are discarded, as well as any sequence feature associated exclusively with those controls
+- Remaining representative sequences are clustered at 98.5% identity using `qiime vsearch cluster-features-de-novo`
+- Clustered sequence are classified using a hybrid alignment and naive Bayes approach with `qiime feature-classifier classify-hybrid-vsearch-sklearn`
+- Only sequences classfied as Arthropoda, with taxonomic information specific to lacking at least Family-level information, are retained
+- The remaining clustered sequences were rarified using a sampling depth of 10,000 sequences
+
+We include the `qiime vsearch cluster-features-de-novo` command below because this is specific to the classification, but note that this entire workflow is explained in detail in the [diversity_workflow.md](https://github.com/devonorourke/mysosoup/blob/master/docs/diversity_workflow.md) document. To classify the clustered sequences: 
+```
+qiime feature-classifier classify-hybrid-vsearch-sklearn \
+--p-threads 20 --p-no-prefilter \
+--i-query Mangan.clust_p985_seqs.qza \
+--i-reference-reads bigCOI.derep.seqs.qza \
+--i-reference-taxonomy bigCOI.derep.tax.qza \
+--i-classifier nbClassifer_bigDB.qza \
+--o-classification Mangan.clust_p985_taxa.qza
+```
+
