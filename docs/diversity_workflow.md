@@ -14,7 +14,7 @@ A. All negative control samples are discarded, as well as any sequence feature a
 ```
 ## filter table to drop all negative controls
 qiime feature-table filter-samples \
-  --i-table Mangan.raw_linked_required.repSeqs.qza \
+  --i-table Mangan.raw_linked_required.table.qza \
   --m-metadata-file $META \
   --p-where "SampleType='sample'" \
   --p-min-features 1 \
@@ -27,6 +27,8 @@ qiime feature-table filter-seqs \
   --o-filtered-data Mangan.dada2_noNTCs_seqs.qza
 ```
 
+> While we started with 4,277 denoised sequences (which included bat and other non-arthropod sequences, as well as distinct sequences from negative controls), removing the negative control samples reduces this to 4,269 sequences. Thus, few sequences were exclusive to the NTCs.
+
 B. Remaining representative sequences are clustered at 98.5% identity using `qiime vsearch cluster-features-de-novo`  
 ```
 qiime vsearch cluster-features-de-novo \
@@ -37,16 +39,25 @@ qiime vsearch cluster-features-de-novo \
   --o-clustered-sequences Mangan.clust_p985_seqs.qza
 ```
 
+> Clustering reduces the number of sequences to about 60% of the original size, down to just 2,607 sequence representatives. Notably, there can still be many suprious diet components we may want to discard, including host DNA and non-arthropod COI sequences. In addition, the classification accuracy of some of these sequences may be insufficient for our diversity estimates, so we'll first classify all the sequences and then filter appropriately.
 
 C. Clustered sequence are classified using a hybrid alignment and naive Bayes approach with `qiime feature-classifier classify-hybrid-vsearch-sklearn`  
 ```
-
+qiime feature-classifier classify-hybrid-vsearch-sklearn \
+--p-threads 20 --p-no-prefilter \
+--i-query Mangan.clust_p985_seqs.qza \
+--i-reference-reads bigCOI.derep.seqs.qza \
+--i-reference-taxonomy bigCOI.derep.tax.qza \
+--i-classifier nbClassifer_bigDB.qza \
+--o-classification Mangan.clust_p985_taxa.qza
 ```
 
 D. Only sequences classfied as Arthropoda, with taxonomic information specific to lacking at least Family-level information, are retained. 
  - For example, any sequence classified as a fungi or chordate would be discarded
  - For example, any sequence classified as "p__:Arthropoda;c__:Insecta;o__:Hymenoptera;f__:g__:s__:" would be discarded because the family, genus, and species ranks lacked information.   
- 
+
+
+
 E. The remaining clustered sequences were rarified using a sampling depth of 10,000 sequences. 
 
   That filtering process resulted in generating a list of taxa ([taxfiltd_ASVs_NTCincluded.txt](https://github.com/devonorourke/mysosoup/blob/master/data/taxonomy/taxfiltd_ASVs_NTCincluded.txt)) that met those criteria, but required additional filtering considerations because a few negative control samples had some sequence data in addition to the guano samples.
