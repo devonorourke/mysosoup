@@ -4,17 +4,44 @@ Prior to beginning diversity analyses, we completed the following steps:
 
 1. Raw sequence reads were trimmed with cutadapt and denoised with DADA2 into representative sequences resulting in the [Mangan.raw_linked_required.repSeqs.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/seqs/Mangan.raw_linked_required.repSeqs.qza)) object, as described in the [sequence_processing.md](https://github.com/devonorourke/mysosoup/blob/master/docs/sequence_processing.md) workflow.    
 
-2. We removed bat-host sequences, as described in the [classify_sequences.md](https://github.com/devonorourke/mysosoup/blob/master/docs/classify_sequences.md) document. The host database design was described in the [host_database.md](https://github.com/devonorourke/mysosoup/blob/master/docs/host_database.md) document.  
+2. We identified bat-host sequences, as described in the [classify_sequences.md](https://github.com/devonorourke/mysosoup/blob/master/docs/classify_sequences.md) document. The host database design was described in the [host_database.md](https://github.com/devonorourke/mysosoup/blob/master/docs/host_database.md) document.  
 
-3. The remaining non-bat representative sequences were investigated for contamination as described in the [contamination_investigations.md](https://github.com/devonorourke/mysosoup/blob/master/docs/contamination_investigations.md) document - we failed to detect extensive contamination either during DNA extraction or PCR amplification. See also the [sequence_filtering.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/sequence_filtering.R) script related to this contamination investigation.  
+3. The non-bat representative sequences were investigated for contamination as described in the [contamination_investigations.md](https://github.com/devonorourke/mysosoup/blob/master/docs/contamination_investigations.md) document - we failed to detect extensive contamination either during DNA extraction or PCR amplification. See also the [sequence_filtering.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/sequence_filtering.R) script related to this contamination investigation.  
 
-Thus we begin this diversity workflow with dereplicated representative sequences. We next perform the following actions prior to applying diversity measures:  
+We begin this diversity workflow using the original dereplicated representative sequences. We next perform the following actions prior to applying diversity measures:  
 
-A. Remaining negative control samples are discarded, as well as any sequence feature associated exclusively with those controls.  
+A. All negative control samples are discarded, as well as any sequence feature associated exclusively with those controls.  
+```
+## filter table to drop all negative controls
+qiime feature-table filter-samples \
+  --i-table Mangan.raw_linked_required.repSeqs.qza \
+  --m-metadata-file $META \
+  --p-where "SampleType='sample'" \
+  --p-min-features 1 \
+  --o-filtered-table Mangan.dada2_noNTCs_table.qza
+
+## filter rep seqs to drop any exclusive to negative controls
+qiime feature-table filter-seqs \
+  --i-data Mangan.raw_linked_required.repSeqs.qza \
+  --i-table Mangan.dada2_noNTCs_table.qza \
+  --o-filtered-data Mangan.dada2_noNTCs_seqs.qza
+```
 
 B. Remaining representative sequences are clustered at 98.5% identity using `qiime vsearch cluster-features-de-novo`  
+```
+qiime vsearch cluster-features-de-novo \
+  --i-table Mangan.dada2_noNTCs_table.qza \
+  --i-sequences Mangan.dada2_noNTCs_seqs.qza \
+  --p-perc-identity 0.985 \
+  --o-clustered-table Mangan.clust_p985_table.qza \
+  --o-clustered-sequences Mangan.clust_p985_seqs.qza
+```
+
 
 C. Clustered sequence are classified using a hybrid alignment and naive Bayes approach with `qiime feature-classifier classify-hybrid-vsearch-sklearn`  
+```
+
+```
 
 D. Only sequences classfied as Arthropoda, with taxonomic information specific to lacking at least Family-level information, are retained. 
  - For example, any sequence classified as a fungi or chordate would be discarded
