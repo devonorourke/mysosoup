@@ -10,23 +10,23 @@ Prior to beginning diversity analyses, we completed the following steps:
 
 We begin this diversity workflow using the original dereplicated representative sequences. We next perform the following actions prior to applying diversity measures:  
 
-A. All negative control samples are discarded, as well as any sequence feature associated exclusively with those controls.  
+A. All pooled samples and negative control samples are discarded, as well as any sequence feature associated exclusively with those controls.  
 > `$META` represents the full path to the QIIME-formatted [qiime_meta.tsv](https://github.com/devonorourke/mysosoup/blob/master/data/metadata/qiime_meta.tsv) file
 
 ```
-## filter table to drop all negative controls
+## filter table to retain only guano sampled as single pellets
 qiime feature-table filter-samples \
   --i-table Mangan.raw_linked_required.table.qza \
-  --m-metadata-file $META \
-  --p-where "SampleType='sample'" \
+  --m-metadata-file qiime_meta.tsv \
+  --p-where "SampleType='sample' AND BatchType='single'" \
   --p-min-features 1 \
-  --o-filtered-table Mangan.dada2_noNTCs_table.qza
-
+  --o-filtered-table Mangan.dada2_singles_table.qza
+  
 ## filter rep seqs to drop any exclusive to negative controls
 qiime feature-table filter-seqs \
   --i-data Mangan.raw_linked_required.repSeqs.qza \
-  --i-table Mangan.dada2_noNTCs_table.qza \
-  --o-filtered-data Mangan.dada2_noNTCs_seqs.qza
+  --i-table Mangan.dada2_singles_table.qza \
+  --o-filtered-data Mangan.dada2_singles_seqs.qza
 ```
 
 > While we started with 4,277 denoised sequences (which included bat and other non-arthropod sequences, as well as distinct sequences from negative controls), removing the negative control samples reduces this to 4,269 sequences. Thus, few sequences were exclusive to the NTCs.
@@ -34,8 +34,8 @@ qiime feature-table filter-seqs \
 B. Remaining representative sequences are clustered at 98.5% identity using `qiime vsearch cluster-features-de-novo`  
 ```
 qiime vsearch cluster-features-de-novo \
-  --i-table Mangan.dada2_noNTCs_table.qza \
-  --i-sequences Mangan.dada2_noNTCs_seqs.qza \
+  --i-table Mangan.dada2_singles_table.qza \
+  --i-sequences Mangan.dada2_singles_seqs.qza \
   --p-perc-identity 0.985 \
   --o-clustered-table Mangan.clust_p985_table.qza \
   --o-clustered-sequences Mangan.clust_p985_seqs.qza
