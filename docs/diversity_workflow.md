@@ -29,8 +29,6 @@ qiime feature-table filter-seqs \
   --o-filtered-data Mangan.dada2_singles_seqs.qza
 ```
 
-> While we started with 4,277 denoised sequences (which included bat and other non-arthropod sequences, as well as distinct sequences from negative controls), removing the negative control samples reduces this to 4,269 sequences. Thus, few sequences were exclusive to the NTCs.
-
 B. Remaining representative sequences are clustered at 98.5% identity using `qiime vsearch cluster-features-de-novo`  
 ```
 qiime vsearch cluster-features-de-novo \
@@ -41,7 +39,7 @@ qiime vsearch cluster-features-de-novo \
   --o-clustered-sequences Mangan.clust_p985_seqs.qza
 ```
 
-> Clustering reduces the number of sequences to about 60% of the original size, down to just 2,607 sequence representatives. Notably, there can still be many suprious diet components we may want to discard, including host DNA and non-arthropod COI sequences. In addition, the classification accuracy of some of these sequences may be insufficient for our diversity estimates, so we'll first classify all the sequences and then filter appropriately.
+> Dropping the negative control and pooled samples, coupled with clustering reduces the number of unique sequence variants to 1,936 sequence representatives. Notably, there can still be many suprious diet components we may want to discard, including host DNA and non-arthropod COI sequences. In addition, the classification accuracy of some of these sequences may be insufficient for our diversity estimates, so we'll first classify all the sequences and then filter appropriately.
 
 C. Clustered sequence are classified using a hybrid alignment and naive Bayes approach with `qiime feature-classifier classify-hybrid-vsearch-sklearn`  
 ```
