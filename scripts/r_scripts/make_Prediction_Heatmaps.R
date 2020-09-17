@@ -4,6 +4,7 @@
 library(tidyverse)
 library(scico)
 library(ggpubr)
+library(svglite)
 
 ################################################################################
 ## part 1 - import data and reformat for plots
@@ -19,8 +20,7 @@ meta <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/dat
   select(-CollectionMonth)
 
 ## for CollectionMonth data:
-MonthURL='/scratch/dro49/qiimetmp/mysotmp/machineLearn_alt/Month_Predictions/predictions.tsv'
-#MonthURL="https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/MachineLearn/month_predictions.tsv"
+MonthURL="https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/MachineLearn/month_predictions.tsv"
 month_pred <- read_delim(file=MonthURL, delim="\t", col_names = TRUE) %>% rename(Prediction = prediction) %>% mutate(Prediction = ifelse(Prediction == "September", "Sept", Prediction))
 month_dat <- merge(month_pred, meta, by="SampleID", all.x = TRUE)
 month_counts <- month_dat %>% group_by(Month) %>% summarise(ActualCounts = n())
@@ -29,8 +29,7 @@ month_plotdat <- merge(month_sums, month_counts) %>% mutate(FractionCounts = Cou
 rm(month_pred, month_dat, month_counts, month_sums, MonthURL)
 
 ## for Site data:
-SiteURL='/scratch/dro49/qiimetmp/mysotmp/machineLearn_alt/Site_Predictions/predictions.tsv'
-#SiteURL="https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/MachineLearn/site_predictions.tsv"
+SiteURL="https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/MachineLearn/site_predictions.tsv"
 site_pred <- read_delim(file=SiteURL, delim="\t", col_names = TRUE) %>% rename(Prediction = prediction)
 site_dat <- merge(site_pred, meta, by="SampleID", all.x = TRUE)
 site_counts <- site_dat %>% group_by(Site) %>% summarise(ActualCounts = n())
@@ -39,8 +38,7 @@ site_plotdat <- merge(site_sums, site_counts) %>% mutate(FractionCounts = Counts
 rm(site_pred, site_dat, site_counts, site_sums, SiteURL)
 
 ## for SiteMonth data
-SiteMonthURL <- '/scratch/dro49/qiimetmp/mysotmp/machineLearn_alt/SiteMonth_Predictions/predictions.tsv'
-#SiteMonthURL <- "/scratch/dro49/qiimetmp/mysotmp/machineLearn/MLearn_ncv_SiteMonth/predictions/predictions.tsv"
+SiteMonthURL = "https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/MachineLearn/sitemonth_predictions.tsv"
 sitemonth_pred <- read_delim(file=SiteMonthURL, delim="\t", col_names = TRUE) %>% rename(Prediction = prediction) %>% 
   mutate(Prediction = gsub("September", "Sept", Prediction))
 sitemonth_dat <- merge(sitemonth_pred, meta, by="SampleID", all.x = TRUE)
@@ -50,6 +48,7 @@ sitemonth_plotdat <- merge(sitemonth_sums, sitemonth_counts) %>% mutate(Fraction
 rm(sitemonth_pred, sitemonth_dat, sitemonth_counts, sitemonth_sums, SiteMonthURL)
 
 rm(meta)
+
 ################################################################################
 ## part 2 - make individual plots
 ################################################################################
@@ -72,9 +71,9 @@ p1 <- ggplot(month_plotdat, aes(x=Prediction, y=Month, fill=FractionCounts, labe
        x="\nPredicted", y="Actual\n")
 
 p1
-setwd("/scratch/dro49/qiimetmp/mysotmp/machineLearn_alt") ## change as needed
-ggsave("FigureY_MLheatmap_byMonth.png", height = 9.5, width = 12, units="cm")
-ggsave("FigureY_MLheatmap_byMonth.pdf", height = 9.5, width = 12, units="cm")
+ggsave("~/github/mysosoup/figures/FigureY_MLheatmap_byMonth.png", height = 9.5, width = 12, units="cm")
+ggsave("~/github/mysosoup/figures/FigureY_MLheatmap_byMonth.pdf", height = 9.5, width = 12, units="cm")
+ggsave("~/github/mysosoup/figures/FigureY_MLheatmap_byMonth.svg", height = 9.5, width = 12, units="cm")
 
 ## Site plot
 p2 <- ggplot(site_plotdat, aes(x=Prediction, y=Site, fill=FractionCounts, label=Counts)) +
@@ -90,9 +89,9 @@ p2 <- ggplot(site_plotdat, aes(x=Prediction, y=Site, fill=FractionCounts, label=
        x="\nPredicted", y="Actual\n")
 
 p2
-ggsave("FigureY_MLheatmap_bySite.png", height = 9.5, width = 12, units="cm")
-ggsave("FigureY_MLheatmap_bySite.pdf", height = 9.5, width = 12, units="cm")
-
+ggsave("~/github/mysosoup/figures/FigureY_MLheatmap_bySite.png", height = 9.5, width = 12, units="cm")
+ggsave("~/github/mysosoup/figures/FigureY_MLheatmap_bySite.pdf", height = 9.5, width = 12, units="cm")
+ggsave("~/github/mysosoup/figures/FigureY_MLheatmap_bySite.svg", height = 9.5, width = 12, units="cm")
 
 ## SiteMonth plot
 ## set levels for plot
@@ -115,8 +114,9 @@ p3 <- ggplot(sitemonth_plotdat, aes(x=Prediction, y=SiteMonth, fill=FractionCoun
        x="\nPredicted", y="Actual\n")
 
 p3
-ggsave("FigureY_MLheatmap_bySiteMonth.png", height = 9.5, width = 12, units="cm")
-ggsave("FigureY_MLheatmap_bySiteMonth.pdf", height = 9.5, width = 12, units="cm")
+ggsave("~/github/mysosoup/figures/FigureY_MLheatmap_bySiteMonth.png", height = 9.5, width = 12, units="cm")
+ggsave("~/github/mysosoup/figures/FigureY_MLheatmap_bySiteMonth.pdf", height = 9.5, width = 12, units="cm")
+ggsave("~/github/mysosoup/figures/FigureY_MLheatmap_bySiteMonth.svg", height = 9.5, width = 12, units="cm")
 
 ##Stitch all 3 plots togehter?
 p1a <- p1 + labs(x="", y="Actual")
