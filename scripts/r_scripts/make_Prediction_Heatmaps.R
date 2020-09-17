@@ -73,8 +73,8 @@ p1 <- ggplot(month_plotdat, aes(x=Prediction, y=Month, fill=FractionCounts, labe
 
 p1
 setwd("/scratch/dro49/qiimetmp/mysotmp/machineLearn_alt") ## change as needed
-ggsave("FigureY_MLheatmap_byMonth.png", height = 10, width = 10, units="cm")
-ggsave("FigureY_MLheatmap_byMonth.pdf", height = 10, width = 10, units="cm")
+ggsave("FigureY_MLheatmap_byMonth.png", height = 9.5, width = 12, units="cm")
+ggsave("FigureY_MLheatmap_byMonth.pdf", height = 9.5, width = 12, units="cm")
 
 ## Site plot
 p2 <- ggplot(site_plotdat, aes(x=Prediction, y=Site, fill=FractionCounts, label=Counts)) +
@@ -90,8 +90,8 @@ p2 <- ggplot(site_plotdat, aes(x=Prediction, y=Site, fill=FractionCounts, label=
        x="\nPredicted", y="Actual\n")
 
 p2
-ggsave("FigureY_MLheatmap_bySite.png", height = 10, width = 10, units="cm")
-ggsave("FigureY_MLheatmap_bySite.pdf", height = 10, width = 10, units="cm")
+ggsave("FigureY_MLheatmap_bySite.png", height = 9.5, width = 12, units="cm")
+ggsave("FigureY_MLheatmap_bySite.pdf", height = 9.5, width = 12, units="cm")
 
 
 ## SiteMonth plot
@@ -115,8 +115,8 @@ p3 <- ggplot(sitemonth_plotdat, aes(x=Prediction, y=SiteMonth, fill=FractionCoun
        x="\nPredicted", y="Actual\n")
 
 p3
-ggsave("FigureY_MLheatmap_bySiteMonth.png", height = 10, width = 10, units="cm")
-ggsave("FigureY_MLheatmap_bySiteMonth.pdf", height = 10, width = 10, units="cm")
+ggsave("FigureY_MLheatmap_bySiteMonth.png", height = 9.5, width = 12, units="cm")
+ggsave("FigureY_MLheatmap_bySiteMonth.pdf", height = 9.5, width = 12, units="cm")
 
 ##Stitch all 3 plots togehter?
 p1a <- p1 + labs(x="", y="Actual")
@@ -126,3 +126,4 @@ ggarrange(p1a, p2a, p3a, common.legend = TRUE, ncol=3, align = "h", labels = c("
 
 ggsave("FigureY_MLheatmaps_all.png", height=12, width = 30, units="cm")
 ggsave("FigureY_MLheatmaps_all.pdf", height=12, width = 30, units="cm")
+ggsave("FigureY_MLheatmaps_all.svg", height=12, width = 30, units="cm")

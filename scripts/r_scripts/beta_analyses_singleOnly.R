@@ -79,11 +79,11 @@ sample_names(phydat)  ## sample names as SampleID in meta
 
 ## import tree object to for phylogenetic distance measures
 ## download qza file:
-# download.file("https://github.com/devonorourke/mysosoup/raw/master/data/trees/rooted-tree.wNTCasvs.nwk", "tree.nwk")
+# download.file("https://github.com/devonorourke/mysosoup/raw/master/data/trees/Mangan.clust_p985_rooted_tree.nwk", "tree.nwk")
 # tree <- read.tree(file = "~/Desktop/tree.nwk")
 
 ## alternatively run from local:
-tree <- read.tree(file = "~/github/mysosoup/data/trees/rooted-tree.wNTCasvs.nwk")
+tree <- read.tree(file = "~/github/mysosoup/data/trees/Mangan.clust_p985_rooted_tree.nwk")
 
 ## add tree info to physeq object
 phy_wTree <- merge_phyloseq (phydat, tree)

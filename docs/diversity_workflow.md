@@ -197,101 +197,45 @@ qiime feature-table core-features \
 ```
 
 ## Predicting sample metadata workflow 
-- Second, export the visualization and capture those features present in at least 10% of samples
+The QIIME2 [classify-samples](https://docs.qiime2.org/2020.8/tutorials/sample-classifier/) plugin offers a mechanism to perform cross-validated supervised learning - in our case, via a Random Forest classifier. The goal is to take an input feature table and a set of metadata variables (in our case, the Site or Month associated with a guano sample), and train a classifier on a subset of these data. The decision tree of the classifier model is then applied to the testing subset of data not used in training. While ordinations can help understand if the overall composition of samples differ by these variables, a supervised learning approach helps identify which sequence features are best associated with particular metadata variables.
+
+There are a few different flavors of cross validation available within the q2-sample-classifier within QIIME - we chose the nested cross validation (NCV) option to ensure that all feature data is used for both testing and training. This is possible because there are multiple iterations of testing and training - we used the default number of iterations (5) in our tests. We are interested in two outputs of the sample classifier workflow: first, an evaluation of the overall accuracy of the classifier for a class of metadata; second, identifying which features are most important to building the classifier model.
+
+We applied the same sample classifier workflow to three possible types of metadata:
+- Site (Egner or Hickory)
+- Month (June, July, or September) 
+- Site + Month (Egner-June, Egner-July, Egner-September, Hickory-June, Hickory-July, Hickory-September)
+> We did not further explore roost-specific characteristics as it was possible for multiple roosts to be occupied by the same group of bats.
+
+To begin, the `core-features` visualization was exported to capture those features present in at least 10% of samples:
 ```
 qiime tools export --input-path Mangan.clust_p985_corefeatures.qzv --output-path tmpdir_coreFeatures_min10k
 cut -f 1 ./tmpdir_coreFeatures_min10k/core-features-0.100.tsv > featureIDs_core10.txt
 ```
 
-
-
-- Lastly, filter those FeatureIDs from initial MachineLearn data to evaluate percent importance
+We then filtered those FeatureIDs from our initial feature table to retain just those select features when predicting sample metadata using the q2-sample-classifier program:
+```
   qiime feature-table filter-features \
   --i-table Mangan.clust_p985_table_Filtd_min10k.qza \
   --m-metadata-file featureIDs_core10.txt \
   --o-filtered-table Mangan.clust_p985_table_coreFeat10.qza
 ```
 
-The QIIME2 [classify-samples](https://docs.qiime2.org/2020.8/tutorials/sample-classifier/) plugin offers a means to test a cross-validated supervised learning classifier - in this case, a Random Forest classifier. The goal is to take an input feature table and a set of metadata variables (in our case, the Site or Locations when guano was collected), train the classifier on some subset of these data, then test the classifier on the other subset of the data not used in training. The decision trees of the classifier used in the training set are then applied to the testing subset of data not used in training, and the accuracy of the classifier is assessed based upon how frequently the class variable prediction matches the truth. There are a few different flavors of cross validation available within the q2-sample-classifier within QIIME - we chose the nested cross validation (NCV) option to ensure that all feature data is used for both testing and training. This is possible because there are multiple iterations of testing and training - we used the default number of iterations (5) in our tests.
-
-The individual features used in training the classifier are individually removed and the subsequent accuracy of the model lacking that information can be evaluated to the original model to determine each features relative importance to the predictive power of the classifier. This key feature enables us to determine which ASVs are more or less important at distinguishing among the class variables like Site or Month. Thus, while ordinations can help understand if the overall composition of samples differ by these variables, a supervised learning approach helps identify the individual ASVs that are driving the largest differences among these variables.
-
-We used the [Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.rarefied-table_noNegSamps_noSingleASVs.qza) and [Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza) artifacts as inputs in our supervised learning model because we were not clear whether randomly subsampling the data would have an impact on the overall model accuracy predictions. Note that subsampling these samples to a depth of 10,000 sequences resulted in discarding 7 of the 297 guano samples, and removed 84 ASVs from the original ASV table. However, those ASVs represent just 0.03% of the overall read abundance, thus it's highly unlikely that those ASVs discarded will significantly contribute to differences in our class variables of interest.
-
-We executed scripts in QIIME 2 using the default settings with one exception: we increased the number of estimators from 100 to 1000 to potentially increase our model accuracy by increasing the number of trees in each forest. Models for Site, SiteMonth, CollectionMonth, and BatchType were performed as follows:
-
-> `$TABLE` represents the [Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.rarefied-table_noNegSamps_noSingleASVs.qza) rarefied dataset   
-> `$METAFILE` represents the full path to the QIIME-formatted [qiime_meta.tsv](https://github.com/devonorourke/mysosoup/blob/master/data/metadata/qiime_meta.tsv) file
-
+Lastly, we executed scripts in QIIME 2 using the default settings with one exception: we increased the number of estimators from 100 to 1000 to potentially increase our model accuracy by increasing the number of trees in each forest. Models for Month, Site, and SiteMonth, were performed similarly:
+> substitute $METACOLUMN for one of three terms: 'SiteMonth', 'CollectionMonth', or 'Site'
+> $METAFILE points to the [qiime_meta.tsv file](https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/metadata/qiime_meta.tsv)
 
 ```
-qiime sample-classifier classify-samples \
-  --i-table "$TABLE" --m-metadata-file "$METAFILE" \
-  --m-metadata-column CollectionMonth --output-dir learn-Month \
-  --p-optimize-feature-selection --p-parameter-tuning --p-estimator RandomForestClassifier --p-n-estimators 1000
+qiime sample-classifier classify-samples-ncv \
+  --i-table Mangan.clust_p985_table_coreFeat10.qza \
+  --m-metadata-file qiime_meta.tsv --m-metadata-column "$METACOLUMN" \
+  --output-dir MLearn_ncv_"$METACOLUMN" \
+  --p-parameter-tuning --p-estimator RandomForestClassifier --p-n-estimators 1000  
 
-qiime sample-classifier classify-samples \
-  --i-table "$TABLE" --m-metadata-file "$METAFILE" \
-  --m-metadata-column Site --output-dir learn-Site \
-  --p-optimize-feature-selection --p-parameter-tuning --p-estimator RandomForestClassifier --p-n-estimators 1000
-
-qiime sample-classifier classify-samples \
-  --i-table "$TABLE" --m-metadata-file "$METAFILE" \
-  --m-metadata-column SiteMonth --output-dir learn-SiteMonth \
-  --p-optimize-feature-selection --p-parameter-tuning --p-estimator RandomForestClassifier --p-n-estimators 1000
-
-qiime sample-classifier classify-samples \
-  --i-table "$TABLE" --m-metadata-file "$METAFILE" \
-  --m-metadata-column BatchType --output-dir learn-BatchType \
-  --p-optimize-feature-selection --p-parameter-tuning --p-estimator RandomForestClassifier --p-n-estimators 1000
+qiime tools export --input-path ./MLearn_ncv_"$METACOLUMN"/predictions.qza --output-path "$METACOLUMN"_Predictions
+qiime tools export --input-path ./MLearn_ncv_"$METACOLUMN"/feature_importance.qza --output-path "$METACOLUMN"_featureImportance  
 ```
 
-The `feature_importance.qza` files were exported as `.tsv` files for use in subsequent R analyses. The `*accuracy.tsv` files [in this directory](https://github.com/devonorourke/mysosoup/tree/master/data/MachineLearn/rarefy) served as inputs to generating the heatmap plots made with the [machine_learn_heatmaps.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/machine_learn_heatmaps.R) script. The `fi*.tsv` files are used in the [machine_learn_analyses.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/machine_learn_analyses.R) script to generate several figures used in the analysis.
-
-
-One of our first considerations was determining if we should be using rarefied or unrarefied data as input for the Random Forest classifier. We therefore applied the same set of scripts as noted above, but switched the input table to the [Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza) unrarefied table.
-> `$TABLE` represents the unrarefied [Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/asvTables/Mangan.wNTCasvs-filt.table_noNegSamps_noSingleASVs.qza) table  
-> `$METAFILE` represents the full path to the QIIME-formatted [qiime_meta.tsv](https://github.com/devonorourke/mysosoup/blob/master/data/metadata/qiime_meta.tsv) file
-
-```
-qiime sample-classifier classify-samples \
-  --i-table "$TABLE" --m-metadata-file "$METAFILE" \
-  --m-metadata-column CollectionMonth --output-dir learn-Month \
-  --p-optimize-feature-selection --p-parameter-tuning --p-estimator RandomForestClassifier --p-n-estimators 1000
-
-qiime sample-classifier classify-samples \
-  --i-table "$TABLE" --m-metadata-file "$METAFILE" \
-  --m-metadata-column Site --output-dir learn-Site \
-  --p-optimize-feature-selection --p-parameter-tuning --p-estimator RandomForestClassifier --p-n-estimators 1000
-
-qiime sample-classifier classify-samples \
-  --i-table "$TABLE" --m-metadata-file "$METAFILE" \
-  --m-metadata-column SiteMonth --output-dir learn-SiteMonth \
-  --p-optimize-feature-selection --p-parameter-tuning --p-estimator RandomForestClassifier --p-n-estimators 1000
-
-qiime sample-classifier classify-samples \
-  --i-table "$TABLE" --m-metadata-file "$METAFILE" \
-  --m-metadata-column BatchType --output-dir learn-BatchType \
-  --p-optimize-feature-selection --p-parameter-tuning --p-estimator RandomForestClassifier --p-n-estimators 1000
-```
-
-Files were exported as noted above. The question of whether it is more appropriate to use rarefied data or unrarefied data was addressed in the initial portion of the [machine_learn_heatmaps.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/machine_learn_heatmaps.R) script. What quickly became clear was that rarefying the data increases the proportion of accuracy to the features (ASVs) that are most significant to the model, though the rank order of the important features tends not to vary substantially between rarefied or unrarefied datasets. In other words, if the point of the classifier is to identify the ASVs that best discriminate between Site or Month in which a sample is collected, whether or not you rarefy the data table isn't going to substantially change the top candidate ASVs. However, this comes with the caveat that _many more_ ASVs are considered as contributing to some fraction of variation in the unrarefied setting, and this may be because of differences in sequencing depth. Much like distance estimates needing some type of normalization to account for differences in abundances due to sampling/sequencing depth (we rarefy to address this, for instance), it's possible that the supervised learning estimates are more variable when per-sample sequencing depths aren't accounted for.
-
-We plotted the cummulative sum of the feature importance (the relative change in model accuracy when it is removed from the classifier training set) in [this plot](https://github.com/devonorourke/mysosoup/blob/master/figures/feature_importance_Rarefied.vs.Nonrarefied.png) and were struck by how many more features are required to account for the top 90% model accuracy (red dotted line) in the unrarefied dataset for the **Month** and **SiteMonth** variables.
-
-![SL_rare_nonrare_comp](https://github.com/devonorourke/mysosoup/blob/master/figures/feature_importance_Rarefied.vs.Nonrarefied.png)
-
-We observed that rarefying data reduces the number of ASVs that contribute to the majority of model accuracy, thus, our analyses that went into plotting how these ASVs changed over Month or Site were selected from the rarefied supervised learning feature importance tables.
-
-# Common ASVs
-We examined what ASVs were identified in a high proportion of samples using the QIIME 2 [core-features](https://docs.qiime2.org/2019.4/plugins/available/feature-table/core-features/) plugin.
-
-```
-qiime feature-table core-features \
---i-table /mnt/lustre/macmaneslab/devon/guano/NAU/Mangan/qiime/reads/Mangan.wNTCasvs-filt.rarefied-table_noNegSamps_noSingleASVs.qza \
---p-min-fraction 0.1 \
---p-steps 10 \
---o-visualization corefeatures.wNTCasvs.noNegs.noSingleASVs.qzv
-```
-
-These data are available in the [corefeatures.wNTCasvs.noNegs.noSingleASVs.qzv](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qzv/core_features/corefeatures.wNTCasvs.noNegs.noSingleASVs.qzv) visualization file. We used the [core_features.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/core_features.R) script to process these data and retained summaries of the information at [this directory](https://github.com/devonorourke/mysosoup/tree/master/data/text_tables/core_features).
+The six .tsv files exported to the three possible `"$METACOLUMN"_Predictions` and `"$METACOLUMN"_featureImportance` folters are are available at [the MachineLearn directory](https://github.com/devonorourke/mysosoup/tree/master/data/MachineLearn) of this repository. These data were used to generate the five panels in Figure 4:
+- The three `*_importance.tsv` files were combined with metadata and read abundance data to create panels A and B in Figure 4 using the R script, [make_FeatureImportance_Heatmaps.R](https://raw.githubusercontent.com/devonorourke/mysosoup/master/scripts/r_scripts/make_FeatureImportance_Heatmaps.R).
+- The three `*_predictions.tsv` files served as inputs to generating the heatmap plots shown in panels C-E of Figure 4 using the R script [make_Prediction_Heatmaps.R](https://raw.githubusercontent.com/devonorourke/mysosoup/master/scripts/r_scripts/make_Prediction_Heatmaps.R).
