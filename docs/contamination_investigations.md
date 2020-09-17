@@ -287,4 +287,4 @@ If the negative control samples were contaminated by liquid transfer from guano 
 We therefore find no compelling reason to remove the ASVs present in both guano and negative control samples.
 
 # Next steps
-Diversity estimates and machine learning classification were carried out as described in the [diversity_workflow.md](https://github.com/devonorourke/mysosoup/blob/master/docs/diversity_workflow.md) document.
+Diversity estimates, core features, and supervised learning analyses were carried out as described in the [diversity_workflow.md](https://github.com/devonorourke/mysosoup/blob/master/docs/diversity_workflow.md) document.
