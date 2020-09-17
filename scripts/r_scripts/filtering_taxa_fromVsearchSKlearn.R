@@ -3,11 +3,11 @@ library(tidyverse)
 ################################################################################
 ## step 1 - Import all VSEARCH classified clustered seqs and filter candidate features
 ################################################################################
-## starting with 2,607 sequence clusters (98.5% identity from denoised ASVs)
+## starting with 1,936 sequence clusters (98.5% identity from denoised ASVs)
 
 ## import vsearch alignments that required 100% identity across >= 94% query coverage
 ## LCA process applied if sequence cluster met criteria threshold
-vs_raw <- read_delim(file="/scratch/dro49/qiimetmp/mysotmp/tmpdir_VsearchOnly_p100c94/taxonomy.tsv",
+vs_raw <- read_delim(file="https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/taxonomy/vsearchOnly_p100_c94_taxonomy.tsv",
                      delim = "\t", col_names = TRUE)
 
 ## remove 'Ambiguous taxa' from strings
@@ -16,7 +16,7 @@ vs_raw$Taxon <- gsub("Ambiguous_taxa", "", vs_raw$Taxon)
 ## remove sequences without any assignment
 vs_filt <- vs_raw %>% 
   filter(Taxon != "Unassigned")
-  ## 762 remaining seqs
+  ## 556 remaining seqs
 
 ## split 'Taxon' field into kingdom-->species levels
 vs_filt <- vs_filt %>% 
@@ -26,15 +26,15 @@ vs_filt <- vs_filt %>%
 ## retain only sequences in phylum Arthropoda
 vs_filt <- vs_filt %>% 
   filter(Phylum=="Arthropoda")
-  ## 754 seqs remain
+  ## 550 seqs remain
 
 ## retain only sequences with at least Family-rank information
 vs_filt <- vs_filt %>% 
   mutate_all(na_if,"") %>% 
   filter(!is.na(Order)) %>% 
   filter(!is.na(Family))
-  ## 753 seqs remain
-  ## These 753 seqs represent our VSEARCH candidates
+  ## 549 seqs remain
+  ## These 549 seqs represent our VSEARCH candidates
 
 ## add classifier label
 vs_filt$Classifier <- "VSEARCH"
@@ -42,7 +42,7 @@ vs_filt$Classifier <- "VSEARCH"
 ## create list of FeatureIDs to filter from qiime .qza taxonomy artifact
 vslist <- as.data.frame(vs_filt$`Feature ID`)
 colnames(vslist) <- 'Feature ID'
-write.csv(vslist, file="/scratch/dro49/qiimetmp/mysotmp/filtd_taxlist_vsearch.txt",
+write.csv(vslist, file="~/github/mysosoup/data/taxonomy/filtd_taxlist_vsearch.txt",
           row.names = FALSE, quote = FALSE)
 
 ## cleanup
@@ -55,20 +55,20 @@ rm(vs_raw, vslist)
 ################################################################################
 
 ## import sklearn classified seq features
-sk_raw <- read_delim(file="/scratch/dro49/qiimetmp/mysotmp/tmpdir_sklearnOnly/taxonomy.tsv",
+sk_raw <- read_delim(file="~/github/mysosoup/data/taxonomy/sklearn_taxonomy.tsv",
                      delim = "\t", col_names = TRUE)
 
 ## exclude vsearch features retained above from sklearn
 sk_filt <- sk_raw %>% 
   filter(!`Feature ID` %in% vs_filt$`Feature ID`)
-  ## 1854 features remain
+  ## 1387 features remain
 
 ## filter using same approach as in VSEARCH above
 sk_filt$Taxon <- gsub("Ambiguous_taxa", "", sk_filt$Taxon)
 
 sk_filt <- sk_filt %>% 
   filter(Taxon != "Unassigned")
-## 1707 features remain
+## 1264 features remain
 
 sk_filt <- sk_filt %>% 
   separate(Taxon,
@@ -76,13 +76,13 @@ sk_filt <- sk_filt %>%
 
 sk_filt <- sk_filt %>% 
   filter(Phylum=="Arthropoda")
-  ## 1382 seqs remain
+  ## 1021 seqs remain
 
 sk_filt <- sk_filt %>% 
   mutate_all(na_if,"") %>% 
   filter(!is.na(Order)) %>% 
   filter(!is.na(Family))
-  ## 771 features remain
+  ## 575 features remain
 
 ## add classifier label
 sk_filt$Classifier <- "sklearn"
@@ -90,7 +90,7 @@ sk_filt$Classifier <- "sklearn"
 ## create list of FeatureIDs to filter from qiime .qza taxonomy artifact
 sklist <- as.data.frame(sk_filt$`Feature ID`)
 colnames(sklist) <- 'Feature ID'
-write.csv(sklist, file="/scratch/dro49/qiimetmp/mysotmp/filtd_taxlist_sklearn.txt",
+write.csv(sklist, file="~/github/mysosoup/data/taxonomy/filtd_taxlist_sklearn.txt",
           row.names = FALSE, quote = FALSE)
 
 ## cleanup
@@ -110,5 +110,5 @@ uniquerows <- length(unique(all_dat$`Feature ID`))
 finalrows == uniquerows  ## all good!
 
 ## write to disk
-write.csv(all_dat, file="/scratch/dro49/qiimetmp/mysotmp/filtd_tax_dataframe_ALL.csv",
+write.csv(all_dat, file="~/github/mysosoup/data/taxonomy/filtd_tax_dataframe_ALL.csv",
           row.names = FALSE, quote = FALSE)
