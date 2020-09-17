@@ -1,6 +1,6 @@
 # Background
 
-Prior to beginning diversity analyses, we completed the following steps:
+Prior to beginning diversity analyses, we completed the following quality control steps:
 
 - Raw sequence reads were trimmed with cutadapt and denoised with DADA2 into representative sequences resulting in the [Mangan.raw_linked_required.repSeqs.qza](https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/seqs/Mangan.raw_linked_required.repSeqs.qza)) object, as described in the [sequence_processing.md](https://github.com/devonorourke/mysosoup/blob/master/docs/sequence_processing.md) workflow.    
 
@@ -8,143 +8,22 @@ Prior to beginning diversity analyses, we completed the following steps:
 
 - The non-bat representative sequences were investigated for contamination as described in the [contamination_investigations.md](https://github.com/devonorourke/mysosoup/blob/master/docs/contamination_investigations.md) document - we failed to detect extensive contamination either during DNA extraction or PCR amplification. See also the [sequence_filtering.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/sequence_filtering.R) script related to this contamination investigation.  
 
-# Sequence processing prior to diversity estimates
-We begin this diversity workflow using the original dereplicated representative sequences. We next perform the following actions prior to applying diversity measures:  
+Given this information, we proceeded to filter the original/raw DADA2-processed feature table and sequence .qza artifacts as described in the [classify_sequences.md](https://github.com/devonorourke/mysosoup/blob/master/docs/classify_sequences.md#sequence-processing-of-non-bat-dna-prior-to-diversity-workflow) document:
+- removed all batch and negative control samples, 
+- clustered at 98.5%
+- classified clustered representative sequences using a hybrid approach, retaining taxonomies prioritized by (1) exact alignments in VSEARCH, then (2) naive Bayes 
+- filtered classified samples to retain only those samples assigned to the Arthropoda phylum, with at least family-level taxonomic names 
+- rarefied samples using a depth of 10,000 sequences per sample. 
 
-1. Filter samples  
-All pooled samples and negative control samples are discarded, as well as any sequence feature associated exclusively with those controls.  
-
-> `$META` represents the full path to the QIIME-formatted [qiime_meta.tsv](https://github.com/devonorourke/mysosoup/blob/master/data/metadata/qiime_meta.tsv) file
-```
-## filter table to retain only guano sampled as single pellets
-qiime feature-table filter-samples \
-  --i-table Mangan.raw_linked_required.table.qza \
-  --m-metadata-file qiime_meta.tsv \
-  --p-where "SampleType='sample' AND BatchType='single'" \
-  --p-min-features 1 \
-  --o-filtered-table Mangan.dada2_singles_table.qza
-
-## drop any ASVs exclusive to negative controls
-qiime feature-table filter-seqs \
-  --i-data Mangan.raw_linked_required.repSeqs.qza \
-  --i-table Mangan.dada2_singles_table.qza \
-  --o-filtered-data Mangan.dada2_singles_seqs.qza
-```
-
-2. Cluster samples  
-
-Remaining representative sequences are clustered at 98.5% identity using `qiime vsearch cluster-features-de-novo`  
-```
-qiime vsearch cluster-features-de-novo \
-  --i-table Mangan.dada2_singles_table.qza \
-  --i-sequences Mangan.dada2_singles_seqs.qza \
-  --p-perc-identity 0.985 \
-  --o-clustered-table Mangan.clust_p985_table.qza \
-  --o-clustered-sequences mv 
-```
-
-> Dropping the negative control and pooled samples, coupled with clustering reduces the number of unique sequence variants to 1,936 sequence representatives. Notably, there can still be many suprious diet components we may want to discard, including host DNA and non-arthropod COI sequences. In addition, the classification accuracy of some of these sequences may be insufficient for our diversity estimates, so we'll first classify all the sequences and then filter appropriately.
-
-3. Classify samples  
-
-Clustered sequences are classified using a hybrid approach: exact alignments with VSEARCH are prioritized first, and any sequences not classified with this method are passed to the naive Bayes approach with `qiime feature-classifier classify-hybrid-vsearch-sklearn`.  
-First, for VSEARCH: 
-```
-qiime feature-classifier classify-consensus-vsearch --p-threads 28 \
---i-query Mangan.clust_p985_seqs.qza \
---i-reference-reads bigCOI.derep.seqs.qza \
---i-reference-taxonomy bigCOI.derep.tax.qza \
---p-perc-identity 1.0 --p-query-cov 0.94 \
---o-classification Mangan.clust_p985_taxa_VsearchOnly_p100_c94.qza
-
-qiime tools export --input-path Mangan.clust_p985_taxa_VsearchOnly_p100_c94.qza --output-path tmpdir_VsearchOnly_p100c94
-```
-
-Next, for naive BAYES. For simplicity sake, I reclassified all sequences, but filtered the exact VSEARCH classifications in a subsequent R script.
-```
-qiime feature-classifier classify-sklearn --p-threads 20 --p-no-prefilter \
---i-reads Mangan.clust_p985_seqs.qza \
---i-classifier nbClassifer_bigDB_2020-2.qza \
---o-classification Mangan.clust_p985_taxa_sklearnOnly.qza
-
-qiime tools export --input-path Mangan.clust_p985_taxa_sklearnOnly.qza --output-path tmpdir_sklearnOnly
-```
-
-4. Filter classified samples  
-
-The outputs of these two `tmpdir_*` directories contain the text versions of the taxonomy labels for each OTU. They are used in an R script, [filtering_taxa_fromVsearchSKlearn.R](https://raw.githubusercontent.com/devonorourke/mysosoup/master/scripts/r_scripts/filtering_taxa_fromVsearchSKlearn.R), so that we obtain a final list of feature IDs to retain in a taxonomy-based filter that ensures:
-- we retain all positive VSEARCH matches (for 100% identity and at least 94% query coverage) that are arthropods with at least family-rank information
-- we retain the remaining positive matches for sklearn that are arthropods with at least family-rank information
-
-This R script produces a pair of (text file) inputs listing the `Feature ID` values needed to filter the VSEARCH and naive Bayes classifier .qza files so that we retain only these particular features we want (that is, those Feature IDs initially and preferentially from VSEARCH, and then from naive Bayes, given the minimum amount of taxonomic information). These files are those used with the `--m-ids-to-keep-file` parameter in the commands below:
-
-- Filter the VSEARCH file to retain just the Feature IDs required:
-```
-qiime rescript filter-taxa \
-  --i-taxonomy Mangan.clust_p985_taxa_VsearchOnly_p100_c94.qza \
-  --m-ids-to-keep-file filtd_taxlist_vsearch.txt \
-  --o-filtered-taxonomy Mangan.clust_p985_taxa_Filtd_vsearch.qza
-```
-
-- Filter the naive Bayes classifier samples to retain just the Feature IDs required:
-```
-qiime rescript filter-taxa \
-  --i-taxonomy Mangan.clust_p985_taxa_sklearnOnly.qza \
-  --m-ids-to-keep-file filtd_taxlist_sklearn.txt \
-  --o-filtered-taxonomy Mangan.clust_p985_taxa_Filtd_sklearn.qza
-```
-
-- Combine the two taxonomy files and used the COMBINED lists of vsearch/sklearn-filtered data to filter the clustered seqs object
-```
-qiime feature-table merge-taxa \
-  --i-data Mangan.clust_p985_taxa_Filtd_vsearch.qza Mangan.clust_p985_taxa_Filtd_sklearn.qza \
-  --o-merged-data Mangan.clust_p985_taxa_Filtd_All.qza
-
-cut -f 1 -d ',' filtd_tax_dataframe_ALL.csv > filtd_taxlist_all.txt
-
-qiime feature-table filter-seqs \
-  --i-data Mangan.clust_p985_seqs.qza \
-  --o-filtered-data Mangan.clust_p985_seqs_Filtd.qza \
-  --m-metadata-file filtd_taxlist_all.txt
-```
-
-- Use the COMBINED lists of vsearch/sklearn-filtered data to filter the clustered table object
-```
-qiime feature-table filter-features \
-  --i-table Mangan.clust_p985_table.qza \
-  --o-filtered-table Mangan.clust_p985_table_Filtd.qza \
-  --m-metadata-file filtd_taxlist_all.txt
-```
-
-5. Rarefy samples  
-
-We first evaluate what the appropriate sampling depth would be by summarizing the feature table to estimate bounds of sampling depth options, then generate a rearefaction curve around that sampling depth boundary: 
-```
-qiime feature-table summarize --i-table Mangan.clust_p985_table_Filtd.qza --o-visualization Mangan.clust_p985_tableSummary.qzv
-
-qiime diversity alpha-rarefaction \
-  --i-table Mangan.clust_p985_table_Filtd.qza \
-  --p-min-depth 2000 --p-max-depth 12000 \
-  --p-metrics shannon observed_otus \
-  --o-visualization Mangan.clust_p985_rarefactionCurve.qzv
-```
-
-We ultimately decided on a rarefying depth of 10,000 sequences per sample:
-```
-qiime feature-table rarefy \
-  --i-table Mangan.clust_p985_table_Filtd.qza \
-  --p-sampling-depth 10000 \
-  --o-rarefied-table Mangan.clust_p985_table_Rarefyd.qza
-```
-
-The rarefied OTU table, [Mangan.clust_p985_table_Rarefyd.qza](https://github.com/devonorourke/mysosoup/raw/master/data/qiime_qza/Mangan.clust_p985_table_Rarefyd.qza), is the file that is used for alpha and beta diversity estimates described below. 
+## Inputs for this workflow
+- The rarefied table of clustered sequences, [Mangan.clust_p985_table_Rarefyd.qza](https://github.com/devonorourke/mysosoup/raw/master/data/qiime_qza/Mangan.clust_p985_table_Rarefyd.qza), is the file that is used for alpha and beta diversity estimates
+- The non-rarefied table of clustered sequences, [Mangan.clust_p985_seqs_Filtd.qza](https://github.com/devonorourke/mysosoup/raw/master/data/qiime_qza/Mangan.clust_p985_seqs_Filtd.qza) is used for the `core-features` and `q2-classify-samples` analyses.
 
 
 # Diversity estimates 
 
 ## Alpha diversity
 Observed richness and Shannon's entropy were for each guano sample and calculated in Vegan using a custom R script, [alpha_analyses_singleOnly.R](https://raw.githubusercontent.com/devonorourke/mysosoup/master/scripts/r_scripts/alpha_analyses_singleOnly.R). This script generated the diversity estimates shown in Figure 2, as well as the supplementary table[all_alpha_pairwise_Wilcoxon.csv](https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/text_tables/wilcoxon_pairwise/all_alpha_pairwise_Wilcoxon.csv), the resport of a Wilcoxon rank sum test comparing pairwise differences in each alpha diversity metric for all possible Site + Month combinations.
-
 
 ## Beta diversity
 While the alpha diversity estimates required only the rarefied OTU table, the beta diversity tests incorporated some phylogenetic-weighted distance measures that required providing a rooted tree. We built this in QIIME as follows prior to running the beta diversity tests:
