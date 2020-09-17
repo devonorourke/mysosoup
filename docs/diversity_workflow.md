@@ -60,7 +60,7 @@ While the alpha and beta diversity tests provide some sense of how the community
 Getting the core features in a dataset is simple with QIIME2's `core-features` function. However, becuase we were using a clustered dataset that was not rarefied, we first discarded any samples with less than 10,000 samples:
 ```
 qiime feature-table filter-samples \
-  --i-table /scratch/dro49/qiimetmp/mysotmp/Mangan.clust_p985_table_Filtd.qza \
+  --i-table Mangan.clust_p985_table_Filtd.qza \
   --p-min-frequency 10000 \
   --o-filtered-table Mangan.clust_p985_table_Filtd_min10k.qza
 ```
