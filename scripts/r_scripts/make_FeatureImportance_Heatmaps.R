@@ -25,12 +25,9 @@ reformaterFunc <- function(featPath, Labeler){
 }
 
 ## paths to data to import
-Month_featPath='/scratch/dro49/qiimetmp/mysotmp/machineLearn_alt/Month_featureImportance/importance.tsv'
-Site_featPath='/scratch/dro49/qiimetmp/mysotmp/machineLearn_alt/Site_featureImportance/importance.tsv'
-SiteMonth_featPath='/scratch/dro49/qiimetmp/mysotmp/machineLearn_alt/SiteMonth_featureImportance/importance.tsv'
-#Month_featPath="https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/MachineLearn/month_importance.tsv"
-#Site_featPath="https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/MachineLearn/site_importance.tsv"
-#SiteMonth_featPath="https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/MachineLearn/sitemonth_importance.tsv"
+Month_featPath="https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/MachineLearn/month_importance.tsv"
+Site_featPath="https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/MachineLearn/site_importance.tsv"
+SiteMonth_featPath="https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/MachineLearn/sitemonth_importance.tsv"
 
 ## import data with 'reformaterFunc' function
 Month_featImp_df <- reformaterFunc(Month_featPath, "Month")
@@ -48,7 +45,7 @@ all_featImp_df <- rbind(Month_featImp_df, Site_featImp_df, SiteMonth_featImp_df)
 
 ## generate color palette to use for arthropod orders:
 #original design modified from:  scico(7, palette = 'batlow')
-order8pal <- c("#001959", "#F9CCF9", "tan4", "#3E6C54", "#FDAC9F", "#808133", "#D49347", "turquoise4")
+#order8pal <- c("#001959", "#F9CCF9", "tan4", "#3E6C54", "#FDAC9F", "#808133", "#D49347", "turquoise4")
 ## becuase we'll order the colors alphabetically (by arthropod order), these should be:
 ## "#001959"  == Araneae
 ## "#F9CCF9" == Coleoptera
@@ -76,22 +73,22 @@ all_featImp_df <- merge(all_featImp_df, PlotLabel_df, by=c('OTUid', 'Species'))
 ## regroup the PlotName positions by arthropod Order, maintaining initial desecending value ordering
 all_featImp_df$PlotName <- fct_reorder(all_featImp_df$PlotName, all_featImp_df$Order, max)
 
-## plot
-ggplot(all_featImp_df, 
-       aes(x = PlotName, 
-           y = GroupLabel, 
-           fill=Value)) +
-  geom_tile() +
-  coord_equal() +
-  scale_fill_scico(palette = "lajolla", limits = c(0, 0.15), breaks=c(0, 0.05, 0.10, 0.15)) +
-  labs(x="", y="", fill="Relative importance") +
-  theme(panel.background = element_blank(),
-        legend.position="top",
-        axis.text.x = element_text(angle=90, hjust=1, size=8))
-
-## export this plot, but modify x axis labels to color by 8 palette scheme proposed above
-ggsave("FigureX_RelativeFeatureImportance_CoreFeatures.png", height=10, width = 35, units="cm")
-ggsave("FigureX_RelativeFeatureImportance_CoreFeatures.pdf", height=10, width = 35, units="cm")
+# ## plot
+# ggplot(all_featImp_df, 
+#        aes(x = PlotName, 
+#            y = GroupLabel, 
+#            fill=Value)) +
+#   geom_tile() +
+#   coord_equal() +
+#   scale_fill_scico(palette = "lajolla", limits = c(0, 0.15), breaks=c(0, 0.05, 0.10, 0.15)) +
+#   labs(x="", y="", fill="Relative importance") +
+#   theme(panel.background = element_blank(),
+#         legend.position="top",
+#         axis.text.x = element_text(angle=90, hjust=1, size=8))
+# 
+# ## export this plot, but modify x axis labels to color by 8 palette scheme proposed above
+# ggsave("FigureX_RelativeFeatureImportance_CoreFeatures.png", height=10, width = 35, units="cm")
+# ggsave("FigureX_RelativeFeatureImportance_CoreFeatures.pdf", height=10, width = 35, units="cm")
 
 
 ## could also split up plots by faceting using taxonomic order:
@@ -103,12 +100,14 @@ p1 <- ggplot(all_featImp_df,
   geom_tile() +
   #coord_equal() +
   facet_grid(~Order, scales = "free_x", space = "free_x") +
-  scale_fill_scico(palette = "lajolla", limits = c(0, 0.15), breaks=c(0, 0.05, 0.10, 0.15)) +
+  #scale_fill_scico(palette = "broc", direction = 1, begin = 0.49,
+  scale_fill_scico(palette = "cork", direction = 1, begin = 0.51,
+                   limits = c(0, 0.15), breaks=c(0, 0.05, 0.10, 0.15)) +
   labs(x="", y="", fill="Relative importance") +
-  theme(panel.background = element_blank(),
-        legend.position="bottom",
+  theme(legend.position="bottom",
+        panel.background = element_blank(),
         axis.text.x = element_text(angle=90, hjust=1, size=8),
-        #strip.text = element_text(angle=90),
+        strip.text = element_blank(),
         panel.spacing = unit(1, "lines"))
 
 ################################################################################
@@ -116,7 +115,13 @@ p1 <- ggplot(all_featImp_df,
 ################################################################################
 
 ## add in read abundance info:
-coretable <- read_qza('/scratch/dro49/qiimetmp/mysotmp/machineLearn_alt/Mangan.clust_p985_table_Filtd_min10k.qza')
+
+## download from github:
+#download.file(url = 'https://github.com/devonorourke/mysosoup/raw/master/data/qiime_qza/Mangan.clust_p985_table_Filtd_min10k.qza')
+#coretable <- read_qza('Mangan.clust_p985_table_Filtd_min10k.qza')
+
+## or run from local:
+coretable <- read_qza('~/github/mysosoup/data/qiime_qza/Mangan.clust_p985_table_Filtd_min10k.qza')
 coredata <- as.data.frame(coretable$data) %>% 
   mutate(OTUid = row.names(.)) %>% 
   pivot_longer(-OTUid, names_to = "SampleID", values_to = "Reads") %>% 
@@ -166,13 +171,13 @@ p2 <- ggplot(readdata,
   theme(legend.position = "top",
         panel.background = element_blank(),
         axis.text.x = element_blank(),
-        strip.text = element_blank(),
+        #strip.text = element_blank(),
         panel.spacing = unit(1, "lines"))
 
 ## paste together:
-ggarrange(p2, p1, nrow = 2, align="v", heights = c(0.8, 1), labels=c("A", "B"))
+ggarrange(p2, p1, nrow = 2, align="v", heights = c(0.6, 1), labels=c("A", "B"))
 
-ggsave("FigureX_RelativeFeatureImportance_CoreFeatures_wAbundances.png", height=25, width = 35, units="cm")
-ggsave("FigureX_RelativeFeatureImportance_CoreFeatures_wAbundances.pdf", height=25, width = 35, units="cm")
+ggsave("~/github/mysosoup/figures/FigureX_RelativeFeatureImportance_CoreFeatures_wAbundances.png", height=20, width = 35, units="cm")
+ggsave("~/github/mysosoup/figures/FigureX_RelativeFeatureImportance_CoreFeatures_wAbundances.pdf", height=29, width = 35, units="cm")
 
 ## modify .pdf to include silhouettes for publication
