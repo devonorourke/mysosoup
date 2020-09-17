@@ -8,7 +8,7 @@ We begin by aligning all denoised ASVs against the host database containing a se
 Samples that are at least 85% identical across at least 80% of the alignment subject are retained for analysis. Notably, these are _very_ liberal alignment parameters and will almost always include non-host sequences; however because the reference database contains only host-sequences, the classification output will suggest these are host samples. They aren't necessarily! However, we are casting as wide a net initially to retain any _possible_ ASVs that even resemble our host sequences, then follow up with more specific parameters (see below) to determine whether these sequences are truly host associated or not.
 
 Representative ASVs from the `Mangan.samp-filt.repSeqs.qza` file were queried for alignment to host reference sequences:
-> - `$DB_TAX` available at https://osf.io/aq6ex/host_tax.qza/download
+- `$DB_TAX` available at https://osf.io/aq6ex/host_tax.qza/download
 - `$DB_SEQ` available at https://osf.io/p7sze/host_seqs.qza/download
 - `$REPSEQ` available at https://github.com/devonorourke/mysosoup/blob/master/data/qiime_qza/seqs/Mangan.raw_linked_required.repSeqs.qza
 
