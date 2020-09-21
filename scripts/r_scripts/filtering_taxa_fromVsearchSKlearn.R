@@ -20,7 +20,7 @@ vs_filt <- vs_raw %>%
 
 ## split 'Taxon' field into kingdom-->species levels
 vs_filt <- vs_filt %>% 
-  separate(Taxon,
+  separate(Taxon, sep=';',
            into=c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species"))
 
 ## retain only sequences in phylum Arthropoda
@@ -71,7 +71,7 @@ sk_filt <- sk_filt %>%
 ## 1264 features remain
 
 sk_filt <- sk_filt %>% 
-  separate(Taxon,
+  separate(Taxon,sep=';',
            into=c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species"))
 
 sk_filt <- sk_filt %>% 
