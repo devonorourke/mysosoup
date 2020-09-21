@@ -121,6 +121,6 @@ The six .tsv files exported to the three possible `"$METACOLUMN"_Predictions` an
 
 
 # OTU table summary
-An R script, [seqVariant_summaries.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/seqVariant_summaries.R), was used to produce the data table S1 used in the manuscript, . This .csv summarizes on a per sequence feature (per OTU) basis:
+An R script, [seqVariant_summaries.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/seqVariant_summaries.R), was used to produce the data table S1 used in the manuscript, [perSample_Detections_SeqAbundance_summary.csv](https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/taxonomy/perSample_Detections_SeqAbundance_summary.csv). This .csv summarizes on a per sequence feature (per OTU) basis:
 1. The proportion samples an OTU was detected across the entire dataset 
 2. The fraction of reads an OTU generated (among all samples) relative to the entire dataset).
