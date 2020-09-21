@@ -1,5 +1,18 @@
 library(tidyverse)
 library(qiime2R)
+library(scales)
+
+## function for plot theme:
+theme_devon <- function () {
+  theme_bw(base_size=12, base_family="Avenir") %+replace%
+    theme(
+      panel.background  = element_blank(),
+      plot.background = element_rect(fill="transparent", colour=NA),
+      legend.background = element_rect(fill="transparent", colour=NA),
+      legend.key = element_rect(fill="transparent", colour=NA)
+    )
+}
+
 
 ################################################################################
 ## 1a) import read counts and taxa information
@@ -105,14 +118,67 @@ coredata %>%
   
 
 ################################################################################
-## 3) core feature summaries
+## 3) alldata vs. core feature summaries
 ################################################################################
 
-## create a .csv file summarizing the taxonomic information available for each of the core sequence features
-taxa %>% 
+##  First, create a simple summary file showing the featureIDs taxonomic information
+### create a .csv file summarizing the taxonomic information available for each of the core sequence features
+coreTaxaSumry <- taxa %>% 
     filter(FeatureID %in% coreFeat_10) %>% 
-    select(-Kingdom, -Phylum, -Confidence, -Consensus)
-    
-  
+    select(-Kingdom, -Phylum, -Confidence, -Consensus) %>% 
+    arrange(Class, Order, Family, Genus, Species)
+write_csv(coreTaxaSumry, path="~/github/mysosoup/data/taxonomy/coreTaxa_summary.csv")    
 
+### repeat for all data, not just core OTUs 
+allTaxaSumry <- taxa %>% 
+  select(-Kingdom, -Phylum, -Confidence, -Consensus) %>% 
+  arrange(Class, Order, Family, Genus, Species)
+write_csv(allTaxaSumry, path="~/github/mysosoup/data/taxonomy/allTaxa_summary.csv")
 
+## Second, for each OTU/FeatureID, calculate:
+  ### (A) the fraction of samples that OTU was detected
+  ### (B) the proportion of reads that OTU contained among all available reads in these +1000 OTUs
+## Need to merge data to get this to work first:
+coredataNtaxa <- merge(coredata, taxa, by="FeatureID", all.x=TRUE)
+  ## note we lose 36 OTUs between the coredata and the full taxa... 
+  ## this is because we filtered out a few samples with less than 10k reads, and those OTUs were derived from those samples
+  ## these samples aren't important to our analyses because they are only present in a handful of low-sequenced samples
+## Summarize total number of reads in dataset, and total number of samples in dataset 
+sumAllReads <- sum(coredataNtaxa$Reads)
+nAllSamples <- n_distinct(coredataNtaxa$SampleID)
+
+perSampSumry <- coredataNtaxa %>% 
+  group_by(FeatureID, Class, Order, Family, Genus, Species, Classifier) %>% 
+  summarize(nDetections = n(),
+            nReads = sum(Reads)) %>% 
+  mutate(pDetections = nDetections / nAllSamples,
+         pReads = nReads / sumAllReads) %>% 
+  arrange(Order, -pDetections)
+write_csv(perSampSumry, path="~/github/mysosoup/data/taxonomy/perSample_Detections_SeqAbundance_summary.csv")
+
+#################################
+## unused code
+#################################
+# CoreOrder <- taxa %>% filter(FeatureID %in% coreFeat_10) %>% distinct(Order) %>% pull()
+# 
+# ggplot() +
+#   geom_point(data = perSampSumry %>% filter(!FeatureID %in% coreFeat_10), 
+#              aes(x=nDetections, y=pReads), color="gray50") +
+#   geom_point(data = perSampSumry %>% filter(FeatureID %in% coreFeat_10), 
+#              aes(x=nDetections, y=pReads, color=Order)) +
+#   scale_x_continuous(trans="log2", labels = comma) +
+#   scale_y_continuous(trans="log2", labels = comma) +
+#   theme_devon() +
+#   labs(x="fraction of samples with sequence variant detected", 
+#        y="fraction of all sequences assigned to sequence variant",
+#        color="arthropod\norder")
+# 
+# #ggplot(data=perSampSumry %>% filter(FeatureID %in% coreFeat_10), 
+# ggplot(data=perSampSumry, 
+#        aes(x=Order, y=pDetections)) +
+#   geom_jitter(width = 0.2) +
+#   labs(y="fraction of samples detected", x="") +
+#   scale_y_continuous(trans = "log2", breaks = c(0.01, 0.02, 0.04, 0.08, 0.16, 0.32, 0.64)) +
+#   theme_devon() +
+#   theme(axis.text.x = element_text(angle=22.5, hjust=1))
+# #facet_grid(~ Order, space = "free_x", shrink = TRUE, scales = "free_x")
