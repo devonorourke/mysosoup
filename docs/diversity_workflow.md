@@ -118,3 +118,9 @@ qiime tools export --input-path ./MLearn_ncv_"$METACOLUMN"/feature_importance.qz
 The six .tsv files exported to the three possible `"$METACOLUMN"_Predictions` and `"$METACOLUMN"_featureImportance` folters are are available at [the MachineLearn directory](https://github.com/devonorourke/mysosoup/tree/master/data/MachineLearn) of this repository. These data were used to generate the five panels in Figure 4:
 - The three `*_importance.tsv` files were combined with metadata and read abundance data to create panels A and B in Figure 4 using the R script, [make_FeatureImportance_Heatmaps.R](https://raw.githubusercontent.com/devonorourke/mysosoup/master/scripts/r_scripts/make_FeatureImportance_Heatmaps.R).
 - The three `*_predictions.tsv` files served as inputs to generating the heatmap plots shown in panels C-E of Figure 4 using the R script [make_Prediction_Heatmaps.R](https://raw.githubusercontent.com/devonorourke/mysosoup/master/scripts/r_scripts/make_Prediction_Heatmaps.R).
+
+
+# OTU table summary
+An R script, [seqVariant_summaries.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/seqVariant_summaries.R), was used to produce the data table S1 used in the manuscript, . This .csv summarizes on a per sequence feature (per OTU) basis:
+1. The proportion samples an OTU was detected across the entire dataset 
+2. The fraction of reads an OTU generated (among all samples) relative to the entire dataset).
