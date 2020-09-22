@@ -55,3 +55,37 @@ bat_sumry %>%
   filter(!is.na(Reads)) %>%
   group_by(batSpecies) %>% 
   summarise(counts = n())
+
+## How many samples contained a particular bat species, for only the single samples?
+bat_sumry %>% 
+  filter(BatchType == "single") %>% 
+  filter(SampleType == "sample") %>% 
+  filter(multihit == FALSE) %>% 
+  select(SampleID, BatchType, `Myotis lucifugus`, `Myotis sodalis`, `Nycticeius humeralis`, multihit) %>% 
+  melt(id.vars = c("SampleID", "BatchType", "multihit"),
+       variable.name = "batSpecies", 
+       value.name = "Reads") %>% 
+  filter(!is.na(Reads)) %>%
+  group_by(batSpecies) %>%
+  summarise(counts = n())
+  ## no duplicate data: 137 Indiana Bat, 5 Little Brown, 2 Evening Bat (out of 196 analyzed)
+
+## How many instances are there where a multi-species sample contains Myotis sodalis (and either MYLU or NYHU)?
+bat_sumry %>% 
+  filter(BatchType == "single") %>% 
+  filter(SampleType == "sample") %>% 
+  filter(multihit == TRUE) %>% 
+  select(SampleID, BatchType, `Myotis lucifugus`, `Myotis sodalis`, `Nycticeius humeralis`, multihit) %>% 
+  filter(!is.na(`Myotis sodalis`)) %>% 
+  nrow()
+  ## 11 instances where there is an Indiana bat sample and something else 
+
+## How many instances where multi-species doesn't include a Myotis sodalis sample?
+bat_sumry %>% 
+  filter(BatchType == "single") %>% 
+  filter(SampleType == "sample") %>% 
+  filter(multihit == TRUE) %>% 
+  select(SampleID, BatchType, `Myotis lucifugus`, `Myotis sodalis`, `Nycticeius humeralis`, multihit) %>% 
+  filter(is.na(`Myotis sodalis`)) %>% 
+  nrow()
+  ## zero!

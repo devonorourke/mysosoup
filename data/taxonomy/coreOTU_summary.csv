@@ -1,0 +1,46 @@
+Class,Order,Family,Genus,Species,nSamples
+Arachnida,Araneae,Araneidae,Eustala,NA,147
+Arachnida,Araneae,Tetragnathidae,Tetragnatha,Tetragnatha elongata,35
+Arachnida,Araneae,Araneidae,Eustala,Eustala cepina,33
+Arachnida,Araneae,Anyphaenidae,Anyphaena,Anyphaena pectorosa,27
+Arachnida,Araneae,Theridiidae,Theridion,Theridion albidum,24
+Arachnida,Araneae,Tetragnathidae,Leucauge,Leucauge venusta,22
+Arachnida,Araneae,Araneidae,Neoscona,Neoscona sp. 1GAB,21
+Insecta,Coleoptera,Ptilodactylidae,Ptilodactyla,NA,38
+Insecta,Diptera,Culicidae,NA,NA,137
+Insecta,Diptera,Limoniidae,NA,NA,134
+Insecta,Diptera,Limoniidae,Rhipidia,NA,124
+Insecta,Diptera,Culicidae,Culex,Culex erraticus,118
+Insecta,Diptera,Limoniidae,Epiphragma,Epiphragma solatrix,111
+Insecta,Diptera,Limoniidae,Erioptera,Erioptera caliptera,104
+Insecta,Diptera,Chironomidae,Chironomus,NA,96
+Insecta,Diptera,Limoniidae,Erioptera,Erioptera parva,90
+Insecta,Diptera,Chironomidae,NA,NA,80
+Insecta,Diptera,Chironomidae,Glyptotendipes,NA,73
+Insecta,Diptera,Tipulidae,Nephrotoma,Nephrotoma ferruginea,70
+Insecta,Diptera,Limoniidae,Helius,Helius flavipes,63
+Insecta,Diptera,Culicidae,Coquillettidia,Coquillettidia perturbans,51
+Insecta,Diptera,Limoniidae,Metalimnobia,Metalimnobia triocellata,51
+Insecta,Diptera,Chironomidae,Glyptotendipes,Glyptotendipes meridionalis,50
+Insecta,Diptera,Culicidae,Uranotaenia,Uranotaenia sapphirina,50
+Insecta,Diptera,Chaoboridae,Chaoborus,Chaoborus punctipennis,37
+Insecta,Diptera,Tabanidae,Tabanus,Tabanus similis,36
+Insecta,Diptera,Tabanidae,NA,NA,36
+Insecta,Diptera,Culicidae,Culex,Culex territans,34
+Insecta,Diptera,Chironomidae,Axarus,Axarus festivus,33
+Insecta,Diptera,Dolichopodidae,NA,NA,30
+Insecta,Diptera,Psychodidae,NA,NA,28
+Insecta,Diptera,Tipulidae,Nephrotoma,Nephrotoma okefenoke,26
+Insecta,Diptera,Tipulidae,Tipula,NA,22
+Insecta,Diptera,Limoniidae,Gonomyia,NA,20
+Insecta,Diptera,Limoniidae,Pseudolimnophila,Pseudolimnophila luteipennis,20
+Insecta,Ephemeroptera,Heptageniidae,Stenacron,Stenacron interpunctatum,28
+Insecta,Hemiptera,Flatidae,NA,NA,24
+Insecta,Lepidoptera,Tineidae,Acrolophus,Acrolophus mortipennella,50
+Insecta,Lepidoptera,Tortricidae,Clepsis,Clepsis peritana,29
+Insecta,Lepidoptera,Tortricidae,Choristoneura,NA,27
+Insecta,Lepidoptera,Gelechiidae,Coleotechnites,Coleotechnites florae,20
+Insecta,Lepidoptera,Oecophoridae,Inga,Inga sparsiciliella,20
+Insecta,Psocodea,Psocidae,Metylophorus,Metylophorus novaescotiae,51
+Insecta,Psocodea,Psocidae,Blaste,Blaste sp. 2KJEM,20
+Insecta,Trichoptera,Hydropsychidae,Potamyia,Potamyia flava,27

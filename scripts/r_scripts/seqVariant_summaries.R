@@ -77,7 +77,14 @@ coreFeat_noSingleton <- coredata %>%
   taxa %>% distinct(FeatureID) %>% nrow()
   ## 19 Orders, 175 Families, 1124 OTUs detected in entire dataset
 
-  ## across just those OTUs in at least 5% of samples?
+  ## in at least 2 or more samples?
+  taxa %>% filter(FeatureID %in% coreFeat_noSingleton) %>% distinct(Order) %>% nrow()
+  taxa %>% filter(FeatureID %in% coreFeat_noSingleton) %>% distinct(Order, Family) %>% nrow()
+  taxa %>% filter(FeatureID %in% coreFeat_noSingleton) %>% distinct(FeatureID) %>% nrow()
+  ## 17 Orders, 107 Families, 523 OTUs detected in at least 2 or more samples
+  
+  
+    ## across just those OTUs in at least 5% of samples?
   taxa %>% filter(FeatureID %in% coreFeat_05) %>% distinct(Order) %>% nrow()
   taxa %>% filter(FeatureID %in% coreFeat_05) %>% distinct(Order, Family) %>% nrow()
   taxa %>% filter(FeatureID %in% coreFeat_05) %>% distinct(FeatureID) %>% nrow()
@@ -121,15 +128,41 @@ coredata %>%
 ## 3) alldata vs. core feature summaries
 ################################################################################
 
+## Table 1 for paper:
+lengthSamples = n_distinct(coredataNtaxa$SampleID)
+lengthTaxa = n_distinct(coredataNtaxa$FeatureID)
+
+coreOrderSumry <- coredataNtaxa %>% 
+  filter(Order %in% coreOrder) %>%
+  group_by(Order) %>%
+  summarise(nSamples = n_distinct(SampleID),
+            nTaxa = n_distinct(FeatureID)) %>% 
+  mutate(pSamples = nSamples / lengthSamples,
+         pTaxa = (nTaxa / lengthTaxa)) %>% 
+  mutate(pTaxa = round(pTaxa, 3) * 100,
+         pSamples = round(pSamples, 3) * 100) %>% 
+  select(-nSamples, -nTaxa)
+write_csv(coreOrderSumry, path="~/github/mysosoup/data/taxonomy/coreOrderSumry.csv")  
+  
+## Table 2 for paper:
+coreOTUsumry <- coredataNtaxa %>% 
+  filter(FeatureID %in% coreFeat_10) %>% 
+  select(-Kingdom, -Phylum, -Confidence, -Consensus) %>% 
+  group_by(Class, Order, Family, Genus, Species) %>%
+  summarise(nSamples = n_distinct(SampleID)) %>% 
+  arrange(Order, -nSamples)
+write_csv(coreOTUsumry, path="~/github/mysosoup/data/taxonomy/coreOTU_summary.csv")
+
+  
+## Other exploratory data to retain:  
 ##  First, create a simple summary file showing the featureIDs taxonomic information
 ### create a .csv file summarizing the taxonomic information available for each of the core sequence features
 coreTaxaSumry <- taxa %>% 
-    filter(FeatureID %in% coreFeat_10) %>% 
-    select(-Kingdom, -Phylum, -Confidence, -Consensus) %>% 
-    arrange(Class, Order, Family, Genus, Species)
+  filter(FeatureID %in% coreFeat_10) %>% 
+  select(-Kingdom, -Phylum, -Confidence, -Consensus) %>% 
+  arrange(Class, Order, Family, Genus, Species)
 write_csv(coreTaxaSumry, path="~/github/mysosoup/data/taxonomy/coreTaxa_summary.csv")    
 
-### repeat for all data, not just core OTUs 
 allTaxaSumry <- taxa %>% 
   select(-Kingdom, -Phylum, -Confidence, -Consensus) %>% 
   arrange(Class, Order, Family, Genus, Species)
