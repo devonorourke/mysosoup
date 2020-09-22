@@ -120,7 +120,13 @@ The six .tsv files exported to the three possible `"$METACOLUMN"_Predictions` an
 - The three `*_predictions.tsv` files served as inputs to generating the heatmap plots shown in panels C-E of Figure 4 using the R script [make_Prediction_Heatmaps.R](https://raw.githubusercontent.com/devonorourke/mysosoup/master/scripts/r_scripts/make_Prediction_Heatmaps.R).
 
 
-# OTU table summary
-An R script, [seqVariant_summaries.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/seqVariant_summaries.R), was used to produce the data table S1 used in the manuscript, [perSample_Detections_SeqAbundance_summary.csv](https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/taxonomy/perSample_Detections_SeqAbundance_summary.csv). This .csv summarizes on a per sequence feature (per OTU) basis:
-1. The proportion samples an OTU was detected across the entire dataset 
-2. The fraction of reads an OTU generated (among all samples) relative to the entire dataset).
+# Diet summaries at Order and OTU-level
+An R script, [seqVariant_summaries.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/seqVariant_summaries.R), was used to produce a series of tables to understand which taxa were detected in terms of the proportion of samples and frequency of sequences associated therein. These data were analyzed broadly at the taxonomic order level, as well as the sequence-cluster (per-OTU) level. Two of these files were shared directly in the manuscript as Table 1 and Table 2:
+- Table 1: [coreOrderSumry.csv](https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/taxonomy/coreOrderSumry.csv). At the taxonomic order level, what fraction of sampels contain at least one OTU classified to a particular order, and what proportion of these OTUs classified are classified to that Order? 
+- Table 2: [coreOTU_summary.csv](https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/taxonomy/coreOTU_summary.csv). What is the taxonomic inforamtion assigned to each OTU among the 54 core features, and how many samples were they detected in?
+
+In addition, a series of other files used in data exploration were created and saved to this repo (but not explicitly documented in the manuscript). For example: 
+- the file [perSample_Detections_SeqAbundance_summary.csv](https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/taxonomy/perSample_Detections_SeqAbundance_summary.csv) summarizes on a per sequence feature (per OTU) basis:
+  - The proportion samples an OTU was detected across the entire dataset 
+  - The fraction of reads an OTU generated (among all samples) relative to the entire dataset)
+- the file [coreTaxa_summary.csv](https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/taxonomy/coreTaxa_summary.csv) provides a simple summary file showing the featureIDs associated with just those core OTUs (detected in at least 10% of samples) and their assigned taxonomies
