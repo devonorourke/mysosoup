@@ -83,8 +83,7 @@ coreFeat_noSingleton <- coredata %>%
   taxa %>% filter(FeatureID %in% coreFeat_noSingleton) %>% distinct(FeatureID) %>% nrow()
   ## 17 Orders, 107 Families, 523 OTUs detected in at least 2 or more samples
   
-  
-    ## across just those OTUs in at least 5% of samples?
+  ## across just those OTUs in at least 5% of samples?
   taxa %>% filter(FeatureID %in% coreFeat_05) %>% distinct(Order) %>% nrow()
   taxa %>% filter(FeatureID %in% coreFeat_05) %>% distinct(Order, Family) %>% nrow()
   taxa %>% filter(FeatureID %in% coreFeat_05) %>% distinct(FeatureID) %>% nrow()
@@ -95,6 +94,7 @@ coreFeat_noSingleton <- coredata %>%
   taxa %>% filter(FeatureID %in% coreFeat_10) %>% distinct(Order, Family) %>% nrow()
   taxa %>% filter(FeatureID %in% coreFeat_10) %>% distinct(FeatureID) %>% nrow()
   ## 8 Orders, 21 Families, 54 OTUs
+
 
 ## sanity check: 
   ## for those 5% and/or 10% core features, how many samples have these OTUs?
@@ -124,13 +124,20 @@ coredata %>%
   feature_taxa %>% group_by(Order) %>% tally()
   
 
+
 ################################################################################
 ## 3) alldata vs. core feature summaries
 ################################################################################
-
+## merge data for calculations
+  coredataNtaxa <- merge(coredata, taxa, by="FeatureID", all.x=TRUE)
+  ## note we lose 36 OTUs between the coredata and the full taxa... 
+  ## this is because we filtered out a few samples with less than 10k reads, and those OTUs were derived from those samples
+  ## these samples aren't important to our analyses because they are only present in a handful of low-sequenced samples
+  
 ## Table 1 for paper:
 lengthSamples = n_distinct(coredataNtaxa$SampleID)
 lengthTaxa = n_distinct(coredataNtaxa$FeatureID)
+coreOrder <- coredataNtaxa %>% filter(FeatureID %in% coreFeat_10) %>% distinct(Order) %>% pull()
 
 coreOrderSumry <- coredataNtaxa %>% 
   filter(Order %in% coreOrder) %>%
@@ -168,14 +175,6 @@ allTaxaSumry <- taxa %>%
   arrange(Class, Order, Family, Genus, Species)
 write_csv(allTaxaSumry, path="~/github/mysosoup/data/taxonomy/allTaxa_summary.csv")
 
-## Second, for each OTU/FeatureID, calculate:
-  ### (A) the fraction of samples that OTU was detected
-  ### (B) the proportion of reads that OTU contained among all available reads in these +1000 OTUs
-## Need to merge data to get this to work first:
-coredataNtaxa <- merge(coredata, taxa, by="FeatureID", all.x=TRUE)
-  ## note we lose 36 OTUs between the coredata and the full taxa... 
-  ## this is because we filtered out a few samples with less than 10k reads, and those OTUs were derived from those samples
-  ## these samples aren't important to our analyses because they are only present in a handful of low-sequenced samples
 ## Summarize total number of reads in dataset, and total number of samples in dataset 
 sumAllReads <- sum(coredataNtaxa$Reads)
 nAllSamples <- n_distinct(coredataNtaxa$SampleID)
@@ -188,6 +187,15 @@ perSampSumry <- coredataNtaxa %>%
          pReads = nReads / sumAllReads) %>% 
   arrange(Order, -pDetections)
 write_csv(perSampSumry, path="~/github/mysosoup/data/taxonomy/perSample_Detections_SeqAbundance_summary.csv")
+
+## how many OTUs are present in just a single sample?
+perSampSumry %>% 
+  filter(nDetections <= 2) %>% 
+  nrow()
+  ungroup() %>% 
+  summarise(meanReads = mean(nReads))
+
+
 
 #################################
 ## unused code

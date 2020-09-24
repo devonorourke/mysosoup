@@ -175,9 +175,55 @@ p2 <- ggplot(readdata,
         panel.spacing = unit(1, "lines"))
 
 ## paste together:
-ggarrange(p2, p1, nrow = 2, align="v", heights = c(0.6, 1), labels=c("A", "B"))
+ggarrange(p2, p1, nrow = 2, align="v", heights = c(0.6, 1), labels=c("D"))
 
 ggsave("~/github/mysosoup/figures/FigureX_RelativeFeatureImportance_CoreFeatures_wAbundances.png", height=20, width = 35, units="cm")
 ggsave("~/github/mysosoup/figures/FigureX_RelativeFeatureImportance_CoreFeatures_wAbundances.pdf", height=29, width = 35, units="cm")
 
 ## modify .pdf to include silhouettes for publication
+
+###########################3
+
+## select a subset of these OTUs to get further info about taxa:
+selectOTUs <- c('65d5fa6d7e70a2048699fd898caf1fca',
+                '954ba86f46a17e332fb8f7e065d5c196',
+                'f1c7baf332ebaa98a4381b5c5de74f64',
+                '5cac244b7bc2b762706cf1e5898f59a9',
+                '2066a2ef9e7c8048b1af441a0d9614b1',
+                'ee428b867f1c0aa2d56e7c61d744bf56',
+                '6a5c7f2f53495aec6dc9eea864305059',
+                '46f68fb7accd2cf2419ca3cd22da3646',
+                '2c11ea64de16805e25ed359888baabf6',
+                '6280a664e750c88afb6069f05b2a29a7',
+                '9c1759410185e12aa041d91bef2484d5')
+
+## subset the data from these select ones... this is kinda arbritrary 'eyeballing' ones though...
+selectOTUdat <- readdata %>% 
+  filter(OTUid %in% selectOTUs) %>% 
+  group_by(OTUid, PlotName, Site, Month) %>% 
+  summarise(nReads=sum(Reads), nDetections=n())
+
+## what about filtering using the most Importance to each group?
+## get the cummulative sums for each group (site, date, site-date), and sort out:
+tmp <- all_featImp_df %>% select(-Classifier, -Confidence, -Class, -Consensus) %>% arrange(Value)
+tmp2 <- tmp %>% filter(Value > 0.005) %>% group_by(GroupLabel) %>% select(PlotName, Value, GroupLabel) %>% pivot_wider(names_from = "GroupLabel", values_from = "Value")
+tmp3 <- tmp2 %>% select(PlotName, SiteMonth) %>% filter(!is.na(SiteMonth)) %>% arrange(-SiteMonth) %>% mutate(CumImpSiteMonth = cumsum(SiteMonth)) %>% select(-SiteMonth)
+tmp4 <- tmp2 %>% select(PlotName, Site) %>% filter(!is.na(Site)) %>% arrange(-Site) %>% mutate(CumImpSite = cumsum(Site)) %>% select(-Site)
+tmp5 <- tmp2 %>% select(PlotName, Month) %>% filter(!is.na(Month)) %>% arrange(-Month) %>% mutate(CumImpMonth = cumsum(Month)) %>% select(-Month)
+tmp6 <- merge(tmp3, tmp4, by = "PlotName", all=TRUE)
+cumImpdf <- merge(tmp6, tmp5, by = "PlotName", all=TRUE)
+write_csv(cumImpdf, path="~/github/mysosoup/data/MachineLearn/cumImportance_allGroups.csv")
+
+## now get the taxa for the OTUs that provided the top 50% importance among these 3 groups:
+top50Imp_OTUnames <- cumImpdf %>% 
+  pivot_longer(-PlotName, names_to = "Group") %>% 
+  filter(value <= 0.501) %>% 
+  pivot_wider(names_from = "Group", values_from = "value") %>% 
+  select(PlotName) %>% pull()
+
+## and reorgainze as before, but with this select list:
+top50Imp_dat <- readdata %>% 
+  filter(PlotName %in% top50Imp_OTUnames) %>% 
+  group_by(OTUid, PlotName, Site, Month) %>% 
+  summarise(nReads=sum(Reads), nDetections=n())
+
