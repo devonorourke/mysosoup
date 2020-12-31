@@ -6,10 +6,11 @@ library(ape)
 library(vegan)
 library(ggpubr)
 library(svglite)
+library(cowplot)
 
 ## function for plot theme:
 theme_devon <- function () {
-  theme_bw(base_size=12, base_family="Avenir") %+replace%
+  theme_bw(base_size=12) %+replace%
     theme(
       panel.background  = element_blank(),
       plot.background = element_rect(fill="transparent", colour=NA),
@@ -87,7 +88,7 @@ tree <- read.tree(file = "~/github/mysosoup/data/trees/Mangan.clust_p985_rooted_
 
 ## add tree info to physeq object
 phy_wTree <- merge_phyloseq (phydat, tree)
-
+rm(tree, phydat)
 
 ########################################################################
 ## Part 1a: calculate distances using one of meach metric:
@@ -150,11 +151,11 @@ bigplot_df$Measure <- factor(bigplot_df$Measure, levels=c('Dice-Sorensen', 'Bray
 bigplot_df$Axis1var <- as.character(bigplot_df$Axis1var)
 bigplot_df$Axis2var <- as.character(bigplot_df$Axis2var)
 
-## max variance for PCs 1 and 2 across all plots (to keep coordinate distances similar)
-data.frame(maxX = max(bigplot_df$Axis.1),
-           minX = min(bigplot_df$Axis.1),
-           maxY = max(bigplot_df$Axis.2),
-           minY = min(bigplot_df$Axis.2))
+# ## max variance for PCs 1 and 2 across all plots (to keep coordinate distances similar)
+# data.frame(maxX = max(bigplot_df$Axis.1),
+#            minX = min(bigplot_df$Axis.1),
+#            maxY = max(bigplot_df$Axis.2),
+#            minY = min(bigplot_df$Axis.2))
 ## use x = c(-.5, 0.4)
 ## use y = c(-.4, .5)
 
@@ -167,10 +168,12 @@ pcoaPlotfunction <- function(BetaMetric){
     geom_point() +
     scale_color_manual(values=v3pal) +
     facet_wrap(Measure ~ ., nrow=2) +
-    theme_devon() +
+    #theme_devon() +
+    theme_bw() +
     theme(strip.text = element_text(size=11)) +
-    lims(x=c(-0.5, 0.4),
-         y=c(-0.4, 0.5)) +
+#    lims(x=c(-0.5, 0.4),
+#         y=c(-0.4, 0.5)) +
+    coord_fixed() +
     labs(color="Month", shape="Site", 
          x=paste0("\nPC1:  ", pc1textval, "%\n"), 
          y=paste0("PC2:  ", pc2textval, "%\n"))
@@ -201,9 +204,19 @@ ggsave("~/github/mysosoup/figures/figure_3s_wu_pcoa.png", width = 15, height = 1
 ggsave("~/github/mysosoup/figures/figure_3s_wu_pcoa.svg", width = 15, height = 15, units = "cm")
 
 ## stitch together
-ggarrange(p_ds, p_bc, p_uu, p_wu, nrow = 2, ncol = 2, common.legend = TRUE)
+plotleg <- get_legend(p_ds + theme(legend.position = "top"))
+four_plot <- plot_grid(p_ds + theme(legend.position = "none"),
+                       p_bc + theme(legend.position = "none"),
+                       p_uu + theme(legend.position = "none"),
+                       p_wu + theme(legend.position = "none"),
+                       nrow = 2, ncol = 2,
+                       labels = c("A", "B", "C", "D"))
+plot_grid(plotleg, four_plot, 
+          nrow = 2, rel_heights = c(0.4, 3))
+
 ggsave("~/github/mysosoup/figures/figure3_betaOrd.png", width = 20, height = 20, units = "cm")
 ggsave("~/github/mysosoup/figures/figure3_betaOrd.svg", width = 20, height = 20, units = "cm")
+ggsave("~/github/mysosoup/figures/figure3_betaOrd.pdf", width = 20, height = 20, units = "cm")
 
 rm(p_ds, p_bc, p_uu, p_wu)
 
@@ -230,7 +243,7 @@ adonis_data_function <- function(distanceData, distanceMetric){
 adonis_ds <- adonis_data_function(dist_ds, "Dice-Sorensen")
 adonis_bc <- adonis_data_function(dist_bc, "Bray-Curtis")
 adonis_uu <- adonis_data_function(dist_uu, "Unifrac Unweighted")
-adonis_wu <- adonis_data_function(dist_uu, "Unifrac Weighted")
+adonis_wu <- adonis_data_function(dist_wu, "Unifrac Weighted")
 
 adonis_all <- rbind(adonis_ds, adonis_bc, adonis_uu, adonis_wu)
 adonis_all <- adonis_all[,c(8,1,2,3,4,5,6,7)]
