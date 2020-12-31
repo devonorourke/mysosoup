@@ -18,11 +18,6 @@ theme_devon <- function () {
 ## 1a) import read counts and taxa information
 ## 1b) import core-features featureIDs (see: https://github.com/devonorourke/mysosoup/blob/master/docs/diversity_workflow.md)
 ################################################################################
-## add taxonomy information
-## amend import of taxa info
-taxa <- read_csv(file="https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/taxonomy/filtd_tax_dataframe_ALL.csv")
-colnames(taxa)[1] <- "FeatureID"
-
 ## add read count data
 ## download from github:
 #download.file(url = 'https://github.com/devonorourke/mysosoup/raw/master/data/qiime_qza/Mangan.clust_p985_table_Filtd_min10k.qza')
@@ -35,6 +30,13 @@ coredata <- as.data.frame(coretable$data) %>%
   filter(Reads > 0)
 colnames(coredata)[1] <- "FeatureID"
 rm(coretable)
+
+## add taxonomy information
+## amend import of taxa info
+taxa <- read_csv(file="https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/taxonomy/filtd_tax_dataframe_ALL.csv")
+colnames(taxa)[1] <- "FeatureID"
+## filter out any taxa not present in coretable OTU/FeatureIDs...
+taxa <- taxa %>% filter(FeatureID %in% coredata$FeatureID)
 
 ## import core featureIDs
 corefeatIDs <- read_csv(file="https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/text_tables/core_features/featureIDs_core10.txt")
@@ -49,57 +51,57 @@ feature_taxa <- taxa %>% filter(FeatureID %in% corefeatIDs$FeatureID)
 ################################################################################
 ## how many unique samples do we have?
 coredata %>% distinct(SampleID) %>% nrow()
-## 196 samples
+  ## 189 samples (as expected)
 
 ## find FeatureIDs in at least...
 ## 5% of samples (>= 10 samples)
 coreFeat_05 <- coredata %>% 
   group_by(FeatureID) %>% tally() %>%
   filter(n >= 10) %>% select(FeatureID) %>% pull()
-  ## 120 features in 5% of samples
+## 117 features in 5% of samples
 
 ## 10% of samples (>= 20 samples)
 coreFeat_10 <- coredata %>% 
   group_by(FeatureID) %>% tally() %>%
   filter(n >= 20) %>% select(FeatureID) %>% pull()
-  ## 54 features in 10% of samples
+## 53 features in 10% of samples
 
 ## at least two or more samples:
 coreFeat_noSingleton <- coredata %>% 
   group_by(FeatureID) %>% tally() %>%
   filter(n >1) %>% select(FeatureID) %>% pull()
-  ## 523 features in sequence features present in at least 2 samples
+## 517 features in sequence features present in at least 2 samples
 
 ## how many distinct taxonomic Orders? Families? OTUs (i.e. FeatureIDs)?
-  ## across entire dataset?
-  taxa %>% distinct(Order) %>% nrow()
-  taxa %>% distinct(Order, Family) %>% nrow()
-  taxa %>% distinct(FeatureID) %>% nrow()
-  ## 19 Orders, 175 Families, 1124 OTUs detected in entire dataset
+## across entire dataset?
+taxa %>% distinct(Order) %>% nrow()
+taxa %>% distinct(Order, Family) %>% nrow()
+taxa %>% distinct(FeatureID) %>% nrow()
+## 19 Orders, 171 Families, 1070 OTUs detected in entire dataset
 
-  ## in at least 2 or more samples?
-  taxa %>% filter(FeatureID %in% coreFeat_noSingleton) %>% distinct(Order) %>% nrow()
-  taxa %>% filter(FeatureID %in% coreFeat_noSingleton) %>% distinct(Order, Family) %>% nrow()
-  taxa %>% filter(FeatureID %in% coreFeat_noSingleton) %>% distinct(FeatureID) %>% nrow()
-  ## 17 Orders, 107 Families, 523 OTUs detected in at least 2 or more samples
-  
-  ## across just those OTUs in at least 5% of samples?
-  taxa %>% filter(FeatureID %in% coreFeat_05) %>% distinct(Order) %>% nrow()
-  taxa %>% filter(FeatureID %in% coreFeat_05) %>% distinct(Order, Family) %>% nrow()
-  taxa %>% filter(FeatureID %in% coreFeat_05) %>% distinct(FeatureID) %>% nrow()
-  ## 10 Orders, 35 Families, 120 OTUs
-  
-  ## across just those OTUs in at least 10% of samples?
-  taxa %>% filter(FeatureID %in% coreFeat_10) %>% distinct(Order) %>% nrow()
-  taxa %>% filter(FeatureID %in% coreFeat_10) %>% distinct(Order, Family) %>% nrow()
-  taxa %>% filter(FeatureID %in% coreFeat_10) %>% distinct(FeatureID) %>% nrow()
-  ## 8 Orders, 21 Families, 54 OTUs
+## in at least 2 or more samples?
+taxa %>% filter(FeatureID %in% coreFeat_noSingleton) %>% distinct(Order) %>% nrow()
+taxa %>% filter(FeatureID %in% coreFeat_noSingleton) %>% distinct(Order, Family) %>% nrow()
+taxa %>% filter(FeatureID %in% coreFeat_noSingleton) %>% distinct(FeatureID) %>% nrow()
+## 17 Orders, 105 Families, 517 OTUs detected in at least 2 or more samples
+
+## across just those OTUs in at least 5% of samples?
+taxa %>% filter(FeatureID %in% coreFeat_05) %>% distinct(Order) %>% nrow()
+taxa %>% filter(FeatureID %in% coreFeat_05) %>% distinct(Order, Family) %>% nrow()
+taxa %>% filter(FeatureID %in% coreFeat_05) %>% distinct(FeatureID) %>% nrow()
+## 10 Orders, 35 Families, 117 OTUs
+
+## across just those OTUs in at least 10% of samples?
+taxa %>% filter(FeatureID %in% coreFeat_10) %>% distinct(Order) %>% nrow()
+taxa %>% filter(FeatureID %in% coreFeat_10) %>% distinct(Order, Family) %>% nrow()
+taxa %>% filter(FeatureID %in% coreFeat_10) %>% distinct(FeatureID) %>% nrow()
+## 8 Orders, 21 Families, 53 OTUs
 
 
 ## sanity check: 
-  ## for those 5% and/or 10% core features, how many samples have these OTUs?
-  ## plot shows number of samples for each OTU among these core features
-  ## red and blue dotted line shows the 5% and 10% thresholds, respectively
+## for those 5% and/or 10% core features, how many samples have these OTUs?
+## plot shows number of samples for each OTU among these core features
+## red and blue dotted line shows the 5% and 10% thresholds, respectively
 coredata %>% 
   filter(FeatureID %in% coreFeat_05) %>% 
   group_by(FeatureID) %>% 
@@ -109,35 +111,32 @@ coredata %>%
   geom_col() +
   geom_hline(yintercept = 10, linetype="dotted", color="red") +
   geom_hline(yintercept = 20, linetype="dotted", color="blue")
-  ## sticking with 10% value - moost of these are present in more than 30-50 samples
-  ## whereas the 5% threshold, you have more than half of the samples with less than 20 samples
-  ## ... that could be driven by some samples only collected on a certain month/site, so they're not really "core"
-  
+## sticking with 10% value - most of these are present in more than 30-50 samples
+## whereas the 5% threshold, you have more than half of the samples with less than 20 samples
+## ... that could be driven by some samples only collected on a certain month/site, so they're not really "core"
+
 ## how many of these are in each Order? Family?
-  ## across entire dataset?
-  taxa %>% group_by(Order) %>% tally()
-  ## in at least 2 or more samples?
-  taxa %>% filter(FeatureID %in% coreFeat_noSingleton) %>% group_by(Order) %>% tally()
-  ## across just those OTUs in top 5% of samples?
-  taxa %>% filter(FeatureID %in% coreFeat_05) %>% group_by(Order) %>% tally()
-  ## across just those OTUs in top 10% of samples?
-  feature_taxa %>% group_by(Order) %>% tally()
-  
+## across entire dataset?
+taxa %>% filter(FeatureID %in% coredata$FeatureID) %>% group_by(Order) %>% tally()
+## in at least 2 or more samples?
+taxa %>% filter(FeatureID %in% coredata$FeatureID) %>% filter(FeatureID %in% coreFeat_noSingleton) %>% group_by(Order) %>% tally()
+## across just those OTUs in top 5% of samples?
+taxa %>% filter(FeatureID %in% coredata$FeatureID) %>% filter(FeatureID %in% coreFeat_05) %>% group_by(Order) %>% tally()
+## across just those OTUs in top 10% of samples?
+feature_taxa %>% group_by(Order) %>% tally()
+
 
 
 ################################################################################
 ## 3) alldata vs. core feature summaries
 ################################################################################
 ## merge data for calculations
-  coredataNtaxa <- merge(coredata, taxa, by="FeatureID", all.x=TRUE)
-  ## note we lose 36 OTUs between the coredata and the full taxa... 
-  ## this is because we filtered out a few samples with less than 10k reads, and those OTUs were derived from those samples
-  ## these samples aren't important to our analyses because they are only present in a handful of low-sequenced samples
-  
+coredataNtaxa <- merge(coredata, taxa, by="FeatureID", all.x=TRUE)
+
 ## Table 1 for paper:
-lengthSamples = n_distinct(coredataNtaxa$SampleID)
-lengthTaxa = n_distinct(coredataNtaxa$FeatureID)
-coreOrder <- coredataNtaxa %>% filter(FeatureID %in% coreFeat_10) %>% distinct(Order) %>% pull()
+lengthSamples = n_distinct(coredataNtaxa$SampleID)  ## 189 samples
+lengthTaxa = n_distinct(coredataNtaxa$FeatureID)    ## 1,070 OTUs
+coreOrder <- coredataNtaxa %>% filter(FeatureID %in% coreFeat_10) %>% distinct(Order) %>% pull()  ## 8 arthropod orders
 
 coreOrderSumry <- coredataNtaxa %>% 
   filter(Order %in% coreOrder) %>%
@@ -148,9 +147,10 @@ coreOrderSumry <- coredataNtaxa %>%
          pTaxa = (nTaxa / lengthTaxa)) %>% 
   mutate(pTaxa = round(pTaxa, 3) * 100,
          pSamples = round(pSamples, 3) * 100) %>% 
-  select(-nSamples, -nTaxa)
-write_csv(coreOrderSumry, path="~/github/mysosoup/data/taxonomy/coreOrderSumry.csv")  
-  
+  select(-nSamples, -nTaxa) %>% 
+  arrange(-pSamples)
+write_csv(coreOrderSumry, path="~/github/mysosoup/data/taxonomy/coreOrderSumry.csv")
+
 ## Table 2 for paper:
 coreOTUsumry <- coredataNtaxa %>% 
   filter(FeatureID %in% coreFeat_10) %>% 
@@ -160,7 +160,7 @@ coreOTUsumry <- coredataNtaxa %>%
   arrange(Order, -nSamples)
 write_csv(coreOTUsumry, path="~/github/mysosoup/data/taxonomy/coreOTU_summary.csv")
 
-  
+
 ## Other exploratory data to retain:  
 ##  First, create a simple summary file showing the featureIDs taxonomic information
 ### create a .csv file summarizing the taxonomic information available for each of the core sequence features
@@ -192,8 +192,7 @@ write_csv(perSampSumry, path="~/github/mysosoup/data/taxonomy/perSample_Detectio
 perSampSumry %>% 
   filter(nDetections <= 2) %>% 
   nrow()
-  ungroup() %>% 
-  summarise(meanReads = mean(nReads))
+  ## 707 OTUs observed in just one sample!
 
 
 
