@@ -31,6 +31,9 @@ meta <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/dat
 taxa <- read_csv(file="https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/taxonomy/filtd_tax_dataframe_ALL.csv")
 colnames(taxa)[1] <- "ASVid"
 
+## import list of nonMYSO samples: 
+nonMYSO_sampleID_list <- read_table(file="https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/host/nonMYSO_sampleIDlist.txt", col_names = FALSE)
+
 ## import OTU table from QZA artifact
 ## download qza file:
 # download.file("https://github.com/devonorourke/mysosoup/raw/master/data/qiime_qza/Mangan.clust_p985_table_Rarefyd.qza", "tmp.qza")
@@ -54,7 +57,7 @@ colnames(tmp) <- c("ASVid", "SampleID", "Reads")  ## note these are OTUs, but th
 df.tmp <- merge(tmp, taxa)
 rm(tmp)
 df.tmp <- merge(df.tmp, meta)
-df.tmp <- df.tmp %>% filter(BatchType == "single") %>% filter(SampleType == "sample")
+df.tmp <- df.tmp %>% filter(BatchType == "single" & SampleType == "sample" & !SampleID %in% nonMYSO_sampleID_list$X1)
 mat.tmp <- dcast(data = df.tmp, formula = SampleID ~ ASVid, value.var='Reads', fill = 0)
 row.names(mat.tmp) <- mat.tmp$SampleID
 mat.tmp$SampleID <- NULL
@@ -71,10 +74,10 @@ phydat <- phyloseq(OTU, phy_tax, meta)
 rm(mat.tmp, phy_tax, OTU)
 
 ## sanity check:
-nsamples(phydat)  ## 196 expected
-ntaxa(phydat) ## 1081 taxa
+nsamples(phydat)  ## 189 expected
+ntaxa(phydat) ## 1057 taxa
 sample_names(phydat)  ## sample names as SampleID in meta
-## all good.
+  ## all good.
 
 
 ## import tree object to for phylogenetic distance measures
