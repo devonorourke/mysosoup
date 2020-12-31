@@ -1,4 +1,4 @@
-## plot for Figure Y of manuscript
+## plot for Figure 4 of manuscript
 ## showing accuracy of model for Site, Month, and SiteMonth classifiers
 
 library(tidyverse)
@@ -124,6 +124,6 @@ p2a <- p2 + labs(x="Predicted", y="")
 p3a <- p3 + labs(x="", y="")
 ggarrange(p1a, p2a, p3a, common.legend = TRUE, ncol=3, align = "h", labels = c("A", "B", "C"))
 
-ggsave("FigureY_MLheatmaps_all.png", height=12, width = 30, units="cm")
-ggsave("FigureY_MLheatmaps_all.pdf", height=12, width = 30, units="cm")
-ggsave("FigureY_MLheatmaps_all.svg", height=12, width = 30, units="cm")
+ggsave("~/github/mysosoup/figures/FigureY_MLheatmaps_all.png", height=12, width = 30, units="cm")
+ggsave("~/github/mysosoup/figures/FigureY_MLheatmaps_all.pdf", height=12, width = 30, units="cm")
+ggsave("~/github/mysosoup/figures/FigureY_MLheatmaps_all.svg", height=12, width = 30, units="cm")
