@@ -119,8 +119,8 @@ qiime tools export --input-path ./MLearn_ncv_"$METACOLUMN"/feature_importance.qz
 ```
 
 The six .tsv files exported to the three possible `"$METACOLUMN"_Predictions` and `"$METACOLUMN"_featureImportance` folters are are available at [the MachineLearn directory](https://github.com/devonorourke/mysosoup/tree/master/data/MachineLearn) of this repository. These data were used to generate the five panels in Figure 4:
-- The three `*_importance.tsv` files were combined with metadata and read abundance data to create panels A and B in Figure 4 using the R script, [make_FeatureImportance_Heatmaps.R](https://raw.githubusercontent.com/devonorourke/mysosoup/master/scripts/r_scripts/make_FeatureImportance_Heatmaps.R).
-- The three `*_predictions.tsv` files served as inputs to generating the heatmap plots shown in panels C-E of Figure 4 using the R script [make_Prediction_Heatmaps.R](https://raw.githubusercontent.com/devonorourke/mysosoup/master/scripts/r_scripts/make_Prediction_Heatmaps.R).
+- The three `*_importance.tsv` files were combined with metadata and read abundance data to create panel D in Figure 4 using the R script, [make_FeatureImportance_Heatmaps.R](https://raw.githubusercontent.com/devonorourke/mysosoup/master/scripts/r_scripts/make_FeatureImportance_Heatmaps.R).
+- The three `*_predictions.tsv` files served as inputs to generating the heatmap plots shown in panels A-C of Figure 4 using the R script [make_Prediction_Heatmaps.R](https://raw.githubusercontent.com/devonorourke/mysosoup/master/scripts/r_scripts/make_Prediction_Heatmaps.R).
 
 
 # Diet summaries at Order and OTU-level
