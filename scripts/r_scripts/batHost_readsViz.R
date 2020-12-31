@@ -89,3 +89,15 @@ bat_sumry %>%
   filter(is.na(`Myotis sodalis`)) %>% 
   nrow()
   ## zero!
+
+### make a list of any single pellet samples that contain ONLY non-sodalis guano
+nonMYSO_sampleIDs <- bat_sumry %>% 
+  filter(BatchType == "single") %>% 
+  filter(SampleType == "sample") %>% 
+  filter(multihit == FALSE) %>% 
+  select(SampleID, BatchType, `Myotis lucifugus`, `Myotis sodalis`, `Nycticeius humeralis`, multihit) %>% 
+  filter(is.na(`Myotis sodalis`)) %>% 
+  select(SampleID) %>% pull()
+write.table(nonMYSO_sampleIDs, 
+          file = "~/github/mysosoup/data/host/nonMYSO_sampleIDlist.txt",
+          quote = FALSE, row.names = FALSE, col.names = FALSE)
