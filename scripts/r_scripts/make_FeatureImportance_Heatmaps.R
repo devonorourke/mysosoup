@@ -94,9 +94,9 @@ all_featImp_df$PlotName <- fct_reorder(all_featImp_df$PlotName, all_featImp_df$O
 ## could also split up plots by faceting using taxonomic order:
 ## plot
 p1 <- ggplot(all_featImp_df, 
-       aes(x = PlotName, 
-           y = GroupLabel, 
-           fill=Value)) +
+             aes(x = PlotName, 
+                 y = GroupLabel, 
+                 fill=Value)) +
   geom_tile() +
   #coord_equal() +
   facet_grid(~Order, scales = "free_x", space = "free_x") +
@@ -160,10 +160,10 @@ v3pal <- viridis::plasma(3, begin = 0.35, end = 0.9, direction = -1)
 readdata$Month <- factor(readdata$Month, levels = c("June", "July", "Sept"))
 
 p2 <- ggplot(readdata, 
-       aes(x=PlotName,
-           y=FracReads,
-           shape=Site,
-           color=Month)) +
+             aes(x=PlotName,
+                 y=FracReads,
+                 shape=Site,
+                 color=Month)) +
   geom_point() +
   scale_color_manual(values=v3pal) +
   facet_grid(~Order, scales = "free_x", space = "free_x") +
@@ -183,6 +183,7 @@ ggsave("~/github/mysosoup/figures/FigureX_RelativeFeatureImportance_CoreFeatures
 ## modify .pdf to include silhouettes for publication
 
 ###########################3
+### unused code:
 
 ## select a subset of these OTUs to get further info about taxa:
 selectOTUs <- c('65d5fa6d7e70a2048699fd898caf1fca',
@@ -212,7 +213,7 @@ tmp4 <- tmp2 %>% select(PlotName, Site) %>% filter(!is.na(Site)) %>% arrange(-Si
 tmp5 <- tmp2 %>% select(PlotName, Month) %>% filter(!is.na(Month)) %>% arrange(-Month) %>% mutate(CumImpMonth = cumsum(Month)) %>% select(-Month)
 tmp6 <- merge(tmp3, tmp4, by = "PlotName", all=TRUE)
 cumImpdf <- merge(tmp6, tmp5, by = "PlotName", all=TRUE)
-write_csv(cumImpdf, path="~/github/mysosoup/data/MachineLearn/cumImportance_allGroups.csv")
+write_csv(cumImpdf, file="~/github/mysosoup/data/MachineLearn/cumImportance_allGroups.csv")
 
 ## now get the taxa for the OTUs that provided the top 50% importance among these 3 groups:
 top50Imp_OTUnames <- cumImpdf %>% 
