@@ -62,11 +62,14 @@ Getting the core features in a dataset is simple with QIIME2's `core-features` f
 qiime feature-table filter-samples \
   --i-table Mangan.clust_p985_table_Filtd.qza \
   --p-min-frequency 10000 \
-  --o-filtered-table Mangan.clust_p985_table_Filtd_min10k.qza
+  --o-filtered-table Mangan.clust_p985_table_Filtd_min10k.qza \
+  --m-metadata-file nonMYSO_sampleIDlist_forQIIME.txt \
+  --p-exclude-ids
 ```
+> Note that the `--m-metadata-file` was just a modified file that included the #SampleID header to a file listing the 7 nonMYSO sampleIDs identified earlier in the [batHost_readsViz.R](https://github.com/devonorourke/mysosoup/blob/master/scripts/r_scripts/batHost_readsViz.R) R script, and saved originally as [nonMYSO_sampleIDlist.txt](https://github.com/devonorourke/mysosoup/blob/master/data/host/nonMYSO_sampleIDlist.txt).
 
 We then identify which sequence features are found among at least 10 percent of our samples. 
-- First, identify core features among these remaining 196 samples
+- First, identify core features among these remaining 189 samples
 ```
 qiime feature-table core-features \
   --i-table Mangan.clust_p985_table_Filtd_min10k.qza \
