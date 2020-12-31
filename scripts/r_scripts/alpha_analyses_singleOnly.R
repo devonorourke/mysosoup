@@ -43,15 +43,17 @@ meta$CollectionMonth <- as.factor(meta$CollectionMonth)
 taxa <- read_csv(file="https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/taxonomy/filtd_tax_dataframe_ALL.csv")
 colnames(taxa)[1] <- "ASVid"
 
+## import list of nonMYSO samples: 
+nonMYSO_sampleID_list <- read_table(file="https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/host/nonMYSO_sampleIDlist.txt", col_names = FALSE)
+
 ## import OTU table from QZA artifact
 ## download qza file:
-# download.file("https://github.com/devonorourke/mysosoup/raw/master/data/qiime_qza/Mangan.clust_p985_table_Rarefyd.qza", "tmp.qza")
+# download.file("https://github.com/devonorourke/mysosoup/raw/master/data/qiime_qza/Mangan.clust_p985_table_Rarefyd.qza", "Mangan.clust_p985_table_Rarefyd.qza")
 # then set PATH to whatever directory needed:
 # qzapath = "PATH/TO/tmp.qza"
 
 ## alternatively, run from local:
 qzapath = "/Users/devonorourke/github/mysosoup/data/qiime_qza/Mangan.clust_p985_table_Rarefyd.qza"  ## amend this line to your own path!
-
 featuretable <- read_qza(qzapath)
 mat.tmp <- featuretable$data
 rm(featuretable)
@@ -65,7 +67,7 @@ colnames(tmp) <- c("ASVid", "SampleID", "Reads")  ## note these are OTUs, not AS
 df.tmp <- merge(tmp, taxa)
 rm(tmp)
 df.tmp <- merge(df.tmp, meta)
-df.tmp <- df.tmp %>% filter(BatchType == "single")
+df.tmp <- df.tmp %>% filter(BatchType == "single" & !SampleID %in% nonMYSO_sampleID_list$X1)
 mat.tmp <- dcast(data = df.tmp, formula = SampleID ~ ASVid, value.var='Reads', fill = 0)
 row.names(mat.tmp) <- mat.tmp$SampleID
 mat.tmp$SampleID <- NULL
@@ -73,7 +75,7 @@ tmp.hill <- data.frame(renyi(mat.tmp, scales = c(0,1), hill=TRUE)) %>% mutate(Sa
 colnames(tmp.hill)[1:2] <- c("Observed", "Shannons")
 Alpha_df <- gather(tmp.hill, key="Alpha_metric", value = "Alpha_value", c('Observed', 'Shannons'))
 mangan_hill_df <- merge(Alpha_df, meta)
-rm(tmp.hill, mat.tmp, Alpha_df, df.tmp, qzapath)
+rm(tmp.hill, mat.tmp, Alpha_df, df.tmp, qzapath, nonMYSO_sampleID_list)
 
 
 ################################################################################
@@ -92,10 +94,10 @@ shan_alpha <- mangan_hill_df %>%
 
 shapiro.test(obs_alpha)
 ## significant result here indicates the data are VIOLATING assumption of normality. oops.
-## W = 0.98346, p-value = 0.02087
+## W = 0.98457, p-value = 0.03592
 
 shapiro.test(shan_alpha)
-## W = 0.86818, p-value = 5.001e-12
+## W = 0.87179, p-value = 1.39e-11
 ## yeah, really not normal.
 
 
@@ -120,9 +122,9 @@ ggqqplot(shan_alpha)
 ################################################################################
 ## Step 2a - compare ranked means between site-month groups with Kruskal-Wallis
 ## Step 2b - generate a figure that shows:
-  ##   i. boxplot of Site-Month data, per Alpha_metric, as well as per-sample data (jittered points)
-  ##  ii. Wilcoxon pairwise rank sum test showing differences between each Site-Month group
-  ## iii. Kruskal-Wallis p-value at top of each plot
+##   i. boxplot of Site-Month data, per Alpha_metric, as well as per-sample data (jittered points)
+##  ii. Wilcoxon pairwise rank sum test showing differences between each Site-Month group
+## iii. Kruskal-Wallis p-value at top of each plot
 ################################################################################
 
 ###### 2a. Run Kruskal Wallis:
@@ -134,12 +136,14 @@ kwfunction <- function(alpha_metric){
 }
 
 kw_observed <- kwfunction('Observed')
-  ## Kruskal-Wallis chi-squared = 27.448, df = 5, p-value = 4.666e-05
-  ## differences in ranks
+kw_observed
+## Kruskal-Wallis chi-squared = 25.389, df = 5, p-value = 0.0001172
+## differences in ranks
 
 kw_shannons <- kwfunction('Shannons')
-  ## Kruskal-Wallis chi-squared = 3.5418, df = 5, p-value = 0.6171
-  ## no differences in ranks
+kw_shannons
+## Kruskal-Wallis chi-squared = 2.1737, df = 5, p-value = 0.8246
+## no differences in ranks
 
 ###### 2b. Make boxplot but include significant pairwise comparisons
 ### this is a bit of a complicated plot, so we'll break it up into three parts
@@ -238,8 +242,8 @@ observed_plot <- ggplot(plotdat_observed) +
   facet_wrap(~ Alpha_metric) +
   labs(x="", y="Estimated diversity\n", color="Month") +
   geom_label(data = plotdat_observed,
-            aes(x = Grouper, y = max(Alpha_value*1.1), label=Letters),
-            colour = "white", fontface = "bold", fill="black", size=4) +
+             aes(x = Grouper, y = max(Alpha_value*1.1), label=Letters),
+             colour = "white", fontface = "bold", fill="black", size=4) +
   annotate("text", x=2.5, y=75, label = observed_KWlabel, size=5) +
   theme_devon() +
   theme(axis.text = element_text(size = 12),
@@ -264,7 +268,7 @@ shannon_plot <- ggplot(plotdat_shannons) +
         axis.title = element_text(size = 14),
         strip.text = element_text(size = 14),
         legend.position="top")   ## toggle on for color version
-        #legend.position = "none") ## toggle on for black/white version
+#legend.position = "none") ## toggle on for black/white version
 
 ## stitch together the two plots and save
 ggarrange(observed_plot, shannon_plot, nrow = 2, common.legend=TRUE)  ## toggle on for black/white version
@@ -282,26 +286,25 @@ ggsave("~/github/mysosoup/figures/Figure_2_alphaDiv_col.svg", width = 20, height
 
 ## Dunn's test direct testing instead of Wilcoxon?
 ## note we're adjusting for multiple comparisons with Benjamini-Hochberg correction:
-  
-  dunnfunction <- function(alpha_metric){
-    mangan_hill_df$Grouper <- paste(mangan_hill_df$CollectionMonth, mangan_hill_df$Site, sep="-")
-    mangan_hill_df$Grouper <- as.factor(mangan_hill_df$Grouper)
-    tmp <- dunnTest(Alpha_value ~ Grouper, 
-                    data=mangan_hill_df %>% 
-                      filter(Alpha_metric==alpha_metric), method = "bh") 
-    tmp <- data.frame(tmp$res)
-    tmp <- tmp %>% mutate(P.adj=round(P.adj, 3))
-    tmp <- tmp %>% mutate(Z=round(Z, 3))
-    tmp <- tmp %>% mutate(P.unadj=round(P.unadj, 3))
-    tmp %>% arrange(P.adj)
-  }
-  
-  dunn_Observed <- dunnfunction('Observed')
-  ## almost all significant pairwise comparisons are between sites on June/July shoulders
-  ## June generally had higher richness than September...
-  ## sit pairs for BH-adjusted compas included:
-  ## JuneEN:SeptHB, JuneHB:JuneEN, JuneEN:SeptHB, JuneHB:SeptHB, JuneEN:SeptEN, JulyEN:JulyHB
-  
-  dunn_Shannons <- dunnfunction('Shannons')
-  ## no pairwise significant values (as expected)
-  
+
+dunnfunction <- function(alpha_metric){
+  mangan_hill_df$Grouper <- paste(mangan_hill_df$CollectionMonth, mangan_hill_df$Site, sep="-")
+  mangan_hill_df$Grouper <- as.factor(mangan_hill_df$Grouper)
+  tmp <- dunnTest(Alpha_value ~ Grouper, 
+                  data=mangan_hill_df %>% 
+                    filter(Alpha_metric==alpha_metric), method = "bh") 
+  tmp <- data.frame(tmp$res)
+  tmp <- tmp %>% mutate(P.adj=round(P.adj, 3))
+  tmp <- tmp %>% mutate(Z=round(Z, 3))
+  tmp <- tmp %>% mutate(P.unadj=round(P.unadj, 3))
+  tmp %>% arrange(P.adj)
+}
+
+dunn_Observed <- dunnfunction('Observed')
+## almost all significant pairwise comparisons are between sites on June/July shoulders
+## June generally had higher richness than September...
+## sit pairs for BH-adjusted compas included:
+## JuneEN:SeptHB, JuneHB:JuneEN, JuneEN:SeptHB, JuneHB:SeptHB, JuneEN:SeptEN, JulyEN:JulyHB
+
+dunn_Shannons <- dunnfunction('Shannons')
+## no pairwise significant values (as expected)
