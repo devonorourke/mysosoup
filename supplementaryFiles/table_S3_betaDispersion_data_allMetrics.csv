@@ -1,17 +1,17 @@
 Class,Df,Sum.Sq,Mean.Sq,F.value,Pr..F.,Factor,Metric
-Groups,1,0.1148,0.1148,0.1148,0,Site,Dice-Sorensen
-Residuals,194,1.1262,1.1262,1.1262,NA,Site,Dice-Sorensen
-Groups,2,0.1735,0.1735,0.1735,0,Month,Dice-Sorensen
-Residuals,193,1.1376,1.1376,1.1376,NA,Month,Dice-Sorensen
-Groups,1,0.07,0.07,0.07,6e-04,Site,Bray-Curtis
-Residuals,194,1.1115,1.1115,1.1115,NA,Site,Bray-Curtis
-Groups,2,0.0527,0.0527,0.0527,0.0514,Month,Bray-Curtis
-Residuals,193,1.6866,1.6866,1.6866,NA,Month,Bray-Curtis
-Groups,1,0.0252,0.0252,0.0252,0.0037,Site,UniFrac Unweighted
-Residuals,194,0.5673,0.5673,0.5673,NA,Site,UniFrac Unweighted
-Groups,2,0.0348,0.0348,0.0348,0.0055,Month,UniFrac Unweighted
-Residuals,193,0.6287,0.6287,0.6287,NA,Month,UniFrac Unweighted
-Groups,1,0,0,0,0.9071,Site,UniFrac Weighted
-Residuals,194,0.5715,0.5715,0.5715,NA,Site,UniFrac Weighted
-Groups,2,0.0123,0.0123,0.0123,0.1285,Month,UniFrac Weighted
-Residuals,193,0.5743,0.5743,0.5743,NA,Month,UniFrac Weighted
+Groups,1,0.0817,0.0817,0.0817,1e-04,Site,Dice-Sorensen
+Residuals,187,0.9434,0.9434,0.9434,NA,Site,Dice-Sorensen
+Groups,2,0.1242,0.1242,0.1242,0,Month,Dice-Sorensen
+Residuals,186,0.9901,0.9901,0.9901,NA,Month,Dice-Sorensen
+Groups,1,0.0563,0.0563,0.0563,0.0019,Site,Bray-Curtis
+Residuals,187,1.058,1.058,1.058,NA,Site,Bray-Curtis
+Groups,2,0.054,0.054,0.054,0.0479,Month,Bray-Curtis
+Residuals,186,1.6263,1.6263,1.6263,NA,Month,Bray-Curtis
+Groups,1,0.0217,0.0217,0.0217,0.0063,Site,Unifrac Unweighted
+Residuals,187,0.5317,0.5317,0.5317,NA,Site,Unifrac Unweighted
+Groups,2,0.0494,0.0494,0.0494,4e-04,Month,Unifrac Unweighted
+Residuals,186,0.5677,0.5677,0.5677,NA,Month,Unifrac Unweighted
+Groups,1,0.0023,0.0023,0.0023,0.4617,Site,Unifrac Weighted
+Residuals,187,0.8033,0.8033,0.8033,NA,Site,Unifrac Weighted
+Groups,2,0.0608,0.0608,0.0608,7e-04,Month,Unifrac Weighted
+Residuals,186,0.7402,0.7402,0.7402,NA,Month,Unifrac Weighted
