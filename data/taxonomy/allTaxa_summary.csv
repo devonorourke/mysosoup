@@ -25,7 +25,6 @@ cf92faaa9dd6ac238287bfbf2f2d1315,Arachnida,Araneae,Araneidae,Larinioides,Larinio
 df49f349aac347c42c8f6e2fb3185b90,Arachnida,Araneae,Araneidae,Mangora,Mangora placida,sklearn
 311310d115cf86c27b5b7ca711998715,Arachnida,Araneae,Araneidae,Mangora,Mangora placida,sklearn
 0e1528da18c7b52dcdd44ace8deb441d,Arachnida,Araneae,Araneidae,Mastophora,Mastophora phrynosoma,sklearn
-bbc297d729dbfb7886fae03dd57dab45,Arachnida,Araneae,Araneidae,Mecynogea,Mecynogea lemniscata,sklearn
 cfe6cda97b772272c8601e86e083478c,Arachnida,Araneae,Araneidae,Mecynogea,Mecynogea lemniscata,VSEARCH
 d4ebdfff2f632287ba46e8dbea1da61c,Arachnida,Araneae,Araneidae,Metepeira,NA,VSEARCH
 3a3de173c78ce02115dd24a20916715e,Arachnida,Araneae,Araneidae,Micrathena,NA,sklearn
@@ -55,13 +54,11 @@ b204c29663c2f65148b84cffe5356345,Arachnida,Araneae,Philodromidae,Philodromus,Phi
 564c9aa49d1f57d06546ed4bb816650d,Arachnida,Araneae,Pisauridae,Dolomedes,Dolomedes scriptus,VSEARCH
 6acf174b9dce7a33ca0ce54ad00d5c6b,Arachnida,Araneae,Pisauridae,Dolomedes,Dolomedes striatus,VSEARCH
 f07a9c441ebd2dcb920a157a490e922f,Arachnida,Araneae,Pisauridae,Pisaurina,Pisaurina mira,VSEARCH
-51ff81c75302e537209f72b45bef4185,Arachnida,Araneae,Salticidae,Colonus,Colonus sylvanus,VSEARCH
 8e7fcf2a47690eb41974b667f784f38f,Arachnida,Araneae,Salticidae,Eris,Eris militaris,VSEARCH
 98d7d5c64d4e004fa54148a377701f69,Arachnida,Araneae,Salticidae,Hentzia,NA,sklearn
 0235bad502b6b2499724d44a83852f18,Arachnida,Araneae,Salticidae,Hentzia,NA,sklearn
 44283295767fe130a965ca4d14968777,Arachnida,Araneae,Salticidae,Paraphidippus,Paraphidippus aurantius,sklearn
 a024fc28d079d7f886c27ca2de13b65a,Arachnida,Araneae,Tetragnathidae,Leucauge,Leucauge venusta,VSEARCH
-daf8a48cac0c46edc334e5ef1ebc52a1,Arachnida,Araneae,Tetragnathidae,Tetragnatha,Tetragnatha elongata,sklearn
 eae35ebb8aff8fa1779e68fc1cd63e6e,Arachnida,Araneae,Tetragnathidae,Tetragnatha,Tetragnatha elongata,VSEARCH
 0ba6bd638e8ca55689dbf03f655e2c35,Arachnida,Araneae,Tetragnathidae,Tetragnatha,Tetragnatha guatemalensis,VSEARCH
 ace4179b3889d821ef7a22a99fbe7e10,Arachnida,Araneae,Tetragnathidae,Tetragnatha,Tetragnatha guatemalensis,VSEARCH
@@ -85,7 +82,6 @@ c5b91c134e87ff90544b26a90b30194d,Arachnida,Araneae,Theridiidae,Theridion,Theridi
 79314d1061e44920e5d4920f3c6bff66,Arachnida,Araneae,Theridiidae,Thymoites,Thymoites unimaculatus,sklearn
 1690a1444a8479fa62b5d2ceaa8f0b17,Arachnida,Araneae,Theridiidae,Thymoites,Thymoites unimaculatus,sklearn
 2ae25d61d9ae54ed5798719061ee09c3,Arachnida,Araneae,Theridiidae,Wamba,Wamba crispulus,VSEARCH
-6f1c552f31769378e474f52ef2e31169,Arachnida,Araneae,Thomisidae,Ozyptila,Ozyptila americana,VSEARCH
 fcbcf9e2c39bc12565ddd2fc1b8f100a,Arachnida,Araneae,Thomisidae,Tmarus,Tmarus angulatus,sklearn
 6a056b42d75944093cfaf1904222e0a5,Arachnida,Araneae,Thomisidae,Tmarus,Tmarus angulatus,VSEARCH
 ad177e11a96f70f5e353545b29160322,Arachnida,Araneae,Thomisidae,Tmarus,Tmarus angulatus,VSEARCH
@@ -137,16 +133,13 @@ ef69d934ca793e185457fcd2c05d7fc9,Insecta,Blattodea,Ectobiidae,Parcoblatta,NA,skl
 e5a328c275b5ffafd2da91027e635957,Insecta,Blattodea,Rhinotermitidae,Reticulitermes,Reticulitermes flavipes,VSEARCH
 c4fbc9bf144f09f68207296b02225936,Insecta,Coleoptera,Aderidae,NA,NA,sklearn
 b0d4ad2f22ee5f63977e6e59981ca151,Insecta,Coleoptera,Aderidae,NA,NA,VSEARCH
-be692e1142aac988316dcc1543413acb,Insecta,Coleoptera,Anthicidae,Anthicus,Anthicus cervinus,VSEARCH
 36e0ac3f9241724fb8cc20ab66b35666,Insecta,Coleoptera,Bostrichidae,Xylobiops,Xylobiops basilaris,VSEARCH
 fec295f0ef64b33e49e7024eae3c4586,Insecta,Coleoptera,Cantharidae,Rhagonycha,Rhagonycha imbecillis,VSEARCH
-1df0b961159a8f20529fd26104a33be0,Insecta,Coleoptera,Carabidae,Acupalpus,Acupalpus testaceus,VSEARCH
 388928d55df3875791209bec8efd13fc,Insecta,Coleoptera,Carabidae,Amphasia,Amphasia sericea,VSEARCH
 82824baabadf6c94d826870b131ac0c6,Insecta,Coleoptera,Carabidae,Anisodactylus,Anisodactylus caenus,VSEARCH
 b8b0d61f4aac01701774bf8af06aceb8,Insecta,Coleoptera,Carabidae,Bembidion,Bembidion affine,sklearn
 9d0fbb8cfc04d772de6751b9860f5cee,Insecta,Coleoptera,Carabidae,Bembidion,Bembidion affine,VSEARCH
 fdd9aa32da45c7b3a4022898cf6fe853,Insecta,Coleoptera,Carabidae,Bembidion,Bembidion impotens,sklearn
-7ef32843401d05db25d0e3abd3e7019c,Insecta,Coleoptera,Carabidae,Harpalus,NA,sklearn
 0245a65fd2413cba4f5ad3000d74d6af,Insecta,Coleoptera,Carabidae,Notiobia,Notiobia terminata,VSEARCH
 a1c0d92515d65e7681a1540913463719,Insecta,Coleoptera,Carabidae,Stenolophus,Stenolophus ochropezus,sklearn
 b5b4a32b3b90146cbf3e63607578fec3,Insecta,Coleoptera,Carabidae,Stenolophus,Stenolophus ochropezus,sklearn
@@ -154,7 +147,6 @@ c419aa148d21da6d8f79c64db4e2bd93,Insecta,Coleoptera,Carabidae,Stenolophus,Stenol
 6fafadf92fa881dc14814b5c4582dd4d,Insecta,Coleoptera,Carabidae,Stenolophus,Stenolophus ochropezus,VSEARCH
 aff315f4958575e8f5575c48d28b5cd5,Insecta,Coleoptera,Carabidae,NA,NA,sklearn
 dc15e36fd3060fb977a986d682fed4e6,Insecta,Coleoptera,Carabidae,NA,NA,VSEARCH
-960f3392d8f04e964fa5284965954545,Insecta,Coleoptera,Cerambycidae,Anelaphus,Anelaphus parallelus,sklearn
 6684e8f1d23df13b668f2fcaebecd8f5,Insecta,Coleoptera,Cerambycidae,Lepturges,Lepturges confluens,VSEARCH
 f666d1b64bbd68ed1ccd4906473feb74,Insecta,Coleoptera,Cerambycidae,Obrium,Obrium rufulum,sklearn
 67bacd845341789c4ee6699bddcff43b,Insecta,Coleoptera,Cerambycidae,Obrium,Obrium rufulum,VSEARCH
@@ -175,7 +167,6 @@ aaa3e1f8642364d32cb5f09184ff35c4,Insecta,Coleoptera,Cleridae,Neorthopleura,NA,sk
 fe97cf979b10951ec434b42f6b3d68eb,Insecta,Coleoptera,Coccinellidae,Harmonia,Harmonia axyridis,VSEARCH
 5af4825b815ba94e667851ce5501c01b,Insecta,Coleoptera,Curculionidae,Conotrachelus,NA,sklearn
 0179a2fce040d03e6173233d820ecfbf,Insecta,Coleoptera,Curculionidae,Corthylus,Corthylus columbianus,VSEARCH
-561a2ef4f9e4c4516f0e2817b64740df,Insecta,Coleoptera,Curculionidae,Pityophthorus,Pityophthorus lautus,sklearn
 71d04c80595237ee5a46d61ac705b8cd,Insecta,Coleoptera,Dytiscidae,Coptotomus,NA,VSEARCH
 6f1ff9a2ada075bbc45db7f728544eeb,Insecta,Coleoptera,Elateridae,Athous,Athous brightwelli,sklearn
 3b5413ff663c1e81491a21eb8a8b592b,Insecta,Coleoptera,Elateridae,Glyphonyx,Glyphonyx teapensis,sklearn
@@ -188,7 +179,6 @@ ebfd465aca9a4c7731be4854f2cd380a,Insecta,Coleoptera,Elateridae,Limoniscus,Limoni
 a33bfa7d4a47b84de76360144f315cc9,Insecta,Coleoptera,Elateridae,Limoniscus,Limoniscus violaceus,sklearn
 41bcadf6f35957ef31eac55e3009e8f8,Insecta,Coleoptera,Elateridae,Melanotus,Melanotus miscellus,VSEARCH
 1ea1f9f65bca83cedf1720aa3d724d7c,Insecta,Coleoptera,Heteroceridae,Tropicus,Tropicus pusillus,VSEARCH
-c98ef8678183500fb590b3cef1da8270,Insecta,Coleoptera,Histeridae,Carcinops,Carcinops pumilio,VSEARCH
 3f0198df0793200a934676fafd0b253b,Insecta,Coleoptera,Hydrophilidae,Enochrus,Enochrus ochraceus,VSEARCH
 497eda0dd46062905f3bf6bde94eee02,Insecta,Coleoptera,Hydrophilidae,Helocombus,Helocombus bifidus,sklearn
 451fbb02ef32060272577cabe65295b3,Insecta,Coleoptera,Hydrophilidae,Helocombus,Helocombus bifidus,sklearn
@@ -226,7 +216,6 @@ c4afba60302c265bd32b9ef5846b7377,Insecta,Coleoptera,Scarabaeidae,Labarrus,Labarr
 a37ab388097defb37465d33237c4e019,Insecta,Coleoptera,Scirtidae,Sacodes,Sacodes thoracica,VSEARCH
 f47fbcfd8ce24ad7c6fb6a8df61dd45d,Insecta,Coleoptera,Sphindidae,Sphindus,NA,sklearn
 fad499604d4c921205434d990b67ad42,Insecta,Coleoptera,Staphylinidae,Philonthus,NA,VSEARCH
-91da679b8a92fedde64602f1482caa1a,Insecta,Coleoptera,Staphylinidae,NA,NA,VSEARCH
 4d2c0b23abf654679d9fd390ca83990c,Insecta,Coleoptera,Staphylinidae,NA,NA,VSEARCH
 45daeaea5791c12079173212797f4d47,Insecta,Coleoptera,Zopheridae,Zopherus,Zopherus sp. TX12_18.01,VSEARCH
 e39de179041fc5c3d5aa19bda77346f0,Insecta,Diptera,Anisopodidae,Mycetobia,NA,VSEARCH
@@ -234,7 +223,6 @@ e39de179041fc5c3d5aa19bda77346f0,Insecta,Diptera,Anisopodidae,Mycetobia,NA,VSEAR
 d5614f7a87c58013b5b47c844b94f444,Insecta,Diptera,Anthomyiidae,Eustalomyia,NA,VSEARCH
 92b09815880e3038cbc00afb1987d5a3,Insecta,Diptera,Asilidae,Cerotainia,Cerotainia macrocera,VSEARCH
 a7cdc3a06ab4f7411faaf67cbffe338b,Insecta,Diptera,Cecidomyiidae,NA,NA,sklearn
-81f5f4fd7bdc7394ed897a202ca27cef,Insecta,Diptera,Cecidomyiidae,NA,NA,sklearn
 66d858c905e317633122b07ec950d7e8,Insecta,Diptera,Cecidomyiidae,NA,NA,sklearn
 6e08d35016d2d25d9ce7954a79fcc20d,Insecta,Diptera,Cecidomyiidae,NA,NA,sklearn
 437dcbce182008fb42cc9471bf41bb8e,Insecta,Diptera,Cecidomyiidae,NA,NA,sklearn
@@ -243,17 +231,12 @@ a7cdc3a06ab4f7411faaf67cbffe338b,Insecta,Diptera,Cecidomyiidae,NA,NA,sklearn
 93362c15cc8d2500cb01ab8f8405793a,Insecta,Diptera,Cecidomyiidae,NA,NA,sklearn
 d0025f73a745954ddcf12d9e9ac09ff3,Insecta,Diptera,Cecidomyiidae,NA,NA,sklearn
 3a112a26342dbb01e43e303de6985bb1,Insecta,Diptera,Cecidomyiidae,NA,NA,sklearn
-e124654e8de4b3b2ec073f588ed1a746,Insecta,Diptera,Cecidomyiidae,NA,NA,sklearn
-4c18307ac1108e9ce0864edc4c65029a,Insecta,Diptera,Cecidomyiidae,NA,NA,sklearn
 cf3bcee26624d455dd2d3d4f9d470ab7,Insecta,Diptera,Cecidomyiidae,NA,NA,sklearn
 a0af8ebf07ba2c68d82dc2e9746d0392,Insecta,Diptera,Cecidomyiidae,NA,NA,sklearn
 1e8bcc5cfa9a84bb6411891edbc4a467,Insecta,Diptera,Cecidomyiidae,NA,NA,sklearn
-5031e8670daae508855fb308805091c1,Insecta,Diptera,Cecidomyiidae,NA,NA,sklearn
 e17362ad99817a19ddcd3a7fa3049942,Insecta,Diptera,Cecidomyiidae,NA,NA,sklearn
-ae994d33a8798e7588d212efd2c092af,Insecta,Diptera,Cecidomyiidae,NA,NA,sklearn
 c50a7728b58c4d5c07788415e91dcb5a,Insecta,Diptera,Cecidomyiidae,NA,NA,sklearn
 374abc94cae9e77ef837f95017237169,Insecta,Diptera,Cecidomyiidae,NA,NA,sklearn
-2ba741998c30cd3149b916669c852045,Insecta,Diptera,Cecidomyiidae,NA,NA,sklearn
 7755a875d8f7aa5b398c9d54109ac51e,Insecta,Diptera,Cecidomyiidae,NA,NA,sklearn
 0c76a180bbbe8bda6416ee3e8e67609a,Insecta,Diptera,Cecidomyiidae,NA,NA,sklearn
 a5005baabab3196ff089c3ea59801937,Insecta,Diptera,Cecidomyiidae,NA,NA,sklearn
@@ -279,16 +262,13 @@ ec88e68ac40b5e4c28c4d30e051545a0,Insecta,Diptera,Ceratopogonidae,Stilobezzia,Sti
 df619a20d7940f485819628bca470b0d,Insecta,Diptera,Ceratopogonidae,Stilobezzia,Stilobezzia antennalis,sklearn
 c034b613fa44b050d3d1e9f758cbdec7,Insecta,Diptera,Ceratopogonidae,NA,NA,sklearn
 f314462837e4131ab5753d8e9aa4b946,Insecta,Diptera,Ceratopogonidae,NA,NA,sklearn
-360aaaed6c01c06ac8f3f707a5c67067,Insecta,Diptera,Ceratopogonidae,NA,NA,sklearn
 584690960c93d3a2135b4d775c2d9bd6,Insecta,Diptera,Ceratopogonidae,NA,NA,VSEARCH
 05ec695e4d5369b4fe1d390497056050,Insecta,Diptera,Ceratopogonidae,NA,NA,VSEARCH
 10a4e0c743169bb7c0ed1eb548d7df9f,Insecta,Diptera,Ceratopogonidae,NA,NA,VSEARCH
 7c0e42d7a2b2a35e1fd427ee68ea5712,Insecta,Diptera,Ceratopogonidae,NA,NA,VSEARCH
 dcbee9f01a25b62f5a3b6cf9e040980f,Insecta,Diptera,Chaoboridae,Chaoborus,Chaoborus punctipennis,sklearn
-a71ec6214e202262c4c417b61c0c75a4,Insecta,Diptera,Chaoboridae,Chaoborus,Chaoborus punctipennis,sklearn
 cf1ee4a2a4f35508084eaa2a2b93cbe6,Insecta,Diptera,Chaoboridae,Chaoborus,Chaoborus punctipennis,sklearn
 5c3474f684c3973222a987571de87d14,Insecta,Diptera,Chaoboridae,Chaoborus,Chaoborus punctipennis,sklearn
-2541243c483116b30d774b77700b1e99,Insecta,Diptera,Chaoboridae,Chaoborus,Chaoborus punctipennis,sklearn
 3610b4a6703bd02e2d962143105fc352,Insecta,Diptera,Chaoboridae,Chaoborus,Chaoborus punctipennis,sklearn
 9625b34ac5696778d08b390e8120e576,Insecta,Diptera,Chaoboridae,Chaoborus,Chaoborus punctipennis,sklearn
 0871fb8fc45696ef2abe3569477afa6f,Insecta,Diptera,Chaoboridae,Chaoborus,Chaoborus punctipennis,VSEARCH
@@ -296,11 +276,7 @@ cf1ee4a2a4f35508084eaa2a2b93cbe6,Insecta,Diptera,Chaoboridae,Chaoborus,Chaoborus
 6626860a94c9df8f9f897d8f8f6031c3,Insecta,Diptera,Chaoboridae,NA,NA,sklearn
 6b5697590b0a94d9d5a2f860b80994fb,Insecta,Diptera,Chaoboridae,NA,NA,sklearn
 174478f4bd768576a17c22bd75609720,Insecta,Diptera,Chaoboridae,NA,NA,sklearn
-d048bedb3ecdd601c2e6fd25083a5846,Insecta,Diptera,Chaoboridae,NA,NA,sklearn
-babb4eff1f4ac9b77ae77a178dd685e0,Insecta,Diptera,Chaoboridae,NA,NA,sklearn
-39fe35fa50c415f70f5547ed8bf94463,Insecta,Diptera,Chaoboridae,NA,NA,sklearn
 31ade9c99d919221be70cb7657d069e2,Insecta,Diptera,Chaoboridae,NA,NA,sklearn
-43feed6e1a701e21953b93040f6b8442,Insecta,Diptera,Chaoboridae,NA,NA,sklearn
 93573be2063a87301a1ee63b70837ae2,Insecta,Diptera,Chaoboridae,NA,NA,VSEARCH
 ed1aad37a270547a75cba148aca2723b,Insecta,Diptera,Chironomidae,Axarus,Axarus festivus,VSEARCH
 95c6807c8f8cc33c9f6f3d57b76e46be,Insecta,Diptera,Chironomidae,Chironomus,Chironomus bifurcatus,VSEARCH
@@ -311,7 +287,6 @@ f7f929bccb95abd7b659e378f95b8995,Insecta,Diptera,Chironomidae,Chironomus,Chirono
 c7300801685c4fde2d3e0b05ebf8b7f8,Insecta,Diptera,Chironomidae,Chironomus,NA,sklearn
 559ac7057f0b8ac4e3d0265e4be8770f,Insecta,Diptera,Chironomidae,Chironomus,NA,sklearn
 de820663be1bb0e5f4b0357e7d4f1ac7,Insecta,Diptera,Chironomidae,Chironomus,NA,sklearn
-166ecc8d0c5ba47f9de64e9092eef94f,Insecta,Diptera,Chironomidae,Chironomus,NA,sklearn
 f1c7baf332ebaa98a4381b5c5de74f64,Insecta,Diptera,Chironomidae,Chironomus,NA,VSEARCH
 4765308abf16ffdeec056b10a29bc9f7,Insecta,Diptera,Chironomidae,Chironomus,NA,VSEARCH
 89f0edba5f6bc83fa3899670dea46327,Insecta,Diptera,Chironomidae,Chironomus,NA,VSEARCH
@@ -323,9 +298,7 @@ a976089ffd0eeb4c1b4cf0571e63a86a,Insecta,Diptera,Chironomidae,Chironomus,NA,VSEA
 dfef803ad463f32243d32ea8045bcf09,Insecta,Diptera,Chironomidae,Cryptochironomus,NA,VSEARCH
 7ae3282ccbac6ed50b3326fca4d01ab2,Insecta,Diptera,Chironomidae,Dicrotendipes,Dicrotendipes modestus,VSEARCH
 3ed61680443c06eeef11f8adc6817752,Insecta,Diptera,Chironomidae,Dicrotendipes,Dicrotendipes tritomus,sklearn
-e675a038184d4409801e9dcfd994d7ca,Insecta,Diptera,Chironomidae,Dicrotendipes,Dicrotendipes tritomus,sklearn
 c0ba00e48c1e4defb25a7f0c7ac7dc37,Insecta,Diptera,Chironomidae,Dicrotendipes,Dicrotendipes tritomus,VSEARCH
-237e5cc9ea0efff4764077b1dfb0f2e6,Insecta,Diptera,Chironomidae,Dicrotendipes,NA,sklearn
 cfb09942e286f342550af126fe3101de,Insecta,Diptera,Chironomidae,Glyptotendipes,Glyptotendipes meridionalis,sklearn
 3b61a96b081c809d4e995e1f78458d0f,Insecta,Diptera,Chironomidae,Glyptotendipes,Glyptotendipes meridionalis,sklearn
 5cac244b7bc2b762706cf1e5898f59a9,Insecta,Diptera,Chironomidae,Glyptotendipes,Glyptotendipes meridionalis,VSEARCH
@@ -381,7 +354,6 @@ aa5f7208c12caec6e2fde2c79e4fea96,Insecta,Diptera,Chironomidae,NA,NA,VSEARCH
 10eb0f0713d0d385f0e59085efa53895,Insecta,Diptera,Chironomidae,NA,NA,VSEARCH
 8ef43d5dd7dcc59193ebe7ba141f4f91,Insecta,Diptera,Chironomidae,NA,NA,VSEARCH
 120d4f5d36feb19306494b0f74153455,Insecta,Diptera,Chironomidae,NA,NA,VSEARCH
-0b5ee61a35ce1eb049501bce5e02b6e7,Insecta,Diptera,Chironomidae,NA,NA,VSEARCH
 bd1f0a535e950b3ef80dee8ab7df1b5b,Insecta,Diptera,Chironomidae,NA,NA,VSEARCH
 f99b30316083da7d402876870334566f,Insecta,Diptera,Chironomidae,NA,NA,VSEARCH
 4777b5d503196755ea21cbff0b415f71,Insecta,Diptera,Chloropidae,Chaetochlorops,Chaetochlorops inquilinus,sklearn
@@ -398,7 +370,6 @@ fc21d4887a549ff141b8106d9fb9ef36,Insecta,Diptera,Culicidae,Aedes,Aedes henderson
 8d1fd713f24b13f91ac9b2666a34c071,Insecta,Diptera,Culicidae,Aedes,Aedes vexans,sklearn
 add49ccb99124aec7ffe5d336f1fbfe3,Insecta,Diptera,Culicidae,Aedes,Aedes vexans,sklearn
 58503646ba1f8026aeb18d2bb5a759b5,Insecta,Diptera,Culicidae,Aedes,Aedes vexans,sklearn
-c90b5b2f3f66fb7a5de33abff4472382,Insecta,Diptera,Culicidae,Anopheles,Anopheles crucians,sklearn
 7a32525674f58041551d0f7bd022ea39,Insecta,Diptera,Culicidae,Anopheles,Anopheles crucians,VSEARCH
 c690eef6449dae66a873e8cd584fe8ac,Insecta,Diptera,Culicidae,Anopheles,Anopheles punctipennis,VSEARCH
 3430ee93c6acd9e640afb8e872589337,Insecta,Diptera,Culicidae,Anopheles,Anopheles quadrimaculatus,sklearn
@@ -459,7 +430,6 @@ bd1f1a71d7fb78f76193ba2087569c59,Insecta,Diptera,Drosophilidae,Drosophila,Drosop
 13066b8607fec8897c48597a7be9797d,Insecta,Diptera,Drosophilidae,Drosophila,Drosophila tripunctata,sklearn
 d2b3d42218f169c650b06b929685dcee,Insecta,Diptera,Drosophilidae,Drosophila,Drosophila tripunctata,VSEARCH
 1470bf318a4a113091bff81410e4a084,Insecta,Diptera,Drosophilidae,Leucophenga,Leucophenga varia,sklearn
-e002e7a11f57cbe33900bd52cbefa9fe,Insecta,Diptera,Drosophilidae,Mycodrosophila,Mycodrosophila claytonae,VSEARCH
 74931840f9f3047a87dee266b058af2f,Insecta,Diptera,Drosophilidae,Scaptomyza,NA,VSEARCH
 ae93808a83f4d77eabd365f54974d964,Insecta,Diptera,Drosophilidae,Zaprionus,Zaprionus indianus,VSEARCH
 f248ec4741357ca401229d4735beca04,Insecta,Diptera,Fanniidae,Fannia,NA,VSEARCH
@@ -520,7 +490,6 @@ c5b4907aa864d6de4d910509d88c3bfb,Insecta,Diptera,Limoniidae,NA,NA,VSEARCH
 a78d76510e14467d5fa75c8a5b35ba05,Insecta,Diptera,Milichiidae,Phyllomyza,NA,sklearn
 bb3fc61111713aa35d1c617af7702ec6,Insecta,Diptera,Muscidae,Atherigona,NA,VSEARCH
 2ecaccf843d7da15a2305aaf30e66dfd,Insecta,Diptera,Muscidae,Coenosia,NA,VSEARCH
-3a544f4170e66ae1a4bac32683ce436f,Insecta,Diptera,Muscidae,Helina,Helina troene,VSEARCH
 28e09fa3855c91a9796028a47414018f,Insecta,Diptera,Muscidae,Neodexiopsis,Neodexiopsis rufitibia,VSEARCH
 4a5fa353297ce8061f2ad48ce3f134c9,Insecta,Diptera,Muscidae,Phaonia,NA,VSEARCH
 3c0b5abe297ec4205b5a9c3e23d668e1,Insecta,Diptera,Muscidae,Potamia,Potamia littoralis,sklearn
@@ -534,7 +503,6 @@ e64cd5f2d8f21ef4e49e6fb964e6465c,Insecta,Diptera,Mycetophilidae,Leia,NA,VSEARCH
 f44d978be5a40a6f303d59cc65950ad5,Insecta,Diptera,Mycetophilidae,Mycomya,Mycomya winnertzi,sklearn
 73b35197af1c6f04eb066eb0206502cc,Insecta,Diptera,Mycetophilidae,Neoempheria,NA,sklearn
 d50de33588f7ba0f6397e3feb5180363,Insecta,Diptera,Mycetophilidae,Zygomyia,NA,VSEARCH
-a5d9c438c4c61071193602417175661d,Insecta,Diptera,Mycetophilidae,NA,NA,sklearn
 9a866dba5d1e39293a6ee66362c9b831,Insecta,Diptera,Mycetophilidae,NA,NA,sklearn
 bb3f594d54196c074dc948aef837efb5,Insecta,Diptera,Mycetophilidae,NA,NA,VSEARCH
 f070442ac434d34f4e7397a33f4da010,Insecta,Diptera,Mydidae,Apiophora,Apiophora quadricinctata,sklearn
@@ -557,7 +525,6 @@ a1f3a2e90c82020c387762fc55ffa200,Insecta,Diptera,Psychodidae,NA,NA,VSEARCH
 78d366a5fe992fcde0435163ef7828cf,Insecta,Diptera,Sciaridae,Scatopsciara,Scatopsciara simillima,sklearn
 95854d0fdd1e5921e10c05f43a0bfdfe,Insecta,Diptera,Sciaridae,NA,NA,sklearn
 6269e83ac7127af0b26acc5ee508bb18,Insecta,Diptera,Sciomyzidae,Atrichomelina,Atrichomelina pubera,VSEARCH
-54b14c98ff23d1b1ca7fa72a2c2a580a,Insecta,Diptera,Stratiomyidae,Actina,Actina viridis,VSEARCH
 1bebd26bce5017ca5066651585e2157e,Insecta,Diptera,Stratiomyidae,Oxycera,Oxycera albovittata,sklearn
 5ae69dd9d361c38938c4be2c907412d5,Insecta,Diptera,Stratiomyidae,NA,NA,VSEARCH
 701887d96e17206a36eaa2f86b931720,Insecta,Diptera,Tabanidae,Chrysops,Chrysops scalaratus,sklearn
@@ -592,7 +559,6 @@ b1b174d92fe684b26a3959250ffc8953,Insecta,Diptera,Tabanidae,Tabanus,NA,sklearn
 b2ad6a6acadcf77778f66b80aa3af9b1,Insecta,Diptera,Tabanidae,Tabanus,NA,sklearn
 6a6c9fecaf015a234d4001ae5116e0b2,Insecta,Diptera,Tabanidae,Tabanus,NA,VSEARCH
 30d2ab227bd5b02179eb83fe8c46dbce,Insecta,Diptera,Tabanidae,NA,NA,sklearn
-de66ceefeadd799762301fca5ee54cbe,Insecta,Diptera,Tabanidae,NA,NA,sklearn
 02fcead996ea330edfe9931ac0221c97,Insecta,Diptera,Tabanidae,NA,NA,sklearn
 9c1759410185e12aa041d91bef2484d5,Insecta,Diptera,Tabanidae,NA,NA,VSEARCH
 21e773ee0e699b392d06f88e1725b2e8,Insecta,Diptera,Tabanidae,NA,NA,VSEARCH
@@ -611,10 +577,8 @@ bb7644f8ba20c5cae13d131ecce18315,Insecta,Diptera,Tachinidae,NA,NA,sklearn
 8961f4df1f949b7e12d32e90956a6511,Insecta,Diptera,Tipulidae,Dolichopeza,Dolichopeza tridenticulata,sklearn
 fc9e3d2647c8f3283af4bca6e2960cad,Insecta,Diptera,Tipulidae,Dolichopeza,Dolichopeza walleyi,sklearn
 2060f661322c11c0e10b4609da19fdcb,Insecta,Diptera,Tipulidae,Nephrotoma,Nephrotoma alterna,sklearn
-9160e61801f45fc5d6e7cf037da44e9f,Insecta,Diptera,Tipulidae,Nephrotoma,Nephrotoma eucera,VSEARCH
 c4b11b5810a8739d81686e4330b82b12,Insecta,Diptera,Tipulidae,Nephrotoma,Nephrotoma ferruginea,sklearn
 a1a6f3a552a455bb4bd84f0b02ff3279,Insecta,Diptera,Tipulidae,Nephrotoma,Nephrotoma ferruginea,sklearn
-109bb46462522a47479d17ea4c51f3c9,Insecta,Diptera,Tipulidae,Nephrotoma,Nephrotoma ferruginea,sklearn
 67571657f9bc42a71d6c402661be1d97,Insecta,Diptera,Tipulidae,Nephrotoma,Nephrotoma ferruginea,VSEARCH
 5535a0445f0308724d8d35746e76f68d,Insecta,Diptera,Tipulidae,Nephrotoma,Nephrotoma ferruginea,VSEARCH
 afb9261a397d3803ededbc877409f804,Insecta,Diptera,Tipulidae,Nephrotoma,Nephrotoma glabricristata,sklearn
@@ -622,7 +586,6 @@ ec302cf1d37458d517013720fc93f32e,Insecta,Diptera,Tipulidae,Nephrotoma,Nephrotoma
 87f24093f403558374c82333fb13a2da,Insecta,Diptera,Tipulidae,Nephrotoma,Nephrotoma glabricristata,sklearn
 8b79c3f59fd520aeb1e6e134baf51d23,Insecta,Diptera,Tipulidae,Nephrotoma,Nephrotoma macrocera,VSEARCH
 190ab3993d54d0eb9f0262c75311072e,Insecta,Diptera,Tipulidae,Nephrotoma,Nephrotoma okefenoke,sklearn
-14c3006f49abf9e2628e8892666826ec,Insecta,Diptera,Tipulidae,Nephrotoma,NA,sklearn
 c415501bdf3b3c215bee406bcfdab452,Insecta,Diptera,Tipulidae,Nephrotoma,NA,sklearn
 f37ca00c1459bc901c15329d30c40e3f,Insecta,Diptera,Tipulidae,Tipula,Tipula abdominalis,VSEARCH
 ac65e0d9f9935a269d4b658ae1db036f,Insecta,Diptera,Tipulidae,Tipula,Tipula coloradensis,VSEARCH
@@ -655,7 +618,6 @@ f95fbc56c37e7479e8ecc16169f6e10f,Insecta,Diptera,Tipulidae,Tipula,NA,sklearn
 53fb375d0c3b52580912812f2a0f7389,Insecta,Ephemeroptera,Baetidae,Callibaetis,Callibaetis pretiosus,sklearn
 ce282abacec41d18731c8530ef80d804,Insecta,Ephemeroptera,Heptageniidae,Maccaffertium,Maccaffertium exiguum,sklearn
 22d6941e40741a993930e52eda93b955,Insecta,Ephemeroptera,Heptageniidae,Stenacron,Stenacron interpunctatum,VSEARCH
-9de0ef800ae4fd074536c777d1673e43,Insecta,Ephemeroptera,Heptageniidae,Stenonema,Stenonema femoratum,sklearn
 fefa053b7f5758d32bb5779cc97c5bd9,Insecta,Ephemeroptera,Palingeniidae,Pentagenia,Pentagenia vittigera,VSEARCH
 910cbd756a035fb73698d8bdc802ebab,Insecta,Hemiptera,Acanaloniidae,Acanalonia,NA,VSEARCH
 52280933d229f35d99636e094c2019dc,Insecta,Hemiptera,Alydidae,Alydus,NA,VSEARCH
@@ -687,7 +649,6 @@ fa5a0978ba6ad79ced321516aac6d82c,Insecta,Hemiptera,Cicadellidae,Gyponana,NA,skle
 89fb8569ed91918c1f82c3df670d9acc,Insecta,Hemiptera,Cicadellidae,Gyponana,NA,sklearn
 939e768b64a8ab16134780f9dc76018e,Insecta,Hemiptera,Cicadellidae,Gyponana,NA,VSEARCH
 c2cb94c95e32a93a61c9edca37f7909a,Insecta,Hemiptera,Cicadellidae,Gyponana,NA,VSEARCH
-4644ddd6b31ccedcc8df91b2e1463cb9,Insecta,Hemiptera,Cicadellidae,Gyponana,NA,VSEARCH
 a50ea4b8de3fc8320dcee4d558417828,Insecta,Hemiptera,Cicadellidae,Ponana,Ponana puncticollis,VSEARCH
 e0d6c9db68217024fd2d6fe8cf3344ef,Insecta,Hemiptera,Cicadellidae,Ponana,NA,sklearn
 0496512031c452e89193fff9e15a886f,Insecta,Hemiptera,Cicadellidae,Scaphoideus,NA,sklearn
@@ -698,7 +659,6 @@ c93175cbbcb481b86e3010e2bc09848e,Insecta,Hemiptera,Cicadellidae,NA,NA,sklearn
 83e4473abf73f22cf6433778bf00f5c0,Insecta,Hemiptera,Cimicidae,Cimex,Cimex adjunctus,sklearn
 3b0cd4fcc298d74e2d0b84a0af4f3451,Insecta,Hemiptera,Cimicidae,Cimex,Cimex adjunctus,sklearn
 d699b0cca311d1afa323046cda0c08b8,Insecta,Hemiptera,Corixidae,Corisella,Corisella edulis,VSEARCH
-0e5315da0fd6d3d60640e02683460cc9,Insecta,Hemiptera,Corixidae,Trichocorixa,Trichocorixa kanza,VSEARCH
 0333589362a8751a70fa62d1faf99905,Insecta,Hemiptera,Corixidae,Trichocorixa,NA,VSEARCH
 53bc80063cc97759bbdf7cdfc7891556,Insecta,Hemiptera,Delphacidae,Pissonotus,Pissonotus flabellatus,sklearn
 25d6c795fa3ae676b9b4947fa1e43841,Insecta,Hemiptera,Delphacidae,Pissonotus,Pissonotus flabellatus,sklearn
@@ -740,10 +700,8 @@ f23227a8f30ae40942708199a0f51fb5,Insecta,Hemiptera,Miridae,NA,NA,sklearn
 689d71205f33a8ccbcda8d444761f260,Insecta,Hemiptera,Miridae,NA,NA,sklearn
 948fcfa135e7f19f168a4b9a664d6047,Insecta,Hemiptera,Miridae,NA,NA,sklearn
 3c7749bafde060b1c813760702dde484,Insecta,Hemiptera,Miridae,NA,NA,sklearn
-368941ee41fa7a0c3a6b50c60306c6b4,Insecta,Hemiptera,Miridae,NA,NA,sklearn
 cfbee16896e6a5da9f4fb54e67566569,Insecta,Hemiptera,Pentatomidae,Dendrocoris,Dendrocoris humeralis,VSEARCH
 35ca5ba82060ef59eea0431c2eacbd99,Insecta,Hemiptera,Phylloxeridae,Daktulosphaira,Daktulosphaira vitifoliae,VSEARCH
-69aee0dbfc85f4d9be773aaeed5653e4,Insecta,Hemiptera,Phylloxeridae,Phylloxera,Phylloxera caryaecaulis,VSEARCH
 36cf893308ad8d773e5215072ca9159c,Insecta,Hemiptera,Phylloxeridae,Phylloxera,NA,sklearn
 98e422a7782e9ceadd83319ecfc06fb1,Insecta,Hemiptera,Phylloxeridae,NA,NA,sklearn
 542a2acc6db2cd825094e2af557d117e,Insecta,Hemiptera,Reduviidae,Zelus,Zelus luridus,VSEARCH
@@ -763,7 +721,6 @@ df05cdba47b6cdef90457ae7ceefa46e,Insecta,Hymenoptera,Braconidae,NA,NA,sklearn
 6616c9dcf5db365341eb3654100d1ff2,Insecta,Hymenoptera,Braconidae,NA,NA,sklearn
 dc2ca875369f67460e5881217e43d32d,Insecta,Hymenoptera,Braconidae,NA,NA,sklearn
 4d517b15eda94f872ec9a70fe8112a7e,Insecta,Hymenoptera,Braconidae,NA,NA,sklearn
-e9679914d04fc74e6da47e0bf43ce120,Insecta,Hymenoptera,Braconidae,NA,NA,sklearn
 0f3f71788592f472726874ee9197c487,Insecta,Hymenoptera,Braconidae,NA,NA,sklearn
 9c1359f62e5bdbb56af80d781cec2e0c,Insecta,Hymenoptera,Braconidae,NA,NA,sklearn
 b8d89230695be8decddc0dae735f1ae0,Insecta,Hymenoptera,Braconidae,NA,NA,sklearn
@@ -780,7 +737,6 @@ bedfc04ccca070a02d83d5b374322fa4,Insecta,Hymenoptera,Formicidae,Myrmica,NA,sklea
 ef672f9b7fe98f85b24d0d7bb969406a,Insecta,Hymenoptera,Formicidae,Pheidole,Pheidole tysoni,VSEARCH
 5db19517612f26a3777f9bf35693d876,Insecta,Hymenoptera,Formicidae,Solenopsis,Solenopsis molesta,VSEARCH
 cfa3bcd864c43b6d19225dfcfabd528a,Insecta,Hymenoptera,Formicidae,NA,NA,sklearn
-7659b1c8fe87c96ea9b089f676f5c7e1,Insecta,Hymenoptera,Ichneumonidae,Mesochorus,NA,sklearn
 4072b7b92a0f9ef9a14db8347dbca4c9,Insecta,Hymenoptera,Ichneumonidae,Trathala,NA,sklearn
 e53bf5e731c6ee8adff526f0a3303922,Insecta,Hymenoptera,Ichneumonidae,Trathala,NA,sklearn
 5e5c7f33235b6856c02a29baa13e5500,Insecta,Hymenoptera,Ichneumonidae,NA,NA,sklearn
@@ -807,7 +763,6 @@ d190df48e75f5e52d62ddcb4c9c19a6a,Insecta,Lepidoptera,Autostichidae,Glyphidocera,
 feaf444f0455212a01aea0d3fe2ee2f5,Insecta,Lepidoptera,Autostichidae,Glyphidocera,Glyphidocera juniperella,VSEARCH
 c5dd9d3f7e026017b9445045c0bb2b8e,Insecta,Lepidoptera,Autostichidae,NA,NA,VSEARCH
 1ca979456c4636653923abe56dcdf158,Insecta,Lepidoptera,Blastobasidae,Asaphocrita,Asaphocrita aphidiella,VSEARCH
-26268ad0ddf7a5fcd275c6de92603684,Insecta,Lepidoptera,Blastobasidae,Asaphocrita,Asaphocrita aphidiella,VSEARCH
 c8f191580ddbebea83080d3dec1215b9,Insecta,Lepidoptera,Blastobasidae,Blastobasis,Blastobasis glandulella,VSEARCH
 51a06bc43a9728c6f30e494e2817a7f3,Insecta,Lepidoptera,Blastobasidae,Blastobasis,Blastobasis taurusella,VSEARCH
 3ac62fcf2bb88923a1070b18ca7ce25c,Insecta,Lepidoptera,Blastobasidae,Blastobasis,NA,VSEARCH
@@ -824,7 +779,6 @@ e89e6fc003dfd84fcc809c0b32447c13,Insecta,Lepidoptera,Bucculatricidae,Bucculatrix
 288112143254e783b3528725774fa7af,Insecta,Lepidoptera,Carposinidae,Carposina,NA,VSEARCH
 5ba4b9e051ff0f529fedb8595f01fca8,Insecta,Lepidoptera,Coleophoridae,Coleophora,Coleophora borea,VSEARCH
 6579fd110c670dc92b5a855c8854a7dd,Insecta,Lepidoptera,Coleophoridae,Coleophora,Coleophora duplicis group,VSEARCH
-ba21c7bf031c5ceae49e7111d1314c7b,Insecta,Lepidoptera,Coleophoridae,Coleophora,Coleophora mayrella,VSEARCH
 0051c96192fb4b65d012ab3b0d9858ee,Insecta,Lepidoptera,Coleophoridae,Coleophora,NA,VSEARCH
 c823e8e5eb07cd2b7979e68dbaed16d5,Insecta,Lepidoptera,Coleophoridae,Coleophora,NA,VSEARCH
 d4cde1500cf1e92efda992fc3933619d,Insecta,Lepidoptera,Cosmopterigidae,Cosmopterix,Cosmopterix turbidella,VSEARCH
@@ -842,7 +796,6 @@ d3dd287db42c46ec00ee4f9f263ad1a8,Insecta,Lepidoptera,Crambidae,Anania,Anania hel
 f51974df289e803808177a78bdf311e2,Insecta,Lepidoptera,Crambidae,Elophila,Elophila obliteralis,VSEARCH
 25d69ef3d072544c2eae5013af690a95,Insecta,Lepidoptera,Crambidae,Evergestis,Evergestis pallidata,VSEARCH
 e693285865a74c2e97190073281f16e6,Insecta,Lepidoptera,Crambidae,Lipocosma,Lipocosma sicalis,VSEARCH
-0b334ab6868c3d28cf57cfd07f19db5c,Insecta,Lepidoptera,Crambidae,Lipocosma,NA,VSEARCH
 9ec1180451b27d11c61a0171a1fb7811,Insecta,Lepidoptera,Crambidae,Microcrambus,Microcrambus elegans,VSEARCH
 70e25f7ac6d819e0525108d80cae7b24,Insecta,Lepidoptera,Crambidae,Palpita,Palpita magniferalis,VSEARCH
 9d4ccf411914b570d7ce64af843e02b5,Insecta,Lepidoptera,Crambidae,Parapediasia,Parapediasia teterrellus,VSEARCH
@@ -861,7 +814,6 @@ f1c71ad2c7374b330363b0fa36cac871,Insecta,Lepidoptera,Dryadaulidae,Dryadaula,NA,V
 2ad4c1c00d807fcd0079ee374762a0e5,Insecta,Lepidoptera,Erebidae,Chytolita,Chytolita morbidalis,VSEARCH
 77caa24543bb441e78a7a57259f27185,Insecta,Lepidoptera,Erebidae,Halysidota,Halysidota harrisii,VSEARCH
 5d893ad258fc4aeb666d051c38000813,Insecta,Lepidoptera,Erebidae,Halysidota,Halysidota tessellaris,VSEARCH
-282707b502a1042ac1486e978b574dc9,Insecta,Lepidoptera,Erebidae,Hypena,Hypena baltimoralis,VSEARCH
 18db9e0eb8284ce045c24ed004536d08,Insecta,Lepidoptera,Erebidae,Hypena,Hypena scabra,sklearn
 dc1aafc2eba5199cd6994cbbcceb43dc,Insecta,Lepidoptera,Erebidae,Hyperstrotia,Hyperstrotia nana,VSEARCH
 611f2bdfbee95b7d4b8b9394c09478c9,Insecta,Lepidoptera,Erebidae,Idia,Idia rotundalis,VSEARCH
@@ -876,7 +828,6 @@ b2f9429494612134e7018c456cee890c,Insecta,Lepidoptera,Erebidae,Sigela,Sigela brau
 c79abf4d2196352b2a48b54a9ad248c6,Insecta,Lepidoptera,Erebidae,Zanclognatha,Zanclognatha obscuripennis,VSEARCH
 fda92cf77746ec686e5a580278b37b1f,Insecta,Lepidoptera,Euteliidae,Paectes,Paectes abrostoloides,VSEARCH
 1832212855483d017cacd42671ca523f,Insecta,Lepidoptera,Gelechiidae,Aristotelia,Aristotelia rubidella,VSEARCH
-e16536bc27eb595cde2d3e574ba29d83,Insecta,Lepidoptera,Gelechiidae,Aristotelia,NA,VSEARCH
 59fffc51ec93a32ab8c3b0cb948db71c,Insecta,Lepidoptera,Gelechiidae,Arogalea,Arogalea cristifasciella,sklearn
 fef6a45a90a8740197aef9c08b23e833,Insecta,Lepidoptera,Gelechiidae,Battaristis,NA,VSEARCH
 0835fed95eff76f5d26159579c6f0c25,Insecta,Lepidoptera,Gelechiidae,Chionodes,Chionodes discoocellella,VSEARCH
@@ -887,7 +838,6 @@ ccb64fe45a6ad8ebaa44ef7873d0c9e1,Insecta,Lepidoptera,Gelechiidae,Dichomeris,Dich
 4b0a4ff227392528f629b03283a173c3,Insecta,Lepidoptera,Gelechiidae,Dichomeris,Dichomeris punctipennella,sklearn
 75439b19bfc2cb22a8bc09bc3826f776,Insecta,Lepidoptera,Gelechiidae,Fascista,Fascista cercerisella,sklearn
 36cca6c98dbf88b64802431d570bea30,Insecta,Lepidoptera,Gelechiidae,Helcystogramma,Helcystogramma melantherella,VSEARCH
-ec70d8975622e18ac70feb953a6822e5,Insecta,Lepidoptera,Gelechiidae,Keiferia,Keiferia inconspicuella,VSEARCH
 0a03b933a9452fc2dbe03f785f9a7853,Insecta,Lepidoptera,Gelechiidae,Monochroa,NA,VSEARCH
 26c564d2a176745946552dc23ba4e906,Insecta,Lepidoptera,Gelechiidae,Pseudotelphusa,Pseudotelphusa quercinigracella,sklearn
 f0020f8b55f23371dcb93740c91c25cd,Insecta,Lepidoptera,Gelechiidae,Sinoe,Sinoe kwakae,VSEARCH
@@ -907,7 +857,6 @@ c892cf4fce94743508b9d034023908b8,Insecta,Lepidoptera,Geometridae,Melanolophia,NA
 47af33f2f745d3ad06205e99b30d4e8d,Insecta,Lepidoptera,Geometridae,NA,NA,sklearn
 af8864e3e98fc703b53c233b21f4cff7,Insecta,Lepidoptera,Geometridae,NA,NA,sklearn
 42d026a37a551e83fcb92bd981e382d8,Insecta,Lepidoptera,Geometridae,NA,NA,VSEARCH
-3ce766838e0f1d5dab8139b1231e1f89,Insecta,Lepidoptera,Glyphipterigidae,Acrolepiopsis,Acrolepiopsis incertella,VSEARCH
 d99b715fdeebb2d83829ff7f24d98a97,Insecta,Lepidoptera,Gracillariidae,Acrocercops,Acrocercops albinatella,VSEARCH
 d9a575a78430c7315061fc21149177b9,Insecta,Lepidoptera,Gracillariidae,Caloptilia,Caloptilia bimaculatella,VSEARCH
 df6da6e33b18946cc0b30b11d14322e7,Insecta,Lepidoptera,Gracillariidae,Caloptilia,Caloptilia bimaculatella,VSEARCH
@@ -948,7 +897,6 @@ d1e738b4e43eefe0e9ef7e50168adb8a,Insecta,Lepidoptera,Momphidae,Mompha,NA,VSEARCH
 8d7e2a8356322ab7c710f75e34ff9625,Insecta,Lepidoptera,Nepticulidae,Ectoedemia,Ectoedemia ulmella,VSEARCH
 caea36bff894ddb3dfbc71b851ea0042,Insecta,Lepidoptera,Nepticulidae,NA,NA,VSEARCH
 96c3081d9254e4fd25c4b7f9d86f1aab,Insecta,Lepidoptera,Notodontidae,Gluphisia,Gluphisia septentrionis,VSEARCH
-acf583a6af3ff2075c11151ffb2954ff,Insecta,Lepidoptera,Notodontidae,Lochmaeus,Lochmaeus manteo,VSEARCH
 74a69ac21103e8602876f872e4a7f17a,Insecta,Lepidoptera,Nymphalidae,Libytheana,Libytheana carinenta,VSEARCH
 3a29b24882a343a2d6958989c69a4f8f,Insecta,Lepidoptera,Nymphalidae,Megisto,Megisto cymela,VSEARCH
 8f97a57398350d8f2b91e161b5972863,Insecta,Lepidoptera,Nymphalidae,Phyciodes,NA,VSEARCH
@@ -962,7 +910,6 @@ b2d734b4364c53c5fbcbb564fac82fb2,Insecta,Lepidoptera,Oecophoridae,Epicallima,Epi
 51f3a50ff9cd9bd295ec57ee118b56ad,Insecta,Lepidoptera,Pyralidae,Salebriaria,NA,sklearn
 14a5105957afd401a6e03dd81c6fe654,Insecta,Lepidoptera,Pyralidae,NA,NA,VSEARCH
 36f73bf84706dcc60fd781f8d299da3e,Insecta,Lepidoptera,Sphingidae,Amorpha,Amorpha juglandis,VSEARCH
-46866293b6eafb7bd500bd047a45415e,Insecta,Lepidoptera,Sphingidae,Darapsa,Darapsa myron,VSEARCH
 46f68fb7accd2cf2419ca3cd22da3646,Insecta,Lepidoptera,Tineidae,Acrolophus,Acrolophus mortipennella,VSEARCH
 858ca922d1854ec50251022b68356340,Insecta,Lepidoptera,Tineidae,Acrolophus,Acrolophus plumifrontella,VSEARCH
 467bd68309fd5af18da3ade9c9258cb6,Insecta,Lepidoptera,Tineidae,Acrolophus,Acrolophus propinqua,sklearn
@@ -1085,7 +1032,6 @@ de9ce01b20cc0f564fe65547ff6e0a3d,Insecta,Neuroptera,Mantispidae,Mantispa,Mantisp
 280bf5ff01220758cdcb4f7ccfa7414b,Insecta,Neuroptera,Sisyridae,Climacia,Climacia areolaris,VSEARCH
 9f473a707d3f3849a50a8599ba99bb97,Insecta,Neuroptera,Sisyridae,Sisyra,Sisyra vicaria,sklearn
 fa0b44d7b4b059088cbfb992f748b341,Insecta,Odonata,Coenagrionidae,Ischnura,Ischnura damula,sklearn
-81a379f46149fb254d978363cdd20081,Insecta,Odonata,Libellulidae,NA,NA,VSEARCH
 10f2df314525a2f81a5b3e911f948b90,Insecta,Orthoptera,Gryllidae,Oecanthus,Oecanthus niveus,sklearn
 ff8c86be528ae3455058335ac3b067b0,Insecta,Orthoptera,Gryllidae,NA,NA,sklearn
 c3dd5fbba20692a91177a75c80242a5f,Insecta,Orthoptera,Tettigoniidae,Scudderia,Scudderia furcata,sklearn
