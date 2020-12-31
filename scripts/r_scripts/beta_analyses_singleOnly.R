@@ -26,7 +26,6 @@ theme_devon <- function () {
 ## import metadata
 meta <- read_csv(file = "https://github.com/devonorourke/mysosoup/raw/master/data/metadata/mangan_metadata.csv", col_names = TRUE)
 
-
 ## add taxonomy information
 ## amend import of taxa info
 taxa <- read_csv(file="https://raw.githubusercontent.com/devonorourke/mysosoup/master/data/taxonomy/filtd_tax_dataframe_ALL.csv")
@@ -191,11 +190,11 @@ p_uu <- pcoaPlotfunction("Unifrac Unweighted")
 p_wu <- pcoaPlotfunction("Unifrac Weighted")
 
 p_ds
-ggsave("~/github/mysosoup/figures/figure_3s_ds_pcoa.png", width = 15, height = 15, units = "cm")
+ggsave("~/github/mysosoup/figures/figure_3s_ds_pcoa.png", width = 15, height = 15, units = "cm", dpi=150)
 ggsave("~/github/mysosoup/figures/figure_3s_ds_pcoa.svg", width = 15, height = 15, units = "cm")
 
 p_bc
-ggsave("~/github/mysosoup/figures/figure_3s_bc_pcoa.png", width = 15, height = 15, units = "cm")
+ggsave("~/github/mysosoup/figures/figure_3s_bc_pcoa.png", width = 15, height = 15, units = "cm", dpi=150)
 ggsave("~/github/mysosoup/figures/figure_3s_bc_pcoa.svg", width = 15, height = 15, units = "cm")
 
 p_uu
