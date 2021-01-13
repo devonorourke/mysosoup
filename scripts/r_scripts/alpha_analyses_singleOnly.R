@@ -226,7 +226,9 @@ getKWlabel_forplot_function <- function(kw_data){
 }
 
 observed_KWlabel <- getKWlabel_forplot_function(kw_observed)
+observed_KWlabel_forPlot <- "Kruskal-Wallis   H(5) = 25.389, p < 0.001" ## modify for plot
 shannons_KWlabel <- getKWlabel_forplot_function(kw_shannons)
+shannons_KWlabel_forPlot <- "Kruskal-Wallis   H(5) = 2.174, p = 0.825"  ## modify for plot
 
 ## now make each plot
 ## if using color, match scheme with beta diversity figure
@@ -234,6 +236,11 @@ v3pal <- viridis::plasma(3, begin = 0.35, end = 0.9, direction = -1)
 
 ## observed plot...
 ## toggle on/off to make colored/not
+
+## first, set levels to order months properly...
+plotdat_observed$CollectionMonth <- factor(plotdat_observed$CollectionMonth, 
+                                           levels = c("June", "July", "Sept"))
+## and plot
 observed_plot <- ggplot(plotdat_observed) +
   scale_color_manual(values = v3pal) +
   geom_boxplot(aes(x=Grouper, y=Alpha_value), outlier.shape = NA) +
@@ -244,14 +251,20 @@ observed_plot <- ggplot(plotdat_observed) +
   geom_label(data = plotdat_observed,
              aes(x = Grouper, y = max(Alpha_value*1.1), label=Letters),
              colour = "white", fontface = "bold", fill="black", size=4) +
-  annotate("text", x=2.5, y=75, label = observed_KWlabel, size=5) +
+  annotate("text", x=2.5, y=75, label = observed_KWlabel_forPlot, size=5) +
   theme_devon() +
   theme(axis.text = element_text(size = 12),
         axis.title = element_text(size = 14),
         strip.text = element_text(size = 14),
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14),
         #legend.position = "none") ## toggle on for black/white version
         legend.position="top")   ## toggle on for color version
 
+## set levels to order months properly for other dataset
+plotdat_shannons$CollectionMonth <- factor(plotdat_shannons$CollectionMonth, 
+                                           levels = c("June", "July", "Sept"))
+## and plot
 shannon_plot <- ggplot(plotdat_shannons) +
   scale_color_manual(values = v3pal) +
   geom_boxplot(aes(x=Grouper, y=Alpha_value), outlier.shape = NA) +
@@ -262,18 +275,20 @@ shannon_plot <- ggplot(plotdat_shannons) +
   geom_label(data = plotdat_shannons,
              aes(x = Grouper, y = max(Alpha_value*1.1), label=Letters),
              colour = "white", fontface = "bold", fill="black", size=4) +
-  annotate("text", x=2.5, y=35, label = shannons_KWlabel, size=5) +
+  annotate("text", x=2.5, y=35, label = shannons_KWlabel_forPlot, size=5) +
   theme_devon() +
   theme(axis.text = element_text(size = 12),
         axis.title = element_text(size = 14),
         strip.text = element_text(size = 14),
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14),
         legend.position="top")   ## toggle on for color version
 #legend.position = "none") ## toggle on for black/white version
 
 ## stitch together the two plots and save
 ggarrange(observed_plot, shannon_plot, nrow = 2, common.legend=TRUE)  ## toggle on for black/white version
-ggsave("~github/mysosoup/figures/Figure_2_alphaDiv_col.png", width = 20, height = 20, units = "cm")
-ggsave("~/github/mysosoup/figures/Figure_2_alphaDiv_col.svg", width = 20, height = 20, units = "cm")
+ggsave("~/github/mysosoup/figures/Figure_2_alphaDiv_col.png", width = 20, height = 20, units = "cm", dpi=150)
+ggsave("~/github/mysosoup/figures/Figure_2_alphaDiv_col.pdf", width = 20, height = 20, units = "cm", dpi=300)
 
 
 #ggarrange(observed_plot, shannon_plot, nrow = 2)  ## toggle on for black/white version
